@@ -33,5 +33,5 @@ def preview():
 def publish():
     local('pelican -s publishconf.py')
     local('git add .')
-    local('echo git commit -m \'%s\'' % datetime.now())
+    local('echo git commit -am \'%s\'' % datetime.now())
     local('git push')
