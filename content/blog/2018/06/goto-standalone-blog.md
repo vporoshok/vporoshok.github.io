@@ -1,7 +1,7 @@
 ---
 title: Отдельный блог
 description: Почему я ушёл с medium
-date: 2018-06-16T16:10:03Z
+date: 2018-06-16T17:33:45Z
 categories:
 - life-style
 tags:
