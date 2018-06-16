@@ -1,0 +1,142 @@
+<svg viewBox="0 0 400 270" xmlns="http://www.w3.org/2000/svg">
+    <g transform="translate(50, 35)">
+        <ellipse
+            cx="150" cy="100"
+            rx="190" ry="130"
+            fill="SkyBlue"
+            opacity="0.8"
+        />
+        <text
+            x="150" y="170"
+            text-anchor="middle"
+            font-family="Verdana"
+        >
+            Services
+        </text>
+    </g>
+    <g transform="translate(50, 50)">
+        <rect
+            width="200" height="100"
+            rx="50" ry="50"
+            fill="SpringGreen"
+            opacity="0.8"
+        />
+        <text
+            x="50" y="55"
+            text-anchor="middle"
+            font-family="Verdana"
+        >
+            Adaptors
+        </text>
+    </g>
+    <g transform="translate(150, 50)">
+        <rect
+            width="200" height="100"
+            rx="50" ry="50"
+            fill="LightCoral"
+            opacity="0.8"
+        />
+        <text
+            x="150" y="55"
+            text-anchor="middle"
+            font-family="Verdana"
+        >
+            Actions
+        </text>
+    </g>
+    <g transform="translate(150, 50)">
+        <rect
+            width="100" height="100"
+            rx="50" ry="50"
+            fill="Khaki"
+            opacity="0.8"
+        />
+        <text
+            x="50" y="55"
+            text-anchor="middle"
+            font-family="Verdana"
+        >
+            Models
+        </text>
+    </g>
+    <g transform="translate(75, 160)">
+        <rect
+            width="60" height="60"
+            rx="30" ry="30"
+            fill="RoyalBlue"
+            opacity="0.8"
+        />
+        <text
+            x="30" y="35"
+            text-anchor="middle"
+            font-family="Verdana"
+        >
+            Conn
+        </text>
+    </g>
+
+    <g>
+        <path
+            d="
+                M275,55
+                C275,0 125,0 125,55"
+            fill="none"
+            stroke="black"
+            stroke-width="2"
+            stroke-dasharray="10 5"
+        />
+        <polygon
+            points="125 60 120 47 130 47"
+            transform="rotate(10 125 55)"
+        />
+        <text
+            x="200" y="35"
+            text-anchor="middle"
+            font-family="Verdana"
+            font-size="12"
+        >
+            Interface
+        </text>
+    </g>
+    <g>
+        <path
+            d="
+                M250,135
+                L230,120"
+            fill="none"
+            stroke="black"
+            stroke-width="2"
+        />
+        <polygon
+            points="230 120 225 107 235 107"
+            transform="rotate(127 230 120) translate(0 5)"
+        />
+    </g>
+    <g>
+        <path
+            d="
+                M150,135
+                L170,120"
+            fill="none"
+            stroke="black"
+            stroke-width="2"
+        />
+        <polygon
+            points="170 120 165 107 175 107"
+            transform="rotate(-127 170 120) translate(0 5)"
+        />
+    </g>
+    <g>
+        <path
+            d="
+                M105,145
+                L105,165"
+            fill="none"
+            stroke="black"
+            stroke-width="2"
+        />
+        <polygon
+            points="105 170 100 157 110 157"
+        />
+    </g>
+</svg>

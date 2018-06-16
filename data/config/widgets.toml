@@ -1,0 +1,27 @@
+# About Widget config
+[about]
+title = "vporoshok.me"
+description = "Где-то на дальнем сервере"
+logo = "/images/logo.jpg"
+
+# Recent Posts Widget config
+[recent_posts]
+title = ""                            # default: "Recent Posts"
+length = 4                            # default: 5
+excludeTypes = ["page"]               # default: ["page"]
+
+# Sidebar Menu Widget config
+[sidebar_menu]
+title = ""                            # default: ""
+mirror = ""                           # default: ""
+
+# Social Menu Widget config
+[social_menu]
+title = ""                            # default: ""
+platforms = ["twitter","github","email","telegram"]
+
+# Taxonomy Cloud Widget config
+[taxonomy_cloud]
+title = ""                            # default: Plural Name for `taxonomyCloud.taxonomy`
+taxonomy = "tags"                     # default: "tags"
+shuffle = true                        # default: true
