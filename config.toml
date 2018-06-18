@@ -37,7 +37,7 @@ preserveTaxonomyNames = true
     archiveDateFormat = "02.01"
     hideEntryNavigation = ["page"] # boolean / array of sections
     showReadingTime = true
-    taxonomyCloudShuffle = true
+    taxonomyCloudShuffle = false
     accentColor = "#ffcd00"
     hideMainMenu = false
 

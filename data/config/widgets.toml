@@ -24,4 +24,4 @@ platforms = ["twitter","github","email","telegram"]
 [taxonomy_cloud]
 title = ""                            # default: Plural Name for `taxonomyCloud.taxonomy`
 taxonomy = "tags"                     # default: "tags"
-shuffle = true                        # default: true
+shuffle = false                       # default: true
