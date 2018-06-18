@@ -3,7 +3,7 @@ title = "Где-то на дальнем сервере"
 # for smart copyright line, leave this blank and check [params.copyright]
 copyright = ""
 
-languageCode = "ru-ru"
+languageCode = "ru"
 defaultContentLanguage = "ru"
 
 theme = "minimo"

@@ -1,0 +1,151 @@
+[author]
+one = "Автор"
+other = "Авторы"
+
+[authorsAvatar]
+other = "Аватар {{ .Author }}"
+
+[by]
+other = "от"
+
+[cancel]
+other = "Отмена"
+
+[cancelComment]
+other = "Отменить комментарий"
+
+[category]
+one = "Категория"
+other = "Категории"
+
+[comment]
+other = "Комментарий"
+
+[commentSubmissionErrorMessage]
+other = "Произошла ошибка. Невозможно отправить комментарий. Пожалуйста, попробуйте ещё раз. Спасибо!"
+
+[commentSubmissionErrorTitle]
+other = "Упс, извините!"
+
+[commentSubmissionSuccessMessage]
+other = "Комментарий отправлен. Скоро он появится на этой странице!"
+
+[commentSubmissionSuccessTitle]
+other = "Спасибо!"
+
+[commentsOnEntry]
+one = "Только {{ .Count }} комментарий к {{ .Title }}"
+few = "{{ .Count }} комментария к {{ .Title }}"
+many = "{{ .Count }} комментариев к {{ .Title }}"
+other = "{{ .Count }} комментариев к {{ .Title }}"
+
+[contactViaEmail]
+other = "Связаться через Email"
+
+[currentPage]
+other = "Текущая страница"
+
+[email]
+other = "Email"
+
+[gopher]
+other = "Gopher"
+
+[goHome]
+other = "Иди домой..."
+
+[leaveAComment]
+other = "Оставить комментарий"
+
+[mainMenu]
+other = "Основное меню"
+
+[name]
+other = "Имя"
+
+[next]
+other = "Следующий"
+
+[nextPage]
+other = "Следующая страница"
+
+[nextPost]
+other = "Следующая запись"
+
+[noTerm]
+other = "Ни одного {{ .Term }}!"
+
+[ok]
+other = "OK"
+
+[openAccountInNewTab]
+other = "Открыть {{ .Platform }}-акаунт в новой вкладке"
+
+[page]
+other = "Страница"
+
+[previous]
+other = "Предыдущий"
+
+[previousPage]
+other = "Предыдущая страница"
+
+[previousPost]
+other = "Предыдущая запись"
+
+[postedOn]
+other = "Опубликовано"
+
+[readingTime]
+one = "Одна минута на чтение"
+few = "{{ .Count }} минуты на чтение"
+many = "{{ .Count }} минут на чтение"
+other = "{{ .Count }} минут на чтение"
+
+[recentPosts]
+other = "Недавние записи"
+
+[reply]
+other = "Ответить"
+
+[replyToAuthor]
+other = "Ответить {{ .Author }}"
+
+[says]
+other = "сказал"
+
+[series]
+one = "Серия"
+few = "Серии"
+many = "Серии"
+other = "Серии"
+
+[sidebarMenu]
+other = "Боковое меню"
+
+[skipToContent]
+other = "Перейти к содержимому"
+
+[skipToMainMenu]
+other = "Перейти к основному меню"
+
+[socialMenu]
+other = "Соцсети"
+
+[submitComment]
+other = "Отправить"
+
+[tableOfContents]
+other = "Оглавление"
+
+[tag]
+one = "Тэг"
+few = "Тэги"
+many = "Тэги"
+other = "Тэги"
+
+[toggleSidebar]
+other = "Скрыть / показать боковую панель"
+
+[website]
+other = "Сайт"
