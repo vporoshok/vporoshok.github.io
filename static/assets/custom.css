@@ -3,3 +3,7 @@
         width: 100%;
     }
 }
+
+blockquote {
+    font-style: normal;
+}
