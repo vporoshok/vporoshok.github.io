@@ -10,7 +10,7 @@ tags:
 - security
 - web
 cover:
-  image: /blog/2017/05/img/pink_door.jpg
+  image: /post/2017/05/img/pink_door.jpg
   caption: '"Pink sweet jail" by [@pinksweet](https://busy.org/@pinksweet)'
   style: normal
 toc: true

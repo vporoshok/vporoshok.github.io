@@ -24,6 +24,7 @@ preserveTaxonomyNames = true
 
 [params.assets]
     favicon = "favicon.ico"
+    customCSS = ["/assets/custom.css"]
     gopher = "" # used in 404 template ( Generator: https://gopherize.me )
 
 [params.copyright]
