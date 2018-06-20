@@ -10,9 +10,10 @@ tags:
 - work
 ---
 
-via
+links
 * https://www.patreon.com/posts/rawmind-44-ne-19402483
 * Лидер и племя
+* https://twitter.com/adamnash/status/945480315505479680
 
 
 ## Уровни разработчика

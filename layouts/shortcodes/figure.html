@@ -1,0 +1,7 @@
+{{ $image := .Get 0 }}
+<figure>
+	<img src="{{ $image }}">
+	<figcaption style="text-align: center">
+	    <small>{{ with .Inner }}{{ . }}{{ end }}</small>
+	</figcaption>
+</figure>
