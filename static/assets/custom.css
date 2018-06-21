@@ -7,3 +7,10 @@
 blockquote {
     font-style: normal;
 }
+
+figure h4 {
+    font-size: 0.8em;
+    font-weight: normal;
+    font-style: italic;
+    text-align: center;
+}
