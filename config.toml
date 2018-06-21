@@ -17,6 +17,7 @@ metaDataFormat = "yaml"
 pygmentsCodefences = true
 pygmentsStyle = "colorful"
 preserveTaxonomyNames = true
+enableEmoji = true
 
 [params.info]
     description = "Заметки о программировании и не только"
