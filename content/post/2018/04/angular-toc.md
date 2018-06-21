@@ -2,7 +2,6 @@
 title: Цикл статей про Angular
 description: Оглавление статей
 date: 2018-04-08T07:24:33Z
-draft: true
 categories:
 - develop
 tags:
