@@ -1,3 +1,6 @@
 [submodule "themes/minimo"]
 	path = themes/minimo
 	url = https://github.com/MunifTanjim/minimo
+[submodule "content/post/2017/06/git/graph-go"]
+	path = content/post/2017/06/git/graph-go
+	url = https://github.com/vporoshok/graph-go
