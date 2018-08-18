@@ -1,0 +1,10 @@
+{{- $type := .Get 0 -}}
+<aside class="admonition">
+    <h4>
+        <span class="admonition-icon">
+            {{- if eq $type "info" -}}ℹ️{{- else if eq $type "warn" -}}⚠️{{- end -}}
+        </span>
+        {{- with .Get 1 -}}{{ . }}{{- else -}}{{ i18n $type }}{{- end -}}
+    </h4>
+    {{- .Inner | markdownify -}}
+</aside>

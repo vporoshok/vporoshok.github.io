@@ -14,3 +14,17 @@ figure h4 {
     font-style: italic;
     text-align: center;
 }
+
+.admonition {
+    margin-bottom: 1.5em;
+    padding: 1em;
+    background: #eee;
+}
+
+.admonition :last-child {
+    margin-bottom: 0;
+}
+
+.admonition-icon {
+    margin: 0em 0.4em 0 0;
+}
