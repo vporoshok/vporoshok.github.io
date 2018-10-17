@@ -1,10 +1,10 @@
-<svg viewBox="0 0 270 120" xmlns="http://www.w3.org/2000/svg">
+<svg viewBox="0 0 270 70" xmlns="http://www.w3.org/2000/svg">
     <style>
         * {
             font-family: 'Open Sans', 'Helvetica Neue', Helvetica, sans-serif;
         }
         .legend text {
-            font-size: 10px;
+            font-size: 8px;
             fill: black;
             text-anchor: middle;
         }
@@ -41,21 +41,140 @@
         <rect class="container" width="160" height="20" />
         <rect class="container" x="170" width="80" height="20" />
 
-        <rect id="A" fill="LightCoral" width="80" height="20" opacity="0.8" />
-        <rect id="ACopy" x="170" fill="LightCoral" height="20" opacity="0.8" />
-        <rect id="B" x="80" fill="SpringGreen" width="80" height="20" opacity="0.8" />
-        <rect id="AB" fill="Yellow" width="0" height="20" opacity="0.8" />
-        <g id="ResPointer" transform="translate(0, 20)" display="none">
-            <use href="#pointer"></use>
-            <text x="-2" y="14" font-size="8">*Res</text>
-        </g>
-        <g id="BPointer" transform="translate(80, 20)" display="none">
-            <use href="#pointer"></use>
-            <text x="-2" y="14" font-size="8">*B</text>
-        </g>
-        <g id="APointer" transform="translate(170, 20)" display="none">
-            <use href="#pointer"></use>
-            <text x="-2" y="14" font-size="8">*A</text>
+        <rect id="A" fill="LightCoral" width="80" height="20" opacity="0.8">
+            <set begin="AtoC.begin - 1s" attributeName="x" to="0"/>
+            <set begin="AtoC.begin - 1s" attributeName="width" to="80"/>
+            <animate id="AtoC" begin="1s; HidePointers.end + 1s"
+                attributeName="x"
+                from="0" to="80"
+                dur="2s"
+                fill="freeze"
+            />
+            <animate begin="AtoC.begin"
+                attributeName="width"
+                from="80" to="0"
+                dur="2s"
+                fill="freeze"
+            />
+        </rect>
+        <rect id="ACopy" x="170" fill="LightCoral" height="20" opacity="0.8">
+            <set begin="AtoC.begin - 1s"
+                attributeName="x"
+                to="170"
+            />
+            <animate begin="AtoC.begin"
+                attributeName="width"
+                from="0" to="80"
+                dur="2s"
+                fill="freeze"
+            />
+            <animate begin="ShowPointers.end + 1s"
+                attributeName="x"
+                from="170" to="250"
+                dur="2"
+                fill="freeze"
+            />
+            <animate begin="ShowPointers.end + 1s"
+                attributeName="width"
+                from="80" to="0"
+                dur="2"
+                fill="freeze"
+            />
+        </rect>
+        <rect id="B" x="80" fill="SpringGreen" width="80" height="20" opacity="0.8">
+            <set begin="AtoC.begin - 1s" attributeName="x" to="80"/>
+            <set begin="AtoC.begin - 1s" attributeName="width" to="80"/>
+            <animate begin="ShowPointers.end + 1s"
+                attributeName="x"
+                from="80" to="160"
+                dur="2"
+                fill="freeze"
+            />
+            <animate begin="ShowPointers.end + 1s"
+                attributeName="width"
+                from="80" to="0"
+                dur="2"
+                fill="freeze"
+            />
+        </rect>
+        <rect fill="Yellow" width="0" height="20" opacity="0.8">
+            <set begin="AtoC.begin - 1s"
+                attributeName="width" to="0"
+            />
+            <animate begin="ShowPointers.end + 1s"
+                attributeName="width"
+                from="0" to="160"
+                dur="2"
+                fill="freeze"
+            />
+        </rect>
+        <g id="pointers" opacity="0">
+            <g id="ResPointer" transform="translate(0, 20)">
+                <use href="#pointer"></use>
+                <text x="-2" y="14" font-size="8">*Res</text>
+                <animateTransform begin="AtoC.begin - 1s"
+                    attributeName="transform"
+                    type="translate"
+                    from="0, 20" to="0, 20"
+                    dur="1"
+                    fill="freeze"
+                />
+                <animateTransform begin="ShowPointers.end + 1s"
+                    attributeName="transform"
+                    type="translate"
+                    from="0, 20" to="160, 20"
+                    dur="2"
+                    fill="freeze"
+                />
+            </g>
+            <g id="BPointer" transform="translate(80, 20)">
+                <use href="#pointer"></use>
+                <text x="-2" y="14" font-size="8">*B</text>
+                <animateTransform begin="AtoC.begin - 1s"
+                    attributeName="transform"
+                    type="translate"
+                    from="80, 20" to="80, 20"
+                    dur="1"
+                    fill="freeze"
+                />
+                <animateTransform begin="ShowPointers.end + 1s"
+                    attributeName="transform"
+                    type="translate"
+                    from="80, 20" to="160, 20"
+                    dur="2"
+                    fill="freeze"
+                />
+            </g>
+            <g id="APointer" transform="translate(170, 20)">
+                <use href="#pointer"></use>
+                <text x="-2" y="14" font-size="8">*A</text>
+                <animateTransform begin="AtoC.begin - 1s"
+                    attributeName="transform"
+                    type="translate"
+                    from="170, 20" to="170, 20"
+                    dur="1"
+                    fill="freeze"
+                />
+                <animateTransform id="merge" begin="ShowPointers.end + 1s"
+                    attributeName="transform"
+                    type="translate"
+                    from="170, 20" to="250, 20"
+                    dur="2"
+                    fill="freeze"
+                />
+            </g>
+            <animate id="ShowPointers" begin="AtoC.end + 0.5s"
+                attributeName="opacity"
+                from="0" to="1"
+                dur="0.1"
+                fill="freeze"
+            />
+            <animate id="HidePointers" begin="merge.end + 0.5s"
+                attributeName="opacity"
+                from="1" to="0"
+                dur="0.1"
+                fill="freeze"
+            />
         </g>
     </g>
 </svg>
