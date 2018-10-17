@@ -1,130 +1,62 @@
 <svg viewBox="0 0 270 120" xmlns="http://www.w3.org/2000/svg">
     <style>
         * {
-            font-family: Verdana;
+            font-family: 'Open Sans', 'Helvetica Neue', Helvetica, sans-serif;
+        }
+        .legend text {
+            font-size: 10px;
+            fill: black;
+            text-anchor: middle;
         }
         .container {
             fill: transparent;
             stroke: rgba(0, 0, 0, 0.8);
         }
     </style>
-
-    <rect id="AB" class="container" x="10" y="10" width="160" height="20" />
-    <rect id="C" class="container" x="180" y="10" width="80" height="20" />
-
-    <g id="A" transform="translate(10, 10)" fill="LightCoral">
-        <rect width="80" height="20" opacity="0.8" />
-        <text x="40" y="16" fill="black" text-anchor="middle">A</text>
-        <animateTransform />
-    </g>
-    <g id="B" transform="translate(90, 10)" fill="SpringGreen">
-        <rect width="80" height="20" opacity="0.8" />
-        <text x="40" y="16" fill="black" text-anchor="middle">B</text>
-    </g>
-
-    <rect
-        x="10" y="50"
-        width="15" height="20"
-        fill="Yellow"
-        opacity="0.8"
-    />
-    <rect
-        x="185" y="50"
-        width="75"
-        height="20"
-        fill="LightCoral"
-        opacity="0.8"
-    />
-    <text
-        x="220" y="66"
-        text-anchor="middle"
-        font-family="Verdana"
-    >A</text>
-    <rect
-        x="100" y="50"
-        width="70"
-        height="20"
-        fill="SpringGreen"
-        opacity="0.8"
-    />
-    <text
-        x="130" y="66"
-        text-anchor="middle"
-        font-family="Verdana"
-    >B</text>
-    <rect
-        x="10" y="50"
-        width="160" height="20"
-        fill="transparent"
-        stroke="black"
-    />
-    <rect
-        x="180" y="50"
-        width="80"
-        height="20"
-        fill="transparent"
-        stroke="black"
-        opacity="0.8"
-    />
-    <g transform="translate(25, 70)">
-        <g transform="rotate(-60)">
-            <line x1="-10" y1="0" x2="-5" y2="0" stroke-width="2" stroke="black"/>
+    <defs>
+        <g id="pointer" transform="rotate(-60)">
+            <line x1="-10" y1="0" x2="-5" y2="0" stroke-width="1.5" stroke="black"/>
             <polygon
-                points="-5 -3 0 0 -5 3"
+                points="-5 -2 0 0 -5 2"
             />
         </g>
-        <text
-            x="0" y="14"
-            font-family="Verdana"
-            font-size="8"
-        >*Res</text>
-    </g>
-    <g transform="translate(100, 70)">
-        <g transform="rotate(-60)">
-            <line x1="-10" y1="0" x2="-5" y2="0" stroke-width="2" stroke="black"/>
-            <polygon
-                points="-5 -3 0 0 -5 3"
-            />
+    </defs>
+
+    <g class="legend" transform="translate(10, 10)">
+        <g transform="translate(0, 0)" fill="LightCoral">
+            <rect width="20" height="10" opacity="0.8" />
+            <text x="10" y="9">A</text>
         </g>
-        <text
-            x="0" y="14"
-            font-family="Verdana"
-            font-size="8"
-        >*B</text>
-    </g>
-    <g transform="translate(185, 70)">
-        <g transform="rotate(-60)">
-            <line x1="-10" y1="0" x2="-5" y2="0" stroke-width="2" stroke="black"/>
-            <polygon
-                points="-5 -3 0 0 -5 3"
-            />
+        <g transform="translate(30, 0)" fill="SpringGreen">
+            <rect width="20" height="10" opacity="0.8" />
+            <text x="10" y="9">B</text>
         </g>
-        <text
-            x="0" y="14"
-            font-family="Verdana"
-            font-size="8"
-        >*A</text>
+        <g transform="translate(60, 0)" fill="Yellow">
+            <rect width="20" height="10" opacity="0.8" />
+            <text x="10" y="9">A+B</text>
+        </g>
     </g>
 
-    <rect
-        x="10" y="90"
-        width="160" height="20"
-        fill="Yellow"
-        stroke="black"
-        opacity="0.8"
-    />
-    <text
-        x="90" y="106"
-        text-anchor="middle"
-        font-family="Verdana"
-    >A + B</text>
-    <rect
-        x="180" y="90"
-        width="80"
-        height="20"
-        fill="transparent"
-        stroke="black"
-        opacity="0.8"
-    />
+    <g transform="translate(10, 30)">
+        <rect class="container" width="160" height="20" />
+        <rect class="container" x="170" width="80" height="20" />
+
+        <rect id="A" fill="LightCoral" width="80" height="20" opacity="0.8" />
+        <rect id="ACopy" x="170" fill="LightCoral" height="20" opacity="0.8" />
+        <rect id="B" x="80" fill="SpringGreen" width="80" height="20" opacity="0.8" />
+        <rect id="AB" fill="Yellow" width="0" height="20" opacity="0.8" />
+        <g id="ResPointer" transform="translate(0, 20)" display="none">
+            <use href="#pointer"></use>
+            <text x="-2" y="14" font-size="8">*Res</text>
+        </g>
+        <g id="BPointer" transform="translate(80, 20)" display="none">
+            <use href="#pointer"></use>
+            <text x="-2" y="14" font-size="8">*B</text>
+        </g>
+        <g id="APointer" transform="translate(170, 20)" display="none">
+            <use href="#pointer"></use>
+            <text x="-2" y="14" font-size="8">*A</text>
+        </g>
+    </g>
 </svg>
-<!--SkyBlue / SpringGreen LightCoral"-->
+
