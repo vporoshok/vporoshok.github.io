@@ -1,0 +1,14 @@
+{
+  "library": {
+    "js": {
+      "main": "/assets/katex/katex.min.js",
+      "autoRender": "/assets/katex/contrib/auto-render.min.js"
+    },
+    "css": {
+      "main": "/assets/katex/katex.min.css"
+    }
+  },
+  "options": {
+    "throwOnError": true
+  }
+}

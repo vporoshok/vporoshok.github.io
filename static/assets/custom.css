@@ -28,3 +28,14 @@ figure h4 {
 .admonition-icon {
     margin: 0em 0.4em 0 0;
 }
+
+.theorem dt {
+    float: left;
+    font-size: 1em;
+    margin: 0 0.5em 0 0;
+}
+
+.theorem dd {
+    margin: 0 0 1.5em;
+    font-style: italic;
+}
