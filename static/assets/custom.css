@@ -1,3 +1,24 @@
+@media print {
+    .sidebar,
+    .menu,
+    .site-header,
+    .entry-toc,
+    .entry-footer,
+    .entry-nav,
+    .sep-after:after,
+    .sep-before:before,
+    .no-print {
+        display: none;
+    }
+
+    .sep-after {
+        margin-bottom: 1em;
+    }
+    .sep-before {
+        margin-top: 1em;
+    }
+}
+
 @media screen and (min-width: 920px) {
     .main {
         width: 100%;
