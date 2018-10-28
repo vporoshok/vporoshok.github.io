@@ -351,8 +351,8 @@ graph TD
 
 ## Дополнительное чтение
 
-1. Tim Peters. _Original original explanation of TimSort_. 2002. https://bugs.python.org/file4451/timsort.txt
-2. Nicolas Auger, Cyril Nicaud, Carine Pivoteau. _Merge Strategies: from Merge Sort to TimSort_. 2015. https://hal-upec-upem.archives-ouvertes.fr/hal-01212839v2/document
+1. Peters, Tim. "Original original explanation of TimSort." _Python bug tracker_. 2002. https://bugs.python.org/file4451/timsort.txt
+2. Auger, Nicolas, Nicaud, Cyril, and Pivoteau, Carine. "Merge Strategies: from Merge Sort to TimSort." _HAL UPEC - UPEM Portal_. 2015. https://hal-upec-upem.archives-ouvertes.fr/hal-01212839v2/document
 
 ## Ссылки
 
