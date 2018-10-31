@@ -1,0 +1,10 @@
+{{- $title := .Get "title" -}}
+<section class="slide entry
+    {{- with .Get `class` }} {{ . }}{{ end -}}"
+    {{- with .Get `id` }} id="{{ . }}"{{ end -}}
+>
+    {{- if $title }}<h2{{- if .Get `shout` }} class="shout"{{ end -}}>
+        {{ $title }}
+    </h2>{{ end -}}
+    {{- .Inner | markdownify -}}
+</section>

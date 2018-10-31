@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang='{{ .Site.Language.Lang }}'>
+<head>
+    {{ partial "head/meta" . }}
+    <title>{{ partial "data/title" . }}</title>
+    <link rel='canonical' href='{{ .Permalink }}'>
+    {{ partial "head/hreflang" . }}
+    <link rel='icon' href='{{ ( or .Site.Params.assets.favicon "favicon.ico" ) | relURL }}'>
+    <link rel='stylesheet' href='{{ print "/assets/css/" .Site.Data.assets.main.css | relURL  }}'>
+
+    {{- range .Site.Params.assets.customCSS -}}
+        <link rel='stylesheet' href='{{ . | relURL }}'>
+    {{- end -}}
+
+    {{- partial "head/css" . -}}
+    {{ partial "head/extra" . }}
+
+    <link rel="stylesheet" href="/assets/shower/themes/material/styles/styles.css">
+    <style>
+        .shower {
+            --slide-ratio: calc(16 / 9);
+        }
+        .mermaid {
+            text-align: center;
+        }
+        .mermaid div {
+            transform: translate(-25%, -25%);
+        }
+    </style>
+</head>
+<body class="shower list entry-content{{- if eq .Params.emoji true }} has-emoji{{ end -}}">
+    <header class="caption">
+        <h1>{{ .Title }}</h1>
+        <p>{{ .Description }}</p>
+    </header>
+
+    {{ .Content }}
+
+    <footer class="badge">
+        <a href="/">На главную</a>
+    </footer>
+
+    <div class="progress"></div>
+
+    <script src="/assets/shower/shower.min.js"></script>
+    {{- partial "footer/scripts" . -}}
+</body>
+</html>

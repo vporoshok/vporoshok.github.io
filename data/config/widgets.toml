@@ -6,9 +6,9 @@
 
 # Recent Posts Widget config
 [recent_posts]
-    title = ""                            # default: "Recent Posts"
+    title = ""                             # default: "Recent Posts"
     length = 10                            # default: 5
-    excludeTypes = ["page"]               # default: ["page"]
+    excludeTypes = ["page","presentation"] # default: ["page"]
 
 # Sidebar Menu Widget config
 [sidebar_menu]
