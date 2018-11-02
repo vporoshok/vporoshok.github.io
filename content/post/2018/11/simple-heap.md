@@ -1,7 +1,7 @@
 ---
 title: Простая двоичная куча
 description: А я угадаю этот минимум за O(1)
-date: 2018-11-02T16:00:00Z
+date: 2018-11-02T15:00:00Z
 draft: false
 categories:
 - algorithm
