@@ -1,0 +1,8 @@
+{{ if not ( eq .Section "page" ) }}
+<div class='entry-meta'>
+  {{ partial "entry/meta/posted-on" . }}
+  {{ partial "entry/meta/author" . }}
+  {{ partial "entry/meta/reading-time" . }}
+  {{ partial "entry/meta/slides" . }}
+</div>
+{{ end }}

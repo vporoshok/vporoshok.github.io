@@ -20,6 +20,11 @@
         .shower {
             --slide-ratio: calc(16 / 9);
         }
+        .caption a {
+            display: inline-block;
+            font-size: 0.8em;
+            margin-left: 2em;
+        }
         .mermaid {
             text-align: center;
         }
@@ -31,7 +36,7 @@
 <body class="shower list entry-content{{- if eq .Params.emoji true }} has-emoji{{ end -}}">
     <header class="caption">
         <h1>{{ .Title }}</h1>
-        <p>{{ .Description }}</p>
+        <p>{{ .Description }}{{- with .Params.back }} <a href="{{ . }}">Назад</a>{{ end -}}</p>
     </header>
 
     {{ .Content }}

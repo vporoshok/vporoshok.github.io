@@ -5,6 +5,7 @@ date: 2018-11-02T15:00:00Z
 draft: false
 katex: true
 mermaid: true
+back: /post/2018/11/simple-heap/
 ---
 
 <style>
