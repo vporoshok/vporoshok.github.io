@@ -31,6 +31,21 @@
         .mermaid div {
             transform: translate(-25%, -25%);
         }
+        .slide a {
+            background: none;
+        }
+        .slide.section {
+            display: flex;
+            padding: 0;
+            align-items: center;
+            justify-content: center;
+        }
+        .slide.section h2 {
+            font-weight: normal;
+        }
+        .slide.compact pre {
+            padding-top: 0;
+        }
     </style>
 </head>
 <body class="shower list entry-content{{- if eq .Params.emoji true }} has-emoji{{ end -}}">

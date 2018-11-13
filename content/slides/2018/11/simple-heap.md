@@ -9,23 +9,8 @@ back: /post/2018/11/simple-heap/
 ---
 
 <style>
-    .slide a {
-        background: none;
-    }
     .red {
         color: red;
-    }
-    .slide.section {
-        display: flex;
-        padding: 0;
-        align-items: center;
-        justify-content: center;
-    }
-    .slide.section h2 {
-        font-weight: normal;
-    }
-    .slide.compact pre {
-        padding-top: 0;
     }
 </style>
 
