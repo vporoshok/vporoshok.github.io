@@ -52,7 +52,7 @@ other = "Email"
 other = "Gopher"
 
 [goHome]
-other = "Иди домой..."
+other = "Вернуться на главную"
 
 [leaveAComment]
 other = "Оставить комментарий"
