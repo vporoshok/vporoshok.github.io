@@ -1,3 +1,21 @@
-<div class="mermaid{{- with .Get `class` }} {{ . }}{{ end -}}">
-{{- .Inner -}}
-</div>
+<figure>
+{{- if .Get "file" }}
+    {{- $file := .Get "file" -}}
+    {{ if (fileExists (printf "%s.svg" $file)) }}
+        <img src="{{ $file }}.svg"
+            {{- with .Get `width` }} width="{{ . }}" }}{{ end -}}
+            {{- with .Get `class` }} class="{{ . }}"{{ end -}}
+            {{- with .Get `alt` }} alt="{{ . }}"{{ end -}}
+        >
+    {{ else }}
+        <div class="mermaid{{- with .Get `class` }} {{ . }}{{ end -}}">
+            {{- readFile (printf "%s.mmd" $file) -}}
+        </div>
+    {{ end }}
+{{ else }}
+    <div class="mermaid{{- with .Get `class` }} {{ . }}{{ end -}}">
+        {{- .Inner -}}
+    </div>
+{{ end -}}
+{{ with .Get `alt` }}<figcaption>{{ . }}</figcaption>{{ end }}
+</figure>

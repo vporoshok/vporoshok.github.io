@@ -1,0 +1,33 @@
+graph TD
+    A((0))
+
+    A --- B((1))
+    A --- C((2))
+    A --- D((4))
+    A --- E((8))
+
+    C --- F((3))
+    D --- G((5))
+    D --- H((6))
+    E --- J((9))
+    E --- I((10))
+    E --- K((12))
+
+    H --- L((7))
+    I --- M((11))
+    K --- N((13))
+    K --- O((14))
+
+    O --- P((15))
+
+    classDef zero  fill:LightCoral
+    classDef one   fill:SpringGreen
+    classDef two   fill:SkyBlue
+    classDef three fill:MediumPurple
+    classDef four  fill:#b666d2
+
+    class A zero
+    class B,C,D,E one
+    class F,G,H,J,I,K two
+    class L,M,N,O three
+    class P four

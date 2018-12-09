@@ -1,0 +1,23 @@
+graph TD
+    a0((1))
+    a0 --- b0((2))
+    a0 --- A0{A0}
+    b0 --- a1((3))
+    b0 --- B0{B0}
+    a1 --- a2((5))
+    a1 --- A1{A1}
+    a2 --- b1((6))
+    a2 --- A2{A2}
+    b1 --- b2((7))
+    b1 --- B1{B1}
+    b2 --- a3((8))
+    b2 --- B2{B2}
+    a3 --- b3((12))
+    a3 --- A3(( ))
+
+    classDef A fill:LightCoral
+    class a0,a1,a2,a3,A0,A1,A2 A
+    classDef B fill:SpringGreen
+    class b0,b1,b2,b3,B0,B1,B2 B
+    classDef zero opacity:0.3,fill:LightCoral
+    class A3 zero

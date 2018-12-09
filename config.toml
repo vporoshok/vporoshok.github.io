@@ -29,10 +29,10 @@ enableEmoji = true
     gopher = "" # used in 404 template ( Generator: https://gopherize.me )
 
 [params.copyright]
-    prefix = 'Материалы распространяются по <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank">лицензии CC BY</a>'
+    prefix = 'Материалы распространяются по <a rel="noreferrer" href="https://creativecommons.org/licenses/by/4.0/" target="_blank">лицензии CC BY</a>'
     holder = "vporoshok"
     startYear = "2018"
-    suffix = "<br>Увидели ошибку? Буду рад <a href=\"https://github.com/vporoshok/vporoshok.github.io\" target=\"_blank\">PR'у</a>"
+    suffix = "<br>Увидели ошибку? Буду рад <a rel=\"noreferrer\" href=\"https://github.com/vporoshok/vporoshok.github.io\" target=\"_blank\">PR'у</a>"
 
 [params.settings]
     dateFormat = "2006-01-02"

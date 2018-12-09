@@ -1,0 +1,26 @@
+graph LR
+    A(( ))
+
+    A --> B(( ))
+    B -.-> C(( ))
+    C -.-> D(( ))
+    D -.-> A
+
+    C --> E(( ))
+    E -.-> C
+    D --> F(( ))
+    F -.-> G(( ))
+    G -.-> D
+
+    G --> H(( ))
+    H -.-> G
+
+    classDef zero  fill:LightCoral
+    classDef one   fill:SpringGreen
+    classDef two   fill:SkyBlue
+    classDef three fill:MediumPurple
+
+    class A zero
+    class B,C,D one
+    class E,F,G two
+    class H three
