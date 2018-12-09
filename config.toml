@@ -11,7 +11,6 @@ theme = "minimo"
 paginate = 10
 enableGitInfo = true
 enableRobotsTXT = true
-googleAnalytics = "UA-41042060-2"
 metaDataFormat = "yaml"
 # Syntax Highlighting ( https://gohugo.io/content-management/syntax-highlighting/ )
 pygmentsCodefences = true
