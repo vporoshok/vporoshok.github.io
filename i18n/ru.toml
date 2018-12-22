@@ -155,3 +155,6 @@ other = "Замечание"
 
 [warn]
 other = "Внимание!"
+
+[figureNumberFormat]
+other = "Рис.&thinsp;%d."

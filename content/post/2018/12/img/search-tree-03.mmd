@@ -1,0 +1,16 @@
+graph TD
+    a((10))
+    a --- b((6))
+    a --- c((18))
+    b --- d((1))
+    b --- e((7))
+    c --- f((13))
+    c --- g((21))
+    e --- h((6))
+    e --- i((8))
+
+    classDef stone  fill:Yellow
+    classDef target fill:LightCoral
+
+    class a,b,e stone
+    class i target
