@@ -1,10 +1,16 @@
-{{- $title := .Get "title" -}}
-<section class="slide entry
-    {{- with .Get `class` }} {{ . }}{{ end -}}"
-    {{- with .Get `id` }} id="{{ . }}"{{ end -}}
->
+<section {{- with .Get `id` }} id="{{ . }}"{{ end }} class="slide entry{{- with .Get `class` }} {{ . }}{{ end -}}">
+    {{- $title := .Get "title" -}}
     {{- if $title }}<h2{{- if .Get `shout` }} class="shout"{{ end -}}>
-        {{ $title }}
+        {{ $title | markdownify }}
     </h2>{{ end -}}
+    {{- $cover := .Get "cover" -}}
+    {{- if $cover }}
+    <figure>
+        <img class="cover" src="{{ $cover }}"{{- with .Get `cover-alt` }} alt="{{ . }}"{{ end -}}>
+        {{- with .Get `cover-copy` -}}
+        <figcaption class="copyright bottom">{{ . | markdownify }}</figcaption>
+        {{- end -}}
+    </figure>
+    {{ end -}}
     {{- .Inner | markdownify -}}
 </section>

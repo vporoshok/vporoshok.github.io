@@ -31,6 +31,10 @@
         .mermaid div {
             transform: translate(-25%, -25%);
         }
+        .slide {
+            background-repeat: no-repeat;
+            background-size: cover;
+        }
         .slide a {
             background: none;
         }
@@ -39,12 +43,22 @@
             padding: 0;
             align-items: center;
             justify-content: center;
+            text-shadow: white 0 0 10px;
         }
         .slide.section h2 {
             font-weight: normal;
         }
         .slide.compact pre {
             padding-top: 0;
+        }
+        .slide.black * {
+            color: white;
+            text-shadow: black 0 0 10px;
+        }
+        img.cover {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
         }
     </style>
 </head>
