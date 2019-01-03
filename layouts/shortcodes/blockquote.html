@@ -1,0 +1,9 @@
+<blockquote>
+    {{- .Inner | markdownify -}}
+    <footer>
+        {{ with .Get `url` }}<a href="{{ . }}">{{ end }}
+        {{ .Get `author` }}
+        {{ with .Get `title` }}<cite title="{{ . }}">{{ . }}</cite>{{ end }}
+        {{ with .Get `url` }}</a>{{ end }}
+    </footer>
+</blockquote>

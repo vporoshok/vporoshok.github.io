@@ -77,3 +77,10 @@ figure figcaption {
     font-style: italic;
     text-align: center;
 }
+
+blockquote footer {
+    position: relative;
+    margin: 1.5em 1em 0;
+    text-align: right;
+    font-size: 0.8em;
+}
