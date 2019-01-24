@@ -6,7 +6,7 @@ draft: true
 categories:
 - book
 tags:
-- architech
+- architect
 toc: true
 ---
 

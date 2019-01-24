@@ -7,7 +7,7 @@ categories:
 - develop
 tags:
 - go
-- architech
+- architect
 ---
 
 # Декораторы и замыкания в Go
