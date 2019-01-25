@@ -73,8 +73,8 @@ func Combine(middlewares ...Middleware) Middleware {
 
 По сути перехватчики являются декораторами функций. Решающим фактором в перехватчиках является общая сигнатура. Таким образом можно реализовать свой слой декораторов, не привязанный к транспортному уровню. Для начала определим собственную сигнатуру. На практике нам достаточно передавать вверх по стеку контекст запроса, а возвращать только ошибку:
 ```go
-type Handler func(context.Context) error
-type Middleware func(Handler) Handler
+type Operation func(context.Context) error
+type Wrapper func(Operation) Operation
 ```
 
 На таких функциях также легко реализовать функцию композицию по аналогии с вышеприведённой. Такие декораторы удобно использовать для
@@ -151,8 +151,10 @@ log.Printf("average exposition is %.4f", exposition / len(paths))
 
 Интересным оказывается порядок вызова декоратора:
 ```go
-err := Middleware(opts)(Handler)(ctx)
-err := Middleware(opts)(func(ctx context.Context) error { ... })(ctx)
+err := Wrapper(opts)(Operation)(ctx)
+err := Wrapper(opts)(func(ctx context.Context) error {
+    // ...
+})(ctx)
 ```
 
 Лично для меня, не смотря на математическое образование, читать такие обратные вызовы, то есть когда обработчик передаётся в декоратор, который возвращает декорированный обработчик, в который уже передаётся контекст, достаточно сложно. Поэтому я предпочитаю более прямой способ записи:
@@ -163,20 +165,18 @@ err := wrap.WithLogging(ctx, logger, func(ctx context.Context) error {
 ```
 для чего достаточно определить следующую вспомогательную функцию:
 ```go
-func WithLogging(ctx context.Context, logger *log.Logger, next Handler) error {
-
-    return Logging(logger)(next)(ctx)
+func WithLogging(ctx context.Context, logger *log.Logger, operation Operation) error {
+    return Logging(logger)(operation)(ctx)
 }
 ```
 
 Или по аналогии с `http.HandlerFunc` определить метод `Apply` на декораторе:
 ```go
-type Handler func(context.Context) error
-type Middleware func(Handler) Handler
+type Operation func(context.Context) error
+type Wrapper func(Operation) Operation
 
-func (mw Middleware) Apply(ctx context.Context, handler Handler) error {
-
-    return mw(handler)(ctx)
+func (wrapper Wrapper) Apply(ctx context.Context, operation Operation) error {
+    return wrapper(operation)(ctx)
 }
 ```
 
@@ -195,11 +195,9 @@ for _, path := range paths {
     err := processWrapper.Apply(ctx, func(ctx context.Context) error {
         fileExposition, err := ProcessFile(ctx, path)
         if err != nil {
-
             return err
         }
         exposition += fileExposition
-
         return nil
     })
     if err != nil {
@@ -214,4 +212,4 @@ for _, path := range paths {
 
 Набор базовых декораторов позволяет создать слой переиспользуемой утилитарной логики. Этот набор может быть специфичным для вашей инфраструктуры: использовать выбранные вами библиотеки для логирования, снятия метрик и трейсинга, использовать внутренние ошибки или оперировать с внутренним набором данных в контексте (идентификатор пользователя, уровни доступа, идентификатор сессии и т.д.). Возможно это будет общая библиотека для нескольких сервисов, но нет смысла делать его фундаментальным, абстрагированным от проекта.
 
-Лучше завязаться на выбранные вами технологии, зато потом использовать эти декораторы с минимальным дополнительным кодом. Например, если вы выбрали в качестве логера [zap](https://godoc.org/go.uber.org/zap) и используете [ctxzap](https://godoc.org/github.com/grpc-ecosystem/go-grpc-middleware/logging/zap/ctxzap) для хранения дополнительных параметров, то не стоит наворачивать дополнительный код с переводом этого в стандартный или по передаче дополнительного контекста. Пересмотрите свой код, выявите повторяющиеся части и попробуйте вынести их в обёртки. Поговорите с другими участниками проекта о том как сделать интерфейс таких декораторов лучше.
+Лучше завязаться на выбранные вами технологии, зато потом использовать эти декораторы с минимальным дополнительным кодом. Например, если вы выбрали в качестве логера [zap](https://godoc.org/go.uber.org/zap) и используете [ctxzap](https://godoc.org/github.com/grpc-ecosystem/go-grpc-middleware/logging/zap/ctxzap) для хранения дополнительных параметров, то не стоит наворачивать дополнительный код с переводом `*zap.Logger` в стандартный или по передаче дополнительного контекста. Пересмотрите свой код, выявите повторяющиеся части и попробуйте вынести их в обёртки. Поговорите с другими участниками проекта о том как сделать интерфейс таких декораторов лучше.
