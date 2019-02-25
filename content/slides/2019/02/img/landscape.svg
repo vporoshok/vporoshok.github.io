@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 150 100">
+    <style>
+        * {
+            fill: dimgrey;
+        }
+    </style>
+    <path d="M-30,115 c0,0 55,-60 60,-60 s 60,60 60,60" />
+    <path d="M30,110 c0,0 55,-90 60,-90 s 60,90 60,90" />
+    <path d="M90,100 c0,0 40,-60 45,-60 s 45,60 45,60" />
+    <circle cx="20" cy="20" r="10" />
+</svg>

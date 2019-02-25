@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+    <polygon fill="midnightblue" points="0,30 80,30 80,60 0,60 10,45" />
+    <polygon fill="darkslateblue" points="20,40 80,30 80,60 20,70" />
+    <circle fill="none" stroke="darkmagenta" stroke-width="7" cx="50" cy="50" r="35"/>
+    <polygon fill="slateblue" points="20,40 100,40 90,55 100,70 20,70" />
+</svg>
