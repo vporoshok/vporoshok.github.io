@@ -1,0 +1,36 @@
+<svg viewBox="0 0 100 70" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <defs>
+        <marker id="arrow" markerWidth="8" markerHeight="4" refX="3" refY="2" orient="auto" markerUnits="strokeWidth">
+            <path d="M0,0 L0,4 L8,2 z" fill="black" />
+        </marker>
+        <symbol id="pair" y="-29" viewBox="0 0 50 12">
+            <circle cx="6" cy="6" r="2"/>
+            <line x1="6" y1="6" x2="25" y2="6" stroke="black" marker-end="url(#arrow)" />
+            <rect x="30" y="2" width="15" height="8" stroke="black" fill="none" />
+        </symbol>
+        <symbol id="grow" y="-29" viewBox="0 0 25 12">
+            <circle cx="6" cy="6" r="2"/>
+            <polyline points="6,6 20,6 20,10 17,10 23,10" stroke="black" fill="none" />
+        </symbol>
+    </defs>
+    <g transform="translate(10, 10)">
+        <rect width="12" height="12" stroke="black" fill="none" />
+        <use xlink:href="#pair" width="50" />
+        <use xlink:href="#pair" x="35" width="50" />
+        <use xlink:href="#pair" x="70" width="50" />
+        <use xlink:href="#grow" x="105" width="25" />
+    </g>
+    <g transform="translate(10, 22)">
+        <rect width="12" height="12" stroke="black" fill="none" />
+        <use xlink:href="#grow" width="25" />
+    </g>
+    <g transform="translate(10, 34)">
+        <rect width="12" height="12" stroke="black" fill="none" />
+        <use xlink:href="#pair" width="50" />
+        <use xlink:href="#pair" x="35" width="50" />
+        <use xlink:href="#grow" x="70" width="25" />
+    </g>
+    <circle cx="12" cy="52" r="1" />
+    <circle cx="16" cy="52" r="1" />
+    <circle cx="20" cy="52" r="1" />
+</svg>
