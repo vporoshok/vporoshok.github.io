@@ -113,7 +113,7 @@ mermaid: true
 {{<slide title="Прямое связывание">}}
 {{<equation>}}
     T(\mathrm{get})\quad\text{и}\quad T(\mathrm{delete}) = O(n)
-{{</slide>}}
+{{</equation>}}
 {{<equation>}}
     T(\mathrm{set}) = \begin{cases}
         O(1), &\text{ключ без коллизии},\\
@@ -148,7 +148,7 @@ mermaid: true
     d_i = d_{i - 1} + 2, \quad i > 1.
 {{</equation>}}
 
-{{<theorem Утверждение>}}
+{{<theorem type="Утверждение">}}
 Для \\(i, j < N/2\\) следует, что \\(i^2 \bmod N \neq j^2 \bmod N\\).
 {{</theorem>}}
 {{</slide>}}
@@ -306,7 +306,7 @@ EX_{a, b} = \begin{cases}
 {{</slide>}}
 
 {{<slide title="Без допущений">}}
-{{<theorem Определение>}}
+{{<theorem type="Определение">}}
 \\(\mathscr H\\) является _универсальным_, если для случайно выбранной \\(h \in \mathscr H\\) следует, что \\(P[h(a) = h(b), a \neq b] \leqslant \frac{1}{N}\\).
 {{</theorem>}}
 
@@ -328,7 +328,7 @@ EX_{a, b} = \begin{cases}
 
 То есть выбор \\(h\\) сводится к выбору \\(a\\) и \\(b\\).
 
-{{<theorem Утверждение>}}
+{{<theorem type="Утверждение">}}
 Такое \\(\mathscr H\\) является универсальным.
 {{</theorem>}}
 {{</slide>}}

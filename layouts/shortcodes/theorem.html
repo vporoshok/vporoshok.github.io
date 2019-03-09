@@ -1,4 +1,4 @@
-<dl class="theorem">
-    <dt>{{- .Get 0 -}}</dt>
+<dl class="theorem{{- with .Get `class` }} {{ . }}{{ end -}}">
+    <dt>{{- .Get "type" -}}</dt>
     <dd>{{- .Inner | markdownify -}}</dd>
 </dl>
