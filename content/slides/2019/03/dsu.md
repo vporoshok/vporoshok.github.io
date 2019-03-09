@@ -4,7 +4,6 @@ description: Мы всем поддерживаем кайф, нам кайф л
 date: 2019-03-08T14:57:14Z
 draft: false
 katex: true
-mermaid: true
 ---
 
 {{<slide title="DSU" class="clear" shout="true"/>}}
