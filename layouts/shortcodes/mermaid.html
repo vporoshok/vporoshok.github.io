@@ -1,4 +1,3 @@
-{{- .Page.Scratch.Add "imageCount" 1 -}}
 <figure>
 {{- if .Get "file" }}
     {{- $file := .Get "file" -}}
@@ -18,8 +17,11 @@
         {{- .Inner -}}
     </div>
 {{ end -}}
+{{- if .Get "clear" | not }}
+    {{- .Page.Scratch.Add "imageCount" 1 -}}
     <figcaption>
         {{ .Page.Scratch.Get "imageCount" | printf (i18n "figureNumberFormat") | markdownify }}
         {{ with .Get "alt" -}}{{ . | markdownify }}{{- end }}
     </figcaption>
+{{ end -}}
 </figure>

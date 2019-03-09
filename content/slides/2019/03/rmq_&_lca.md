@@ -7,6 +7,14 @@ katex: true
 mermaid: true
 ---
 
+<style>
+    .w-25 {
+        width: 25%;
+        margin-left: auto;
+        margin-right: auto;
+    }
+</style>
+
 {{<equation class="hidden">}}
     \gdef\rmq{\mathop{\mathrm{rmq}}}
     \gdef\lca{\mathop{\mathrm{lca}}}
@@ -20,6 +28,8 @@ mermaid: true
 2. [RMQ -> LCA](#rmq_to_lca)
 3. [offline LCA](#offline_lca)
 4. [online RMQ](#online_rmq)
+5. [±1 RMQ](#pm_one_rmq)
+6. [LCA -> ±1 RMQ](#lca_to_pm_one_rmq)
 {{</slide>}}
 
 {{<slide title="Задача и применение" class="section" id="problem" />}}
@@ -85,7 +95,7 @@ graph TD
     \{9, 8, 12, 3, 5, 7, 17\}
 {{</equation>}}
 
-{{<mermaid class="next">}}
+{{<mermaid clear="true" class="next">}}
 graph TD
     A((3))
     A --- B((8))
@@ -122,26 +132,23 @@ graph TD
     A --- C(( ))
     A --- D{ }
     C --- E{ }
-    C --- F(( ))
-    C --- G{ }
-    F --- H{ }
-    F --- I{ }
-    F --- J(( ))
-    J --- K{ }
-    J --- L{x}
-    J --- M{ }
+    C --- F{ }
+    C --- G(( ))
+    C --- H{ }
+    G --- I{ }
+    G --- J{x}
+    G --- K{ }
+    G --- L{ }
 
     classDef zero  fill:tomato
     classDef one   fill:darkorange
     classDef two   fill:gold
     classDef three fill:chartreuse
-    classDef four  fill:turquoise
 
     class A,B zero
-    class C,E one
-    class F,H,I two
-    class J,K three
-    class L four
+    class C,E,F one
+    class G,I two
+    class J three
 {{</mermaid>}}
 {{</slide>}}
 
@@ -181,4 +188,186 @@ graph TD
 \\(\rmq(i, j)\\)
 - \\(j - i = 2^k\\) --- результат уже есть в таблице
 - выберем \\(k = \max\\{\ell \colon j - i > 2^\ell\\}\\), возьмём из таблицы \\(\rmq(i, i + 2^k)\\) и \\(\rmq(j - 2^k, j)\\). Выберем из них минимум.
+{{</slide>}}
+
+{{<slide title="±1 RMQ" class="section" id="pm_one_rmq" />}}
+
+{{<slide title="±1 RMQ">}}
+Добавим ограничение: \\(|a\_k - a\_{k+1}| = 1\\) для \\(k < n - 1\\).
+
+{{<equation>}}
+    \{35, 34, 33, 34, 35, 34, 35, 36, 37, \ldots\}
+{{</equation>}}
+{{</slide>}}
+
+{{<slide title="±1 RMQ">}}
+Разобьём \\(A\\) на блоки \\(B_\ell\\) размера \\(b\\):
+
+{{<equation>}}
+    A = B_1 + B_2 + \ldots + B_{\lceil n/b \rceil}.
+{{</equation>}}
+
+{{<equation>}}
+    m_\ell = \min(B_\ell)
+{{</equation>}}
+
+Логарифмическая таблица:
+
+{{<equation>}}
+    T(\new) = O(n\frac{n}{b} + \frac{n}{b}\log\frac{n}{b}),
+    \qquad
+    M = O(\frac{n}{b}\log\frac{n}{b}).
+{{</equation>}}
+{{</slide>}}
+
+{{<slide>}}
+Запросы \\(\rmq(i, j)\\) делятся на 2 типа:
+- \\(i\\) и \\(j\\) лежат в одном блоке;
+
+![Запрос RMQ внутри блока](../img/in_block.svg)
+
+- \\(i\\) и \\(j\\) лежат в разных блоках:
+
+![Запрос RMQ с головой, телом и хвостом](../img/head-tail.svg)
+{{</slide>}}
+
+{{<slide title="±1 RMQ">}}
+Сигнатура блока:
+
+{{<equation>}}
+    \{35, 34, 33, 34, 35, 34, 35, 36, 37\}
+{{</equation>}}
+{{<equation>}}
+    (35, 00110111)
+{{</equation>}}
+
+Построим таблицы для всех сигнатур: \\(2^{b - 1} \times b \times b\\)
+{{</slide>}}
+
+{{<slide title="±1 RMQ">}}
+Итого расход по памяти:
+
+{{<equation>}}
+    \underbrace{2^{b-1} b^2}_{\mathclap\text{куб таблиц по сигнатурам}} +
+    \overbrace{\frac{n}{b}\log\frac{n}{b}}^{\mathclap\text{логарифмическая таблица}} +
+    \underbrace{\frac{n}{b}\log b}_{\mathclap\text{соответствие сигнатур}}
+{{</equation>}}
+{{</slide>}}
+
+{{<slide title="±1 RMQ">}}
+Итого расход по памяти:
+
+{{<equation>}}
+    2^{b-1} b^2 + \frac{n}{b}\log\frac{n}{b} + \frac{n}{b}\log b
+    = 2^{b-1} b^2 + \frac{n}{b}\log n.
+{{</equation>}}
+
+При \\(b = \frac{\log n}{2}\\):
+
+{{<equation>}}
+    O(\sqrt n \log^2 n + n) \approx O(n)
+{{</equation>}}
+{{</slide>}}
+
+{{<slide title="LCA -> ±1 RMQ" class="section" id="lca_to_pm_one_rmq" />}}
+
+{{<slide title="LCA -> ±1 RMQ">}}
+{{<mermaid>}}
+graph TD
+    A((3))
+    A --- B((8))
+    A --- C((5))
+    B --- D((9))
+    B --- E((12))
+    C --- F((14))
+    C --- G((7))
+{{</mermaid>}}
+{{</slide>}}
+
+{{<slide title="LCA -> ±1 RMQ">}}
+{{<mermaid clear="true" class="w-25">}}
+graph TD
+    A((3))
+    A --- B((8))
+    A --- C((5))
+    B --- D((9))
+    B --- E((12))
+    C --- F((14))
+    C --- G((7))
+{{</mermaid>}}
+
+{{<equation>}}
+    3 \to 8 \to 9 \to 8 \to 12 \to 8 \to 3 \to 5 \to 14 \to 5 \to 7 \to 5 \to 3
+{{</equation>}}
+{{</slide>}}
+
+{{<slide title="LCA -> ±1 RMQ">}}
+{{<mermaid clear="true" class="w-25">}}
+graph TD
+    A((3))
+    A --- B((8))
+    A --- C((5))
+    B --- D((9))
+    B --- E((12))
+    C --- F((14))
+    C --- G((7))
+{{</mermaid>}}
+
+{{<equation>}}
+    9 \to 8 \to 12 \to 8 \to 3 \to 5 \to 14 \to 5 \to 7
+{{</equation>}}
+{{</slide>}}
+
+{{<slide title="LCA -> ±1 RMQ">}}
+{{<mermaid clear="true" class="w-25">}}
+graph TD
+    A((3))
+    A --- B((8))
+    A --- C((5))
+    B --- D((9))
+    B --- E((12))
+    C --- F((14))
+    C --- G((7))
+{{</mermaid>}}
+
+{{<equation>}}
+    9 \to 8 \to 12 \to 8 \to 3 \to 5 \to 14 \to 5 \to 7
+{{</equation>}}
+
+Рассмотрим последовательность глубин:
+
+{{<equation>}}
+    3 \to 2 \to 3 \to 2 \to 1 \to 2 \to 3 \to 2 \to 3
+{{</equation>}}
+{{</slide>}}
+
+{{<slide title="LCA -> ±1 RMQ">}}
+{{<mermaid clear="true" class="w-25">}}
+graph TD
+    A((3))
+    A --- B((8))
+    A --- C((5))
+    B --- D((9))
+    B --- E((12))
+    C --- F((14))
+    C --- G((7))
+
+    classDef zero  color:tomato
+    classDef one   color:steelblue
+    classDef two   color:blueviolet
+
+    class E zero
+    class C one
+    class A two
+{{</mermaid>}}
+
+{{<equation>}}
+    9 \to 8 \to \textcolor{tomato}{12} \to 8 \to \textcolor{blueviolet}{3} \to \textcolor{steelblue}{5} \to 14 \to \textcolor{steelblue}{5} \to 7
+{{</equation>}}
+
+Рассмотрим последовательность глубин:
+
+{{<equation>}}
+    3 \to 2 \to \textcolor{tomato}{3} \to 2 \to \textcolor{blueviolet}{1} \to \textcolor{steelblue}{2} \to 3 \to \textcolor{steelblue}{2} \to 3
+{{</equation>}}
 {{</slide>}}
