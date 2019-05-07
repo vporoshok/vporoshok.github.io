@@ -30,7 +30,6 @@ back: /post/2018/11/introduction/
 />}}
 
 {{<slide id="hello" title="Всем привет!">}}
-<img style="float:right;width:20%" src="/images/logo-orig.jpg">
 - Бастрыков Евгений
 - Программирую с 2013
 - Преподаю «Алгоритмы и структуры данных»
