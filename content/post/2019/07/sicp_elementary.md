@@ -2,7 +2,7 @@
 title: 'SICP: 1.1 Элементы программирования'
 description: Комбинации, переменные, функции и условные выражения
 date: 2019-08-03T16:43:50Z
-draft: false
+draft: true
 categories:
 - algorithm
 tags:
