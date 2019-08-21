@@ -22,14 +22,14 @@ toc: true
 package action
 
 import (
-	"github.com/jonboulle/clockwork"
-	"go.uber.org/zap"
+    "github.com/jonboulle/clockwork"
+    "go.uber.org/zap"
 )
 
 // DIContainer is a dependency injection container
 type DIContainer interface {
-	GetClock() clockwork.Clock
-	GetLogger() *zap.Logger
+    GetClock() clockwork.Clock
+    GetLogger() *zap.Logger
 }
 ```
 
@@ -150,7 +150,10 @@ type BaseAction struct {
     logger *zap.SugaredLogger
 }
 
-func (act *BaseAction) Init(ctx context.Context, di DIContainer, instance interface{}) {
+func (act *BaseAction) Init(
+    ctx context.Context, di DIContainer, instance interface{},
+) {
+
     act.di = di
     actName := reflect.TypeOf(instance).Elem().Name()
     act.logger = LoggerWithTraceID(ctx, di.GetLogger()).Named(actName).Sugar()
@@ -179,23 +182,26 @@ import (
 
 // RecoverError catch error from panic
 func (act *BaseAction) RecoverError(fn func()) (err error) {
-	defer func() {
-		r := recover()
-		var ok bool
-		if err, ok = r.(error); !ok && r != nil {
-			panic(r)
-		}
-		err = errors.WithStack(err)
-	}()
-	fn()
-	return nil
+    defer func() {
+        r := recover()
+        var ok bool
+        if err, ok = r.(error); !ok && r != nil {
+            panic(r)
+        }
+        err = errors.WithStack(err)
+    }()
+    fn()
+    return nil
 }
 
 // PanicIfError handle error with panic
-func (act *BaseAction) PanicIfError(err error, msg string, args ...interface{}) {
-	if err != nil {
-		panic(errors.Wrapf(err, msg, args...))
-	}
+func (act *BaseAction) PanicIfError(
+    err error, msg string, args ...interface{},
+) {
+
+    if err != nil {
+        panic(errors.Wrapf(err, msg, args...))
+    }
 }
 ```
 
@@ -228,7 +234,7 @@ func (act *LoginAction) mustCheckPassword(password string) {
 }
 ```
 
-Обратите внимание на то, что методы, которые могут выбросить панику обязательно начинаются со слова `must`, а также обязательно являются приватными. Подробнее про такой подход я уже писал в посте [Полезные приёмы по работе с ошибками в Go]({{<ref "errors">}}).
+Обратите внимание на то, что методы, которые могут выбросить панику обязательно начинаются со слова `must`, а также обязательно являются приватными. Подробнее про такой подход я писал в посте [Полезные приёмы по работе с ошибками в Go]({{<ref "errors">}}).
 
 ## Несколько точек входа
 
@@ -236,11 +242,11 @@ func (act *LoginAction) mustCheckPassword(password string) {
 - получение пользователя и проверка его пароля;
 - формирование авторизационного токена.
 
-Но тогда понядобится также сделать некоторую обёртку над этой парой. С другой стороны можно оставить одно действие-объект, но сделать к нему несколько точек входа:
+Но тогда понадобится также сделать некоторую обёртку над этой парой. С другой стороны можно оставить одно действие-объект, но сделать к нему несколько точек входа:
 ```go
 // Login find user, check password and return authentication token
 func Login(
-    ctx context.Context, di DIConainer, email, password string,
+    ctx context.Context, di DIContainer, email, password string,
 ) (token string, err error) {
 
     act := new(LoginAction)
@@ -249,23 +255,26 @@ func Login(
     return act.Login(ctx, email, password)
 }
 
-// Impersonale check current user administration privilege and return token by given user id
-func Impersonale(
-    ctx context.Context, di DIConainer, id string,
+// Impersonate generate auth token for user by id
+//
+// It check that current user (from context) has administration privilege
+// and return token by given user id.
+func Impersonate(
+    ctx context.Context, di DIContainer, id string,
 ) (token string, err error) {
 
     act := new(LoginAction)
     act.Init(ctx, di, act)
 
-    return act.Impersonale(ctx, id)
+    return act.Impersonate(ctx, id)
 }
 ```
 
-Таким образом логика проверки и получения пользователя будет разной, а логика формирования автооизационного токена переиспользуется.
+Таким образом логика проверки и получения пользователя будет разной, а логика формирования авторизационного токена переиспользуется.
 
 ## Опции
 
-Также частой оказывается ситуация, когда действие может быть сильно кастомизируемо, например, флажок Remember me на форме логина. Комбинаторно увеличивать точки входа в данном случае оказывается плохим решением. Но можно воспользоваться [подходом Option](https://dave.cheney.net/2014/10/17/functional-options-for-friendly-apis):
+Также частой оказывается ситуация, когда действие может иметь множество дополнительных опций, например, флажок Remember me на форме логина. Комбинаторно увеличивать точки входа в данном случае оказывается плохим решением. Но можно воспользоваться [подходом Option](https://dave.cheney.net/2014/10/17/functional-options-for-friendly-apis):
 ```go
 type LoginAction struct {
     BaseAction
@@ -292,7 +301,7 @@ func LoginWithRememberMe(v bool) LoginOption {
 }
 
 func Login(
-    ctx context.Context, di DIConainer, email, password string,
+    ctx context.Context, di DIContainer, email, password string,
     opts ...LoginOption,
 ) (token string, err error) {
 
