@@ -1,8 +1,8 @@
 ---
 title: Действия в действии
 description: Различные полезные практики в написании действий
-date: 2019-08-20T10:00:06Z
-draft: true
+date: 2019-08-21T03:25:57Z
+draft: false
 categories:
 - develop
 tags:
@@ -163,13 +163,147 @@ func Login(
     ctx context.Context, di DIContainer, email, password string,
 ) (token string, err error) {
 
-    act := new(LogginAction)
+    act := new(LoginAction)
     act.Init(ctx, di, act)
 
     return act.Do()
 }
 ```
 
+Помимо инициализации можно также описать в базовом действии пару panic/recover. Использовать или нет panic/recover один из самых спорных моментов вокруг языка Go. Я пришёл к следующему подходу:
+```go
+import (
+    // ...
+    "github.com/pkg/errors"
+)
+
+// RecoverError catch error from panic
+func (act *BaseAction) RecoverError(fn func()) (err error) {
+	defer func() {
+		r := recover()
+		var ok bool
+		if err, ok = r.(error); !ok && r != nil {
+			panic(r)
+		}
+		err = errors.WithStack(err)
+	}()
+	fn()
+	return nil
+}
+
+// PanicIfError handle error with panic
+func (act *BaseAction) PanicIfError(err error, msg string, args ...interface{}) {
+	if err != nil {
+		panic(errors.Wrapf(err, msg, args...))
+	}
+}
+```
+
+Тогда обычное действие можно описать так:
+```go
+func (act *LoginAction) Do(
+    ctx context.Context, email, password string,
+) (token string, err error) {
+
+    err = act.RecoverError(func() {
+        token = act.mustDo(ctx, email, password)
+    })
+
+    return
+}
+
+func (act *LoginAction) mustDo(
+    ctx context.Context, email, password string,
+) string {
+    user, err := act.di.GetUserRepository().GetByEmail(ctx, email)
+    act.PanicIfError(err, "fail to get user")
+    act.user = user
+    act.mustCheckPassword(password)
+    act.mustGetSecrets(ctx)
+    // ...
+}
+
+func (act *LoginAction) mustCheckPassword(password string) {
+    // ...
+}
+```
+
+Обратите внимание на то, что методы, которые могут выбросить панику обязательно начинаются со слова `must`, а также обязательно являются приватными. Подробнее про такой подход я уже писал в посте [Полезные приёмы по работе с ошибками в Go]({{<ref "errors">}}).
+
 ## Несколько точек входа
 
+Часто оказывается так, что одну и ту же рутину нужно произвести с несколько разным окружением. Например, если нам понадобиться сделать метод для входа администратора системы под другой учётной записью. С одной стороны можно разделить наше действие `Login` на 2 части:
+- получение пользователя и проверка его пароля;
+- формирование авторизационного токена.
+
+Но тогда понядобится также сделать некоторую обёртку над этой парой. С другой стороны можно оставить одно действие-объект, но сделать к нему несколько точек входа:
+```go
+// Login find user, check password and return authentication token
+func Login(
+    ctx context.Context, di DIConainer, email, password string,
+) (token string, err error) {
+
+    act := new(LoginAction)
+    act.Init(ctx, di, act)
+
+    return act.Login(ctx, email, password)
+}
+
+// Impersonale check current user administration privilege and return token by given user id
+func Impersonale(
+    ctx context.Context, di DIConainer, id string,
+) (token string, err error) {
+
+    act := new(LoginAction)
+    act.Init(ctx, di, act)
+
+    return act.Impersonale(ctx, id)
+}
+```
+
+Таким образом логика проверки и получения пользователя будет разной, а логика формирования автооизационного токена переиспользуется.
+
 ## Опции
+
+Также частой оказывается ситуация, когда действие может быть сильно кастомизируемо, например, флажок Remember me на форме логина. Комбинаторно увеличивать точки входа в данном случае оказывается плохим решением. Но можно воспользоваться [подходом Option](https://dave.cheney.net/2014/10/17/functional-options-for-friendly-apis):
+```go
+type LoginAction struct {
+    BaseAction
+    // RememberMe mark result token as renewable
+    RememberMe bool
+}
+
+// LoginOption an additional option for login
+type LoginOption interface {
+    Apply(*LoginAction)
+}
+
+type fnLoginOption func(*LoginAction)
+
+func (fn fnLoginOption) Apply(act *LoginAction) {
+    fn(act)
+}
+
+// LoginWithRememberMe add renewable mark to auth token
+func LoginWithRememberMe(v bool) LoginOption {
+    return fnLoginOption(func(act *LoginAction) {
+        act.RememberMe = v
+    })
+}
+
+func Login(
+    ctx context.Context, di DIConainer, email, password string,
+    opts ...LoginOption,
+) (token string, err error) {
+
+    act := new(LoginAction)
+    act.Init(ctx, di, act)
+    for _, opt := range opts {
+        opt(act)
+    }
+
+    return act.Login(ctx, email, password)
+}
+```
+
+Получается легко расширяемое и при этом хорошо изолированное действие.
