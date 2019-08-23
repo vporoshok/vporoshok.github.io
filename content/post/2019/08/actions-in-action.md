@@ -308,7 +308,7 @@ func Login(
     act := new(LoginAction)
     act.Init(ctx, di, act)
     for _, opt := range opts {
-        opt(act)
+        opt.Apply(act)
     }
 
     return act.Login(ctx, email, password)
