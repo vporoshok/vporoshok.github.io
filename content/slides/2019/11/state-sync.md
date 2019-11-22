@@ -1,8 +1,8 @@
 ---
 title: Синхронизация состояния в распределённых системах
-description: Распределённые системы имеют кучу подводных граблей, о которых часто забывают или не задумываются. Синхронизация состояния сама по себе нетривиальная задача, которой посвящены многие работы. А уж если состояние распределено по системе…
+description: Распределённые системы имеют кучу подводных граблей. Синхронизация состояния сама по себе нетривиальная задача, которой посвящены многие работы. А уж если состояние распределено по системе…
 date: 2019-11-16T12:24:33Z
-draft: true
+draft: false
 mermaid: true
 ---
 
@@ -119,5 +119,61 @@ return tonumber(updatedCount)
 - gossip
 - message queue
 - key-value
+{{</slide>}}
+
+{{<slide title="Кеш внутри сервиса">}}
+Флаг
+<center>
+Key --- version
+</center>
+{{<next>}}
+TTL
+{{</next>}}
+{{<next>}}
+<center>
+Key --- updatedAt
+</center>
+{{</next>}}
+{{</slide>}}
+
+{{<slide shout="true" title="Расхождение часов" />}}
+
+{{<slide title="Расхождение часов">}}
+```go
+ts := time.Now().UTC()
+claims := &jwt.StandardClaims{
+    IssuedAt: ts.Add(-deviateIssuedAt).Unix(),
+    ExpiresAt: ts.Add(validTTL).Unix(),
+}
+```
+{{</slide>}}
+
+{{<slide title="Расхождение часов" class="clear">}}
+{{<mermaid>}}
+sequenceDiagram
+    participant Client 1
+    participant A
+    participant Redis
+    participant B as B (-10 с)
+    participant Client 2
+    Client 1->>+A: Get
+    Client 2->>+B: Invalidate
+    Note over A: 1574000011
+    B->>Redis: 1574000002
+    A->>-Client 1: Value
+    B->>-Client 2: OK
+    A->>Redis: Get
+    Redis->>A: 1574000002
+    Note over A: Is not changed
+{{</mermaid>}}
+{{</slide>}}
+
+{{<slide title="Шардирование" class="section" id="sharding" />}}
+
+{{<slide title="Шардирование">}}
+За определённое состояние должен отвечать только один сервис
+- таймеры
+- изменения в бд
+- акторы
 {{</slide>}}
 
