@@ -136,7 +136,7 @@ func HandleHTTPError(w http.ResponseWriter, err error) {
 }
 ```
 
-А для протокола gRPC вообще можно реализовать удобные [перехватчики]({{< ref "../01/decorators.md" >}}#перехватчики):
+А для протокола gRPC вообще можно реализовать удобные [перехватчики]({{<ref "../01/decorators.md">}}#перехватчики):
 ```go
 func UnaryServerInterceptor(
     ctx context.Context, req interface{},
