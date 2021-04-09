@@ -1,0 +1,23 @@
+<svg viewBox="0 0 200 32" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <defs>
+        <marker id="arrow" markerWidth="8" markerHeight="4" refX="3" refY="2" orient="auto" markerUnits="strokeWidth">
+            <path d="M0,0 L0,4 L8,2 z" fill="black" />
+        </marker>
+        <symbol id="jump" y="-17" viewBox="0 0 24 12">
+            <path d="M8,7 Q12,0 16,6" stroke="black" fill="none" marker-end="url(#arrow)" />
+        </symbol>
+    </defs>
+
+    <g transform="translate(10, 10)">
+        <rect width="12" height="12" stroke="black" fill="none" />
+        <rect x="12" width="12" height="12" stroke="black" fill="salmon" />
+        <use xlink:href="#jump" x="12" width="24" />
+        <rect x="24" width="12" height="12" stroke="black" fill="salmon" />
+        <use xlink:href="#jump" x="22" width="24" />
+        <rect x="36" width="12" height="12" stroke="black" fill="palegreen" />
+        <rect x="48" width="12" height="12" stroke="black" fill="none" />
+        <circle cx="64" cy="6" r="1" />
+        <circle cx="68" cy="6" r="1" />
+        <circle cx="72" cy="6" r="1" />
+    </g>
+</svg>

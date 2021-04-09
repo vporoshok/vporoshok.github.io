@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>logging on Где-то на дальнем сервере</title>
+    <link>https://vporoshok.me/tags/logging/</link>
+    <description>Recent content in logging on Где-то на дальнем сервере</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>ru</language>
+    <lastBuildDate>Wed, 15 Jul 2020 19:25:46 +0000</lastBuildDate>
+    
+	<atom:link href="https://vporoshok.me/tags/logging/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Залогируй это</title>
+      <link>https://vporoshok.me/post/2020/07/logs/</link>
+      <pubDate>Wed, 15 Jul 2020 19:25:46 +0000</pubDate>
+      
+      <guid>https://vporoshok.me/post/2020/07/logs/</guid>
+      <description>С самого начала моей карьеры программиста я на каждом углу встречал напутствия в стиле: «Пишите как можно больше логов, логируйте всё». Но все попытки логировать всё подряд приводили лишь к огромным файлам, в которых ничего не понять. И нигде мне не встречалось вразумительного руководства что и как надо логировать. Что ж, накопив немного опыта, давайте попробуем разобраться в этом вопросе.
+Роли и задачи Прежде чем определять что писать в логи, необходимо разобраться кто и с какой целью их будет читать, ведь от модели использования будет зависеть ожидаемое содержимое.</description>
+    </item>
+    
+  </channel>
+</rss>

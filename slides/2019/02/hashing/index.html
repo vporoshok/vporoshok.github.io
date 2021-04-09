@@ -1,0 +1,576 @@
+<!DOCTYPE html>
+<html lang='ru'>
+<head>
+    <meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='description' content='…'>
+<meta name='theme-color' content='#ffcd00'>
+
+<meta property='og:title' content='Хеш-таблицы • Где-то на дальнем сервере'>
+<meta property='og:description' content='…'>
+<meta property='og:url' content='https://vporoshok.me/slides/2019/02/hashing/'>
+<meta property='og:site_name' content='Где-то на дальнем сервере'>
+<meta property='og:type' content='article'><meta property='article:section' content='slides'><meta property='article:published_time' content='2019-03-01T16:43:34Z'/><meta property='article:modified_time' content='2019-03-09T07:53:21&#43;04:00'/><meta name='twitter:card' content='summary'>
+
+<meta name="generator" content="Hugo 0.57.2" />
+
+    <title>Хеш-таблицы • Где-то на дальнем сервере</title>
+    <link rel='canonical' href='https://vporoshok.me/slides/2019/02/hashing/'>
+    
+    <link rel='icon' href='/favicon.ico'>
+    <link rel='stylesheet' href='/assets/css/main.6a060eb7.css'><link rel='stylesheet' href='/assets/custom.css'><style>
+:root{--color-accent:#ffcd00;}
+</style>
+
+
+
+    <link rel="stylesheet" href="/assets/shower/themes/material/styles/styles.css">
+    <style>
+        .shower {
+            --slide-ratio: calc(16 / 9);
+        }
+        .caption a {
+            display: inline-block;
+            font-size: 0.8em;
+            margin-left: 2em;
+        }
+        .mermaid {
+            text-align: center;
+        }
+        .mermaid div {
+            transform: translate(-25%, -25%);
+        }
+        .slide {
+            background-repeat: no-repeat;
+            background-size: cover;
+        }
+        .slide a {
+            background: none;
+        }
+        .slide.section {
+            display: flex;
+            padding: 0;
+            align-items: center;
+            justify-content: center;
+            text-shadow: white 0 0 10px;
+        }
+        .slide.section h2 {
+            font-weight: normal;
+        }
+        .slide.compact pre {
+            padding-top: 0;
+        }
+        .slide.black * {
+            color: white;
+            text-shadow: black 0 0 10px;
+        }
+        img.cover {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+    </style>
+</head>
+<body class="shower list entry-content">
+    <header class="caption">
+        <h1>Хеш-таблицы</h1>
+        <p>…</p>
+    </header>
+
+    <style>
+    .red {
+        color: red;
+    }
+</style>
+
+<section class="slide entry clear"><h2 class="shout">
+        Хеш-таблицы
+    </h2></section>
+
+
+<section id="toc" class="slide entry toc"><h2>
+        План
+    </h2><ol>
+<li><a href="#problem">задача и применение</a></li>
+<li><a href="#non-constant">неконстантные решения</a></li>
+<li><a href="#hashing">хеширование</a></li>
+<li><a href="#collision">коллизии</a></li>
+<li><a href="#complexity">анализ сложности с допущениями</a></li>
+<li><a href="#real">без допущений</a></li>
+</ol></section>
+
+
+<section id="problem" class="slide entry section"><h2>
+        Задача и применение
+    </h2></section>
+
+
+<section class="slide entry"><h2>
+        Задача и применение
+    </h2>Есть множество пар \((k, v)\) &mdash; ключ-значение. Необходимо построить структуру хранения этих пар так, чтобы на ней были определены операции:</p>
+
+<ul>
+<li><code>set(k, v)</code></li>
+<li><code>get(k)</code></li>
+<li><code>delete(k)</code></li>
+</ul></section>
+
+
+<section id="non-constant" class="slide entry section"><h2>
+        Неконстантные решения
+    </h2></section>
+
+
+<section class="slide entry"><h2>
+        Неконстантные решения
+    </h2><table>
+    <col-group>
+        <col width="40%">
+        <col>
+        <col>
+        <col>
+        <col>
+    </col-group>
+    <thead>
+        <tr>
+            <th scope="col">Структура
+            <th scope="col"><code>new</code>
+            <th scope="col"><code>set</code>
+            <th scope="col"><code>get</code>
+            <th scope="col"><code>del</code>
+    <tbody>
+        <tr>
+            <th scope="row">Массив
+            <td>\(O(n)\)
+            <td>\(O(1)\)
+            <td class="red">\(O(n)\)
+            <td class="red">\(O(n)\)
+        <tr class="next">
+            <th scope="row">Отсортированный массив
+            <td class="red">\(O(n\log n)\)
+            <td>\(O(\log n)^\star\)
+            <td>\(O(\log n)^\star\)
+            <td>\(O(\log n)^\star\)
+        <tr class="next">
+            <th scope="row">Дерево поиска
+            <td>\(O(n)\)
+            <td>\(O(\log n)\)
+            <td>\(O(\log n)\)
+            <td>\(O(\log n)\)
+        <tr class="next">
+            <th scope="row">Хочется
+            <td>\(O(n)\)
+            <td>\(O(1)\)
+            <td>\(O(1)\)
+            <td>\(O(1)\)
+</table></section>
+
+
+<section id="hashing" class="slide entry section"><h2>
+        Хеширование
+    </h2></section>
+
+
+<section class="slide entry"><h2>
+        Хеширование
+    </h2><p>Выделим массив для хранения пар размера \(N\), при этом допустимое множество ключей \(K\) такое, что \(|K| \gg N\). Определим функциональное отображение</p>
+
+<div class="equation">
+\[
+    h\colon K \to N,
+\]
+</div>
+
+<p>с помощью которого будем определять позицию пары. Это отображение называется <em>хеш-функцией</em>.</p>
+</section>
+
+
+<section id="collision" class="slide entry section"><h2>
+        Коллизии
+    </h2></section>
+
+
+<section class="slide entry"><h2>
+        Коллизии
+    </h2><p>Так как \(|K| \gg N\), то существуют \(k\) и \(k^\prime\) такие, что \(h(k) = h(k^\prime)\). Это называется <em>коллизия</em>.</p>
+
+<p><p class="next">То есть две пары с различными ключами претендуют на одну ячейку в массиве.</p>
+
+<p><p class="next">Также предполагается, что размер \(K\) много больше объёма оперативной памяти.</p>
+</section>
+
+
+<section class="slide entry section"><h2>
+        Методы разрешения коллизий
+    </h2></section>
+
+
+<section class="slide entry"><h2>
+        Прямое связывание
+    </h2><p>В массиве хранятся указатели на списки, в которых может быть несколько элементов.</p>
+
+<p><img src="../img/chaining.svg" alt="Разрешение коллизий прямым связыванием" /></p>
+</section>
+
+
+<section class="slide entry"><h2>
+        Прямое связывание
+    </h2><div class="equation">
+\[
+    T(\mathrm{get})\quad\text{и}\quad T(\mathrm{delete}) = O(n)
+\]
+</div>
+<div class="equation">
+\[
+    T(\mathrm{set}) = \begin{cases}
+        O(1), &\text{ключ без коллизии},\\
+        O(n), &\text{иначе}.
+    \end{cases}
+\]
+</div></section>
+
+
+<section class="slide entry"><h2>
+        Открытая адресация
+    </h2>Определим функцию \(h(k, i)\), где \(i \in \natnums\) &mdash; номер попытки. При возникновении коллизии будем увеличивать номер попытки.</section>
+
+
+<section class="slide entry"><h2>
+        Метод линейных проб
+    </h2><div class="equation">
+\[
+    h(k, i) = h(k) + i \mod N
+\]
+</div>
+
+<p><img src="../img/linear-probe.svg" alt="Разрешение коллизий открытой адресацией с линейными пробами" /></p>
+
+<p><strong>Преимущества:</strong> локальность данных.</p>
+
+<p><strong>Недостатки:</strong> удаление, рехеширование при переполнении.</p>
+</section>
+
+
+<section class="slide entry"><h2>
+        Метод квадратичных проб
+    </h2><div class="equation">
+\[
+    h(k, i) = h(k) + i^2 \mod N
+\]
+</div>
+<div class="equation">
+\[
+    h(k, i) = h(k, i - 1) + d_{i - 1},
+    \quad \text{где} \quad
+    d_i = d_{i - 1} + 2, \quad i > 1.
+\]
+</div>
+
+<dl class="theorem">
+    <dt>Утверждение</dt>
+    <dd>Для \(i, j &lt; N/2\) следует, что \(i^2 \bmod N \neq j^2 \bmod N\).</dd>
+</dl></section>
+
+
+<section class="slide entry"><h2>
+        Общий случай
+    </h2><div class="equation">
+\[
+    h(k, i) = h(k) + g(k)\cdot i \mod N,
+\]
+</div>
+
+<p>где \(g(k)\) равномерно распределено.</p>
+
+<p>Для избежания коллизии по попыткам \(h(k, i) = h(k, j)\) для \(i \neq j\), достаточно, чтобы \(g(k) \perp N\). Достаточно чтобы \(N\) было простым.</p>
+</section>
+
+
+<section id="complexity" class="slide entry section"><h2>
+        Анализ сложности
+    </h2></section>
+
+
+<section class="slide entry"><h2>
+        Анализ сложности
+    </h2>Предположим, что \(h\colon K \to N\) &mdash; случайная величина с равномерным распределением.</section>
+
+
+<section class="slide entry"><h2>
+        Прямое связывание
+    </h2><p>Пусть искомый ключ находится в конце цепочки длинны \(L\). Тогда сложность его нахождения равна:</p>
+
+<div class="equation">
+\[
+    T(\mathrm{get}) = O(L).
+\]
+</div>
+
+<p>Определим функцию коллизии следующим образом:</p>
+
+<div class="equation">
+\[
+    X_{a, b} = P\{h(a) = h(b)\} = \begin{cases}
+        1, & h(a) = h(b),\\
+        0, & \text{иначе}
+    \end{cases}
+\]
+</div>
+</section>
+
+
+<section class="slide entry"><h2>
+        Прямое связывание
+    </h2><p>Перейдём к мат. ожиданию:</p>
+
+<div class="equation">
+\[
+    EX_{a, b} = \begin{cases}
+        1/N, & a \neq b,\\
+        1, & a = b.
+    \end{cases}
+\]
+</div>
+
+<p>Тогда</p>
+
+<div class="equation">
+\[
+    ET(\mathrm{get}) = O(EL) = O(\sum_{i = 1}^n EX_{k, k_i}) \leqslant O(1 + n/N).
+\]
+</div>
+</section>
+
+
+<section class="slide entry"><h2>
+        Метрика хеш-таблицы
+    </h2>Коэффициент \(\alpha = n / N\) называется коэффициентом заполнения.</p>
+
+<aside class="admonition">
+    <h4>
+        <span class="admonition-icon">ℹ️</span>Замечание</h4>Для метода прямого связывания \(\alpha\) может превышать 1, а для открытой адресации &mdash; нет.</aside></section>
+
+
+<section class="slide entry"><h2>
+        Прямое связывание
+    </h2>Обозначим через \(p_i\) вероятность того, что потребуется \(i\) проб для вставки:</p>
+
+<div class="equation">
+\[
+\begin{gathered}
+p_1 = \frac{N - n}{N}, \quad
+p_2 = \frac{n}{N} \cdot \frac{N - n}{N - 1}, \quad
+\ldots, \\[2em]
+p_i = \frac{n}{N} \cdot \frac{n - 1}{N - 1} \cdot \frac{n - 2}{N - 2}
+\cdot \ldots \cdot \frac{n - i + 1}{N - i + 1}
+\cdot \frac{N - n}{N - i + 1}
+\end{gathered}
+\]
+</div></section>
+
+
+<section class="slide entry"><h2>
+        Прямое связывание
+    </h2>Перейдём к мат. ожиданию:</p>
+
+<div class="equation">
+\[
+\begin{gathered}
+ET(\mathrm{set}) = \sum_{i = 1}^{n + 1} i \cdot p_i = \\[1em]
+= 1 \cdot \frac{N - n}{N} + 2 \cdot \frac{n}{N} \cdot \frac{N - n}{N - 1} +
+\ldots + (n + 1)\frac{n}{N} \cdot
+\ldots \cdot \frac{N - n + 1}{N - n} = \\[1em]
+= \frac{N + 1}{N - (n - 1)}
+\end{gathered}
+\]
+</div></section>
+
+
+<section class="slide entry"><h2>
+        Прямое связывание
+    </h2><p>Аналогично можно посчитать мат. ожидание сложности операции <code>get</code></p>
+
+<div class="equation">
+\[
+ET(\mathrm{get}) = \frac{1}{n} \sum_{i = 1}^{n} ET(\mathrm{set}_i),
+\]
+</div>
+
+<p>где \(\mathrm{get}_i\) &mdash; вставка \(i\)-го ключа, то есть</p>
+
+<div class="equation">
+\[
+ET(\mathrm{get}) = \frac{N + 1}{n} \sum_{i = 1}^{n} \frac{1}{N - i + 2} =
+(N + 1)(H_{N+1} - H_{N-n+1}),
+\]
+</div>
+
+<p>где \(H_i = \ln i + \gamma\) &mdash; гармоническая функция (\(\gamma\) &mdash; постоянная Эйлера).</p>
+</section>
+
+
+<section class="slide entry"><h2>
+        Прямое связывание
+    </h2>Таким образом,</p>
+
+<div class="equation">
+\[
+\begin{gathered}
+ET(\mathrm{get}) = \frac{\ln(N + 1) - \ln(N - n + 1)}{\alpha} = \\[1em]
+= \frac{\ln((N + 1) / (N -n + 1))}{\alpha} = - \frac{\ln(1 - \alpha)}{\alpha}.
+\end{gathered}
+\]
+</div></section>
+
+
+<section class="slide entry"><h2>
+        К цифрам
+    </h2><table>
+<thead>
+<tr>
+<th>\(\alpha\)</th>
+<th>Общий сл.</th>
+<th>Лин. пробы</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td>0.1</td>
+<td>1.05</td>
+<td>1.06</td>
+</tr>
+
+<tr>
+<td>0.25</td>
+<td>1.15</td>
+<td>1.17</td>
+</tr>
+
+<tr>
+<td>0.5</td>
+<td>1.39</td>
+<td>1.5</td>
+</tr>
+
+<tr>
+<td>0.75</td>
+<td>1.85</td>
+<td>2.5</td>
+</tr>
+
+<tr>
+<td>0.9</td>
+<td>2.56</td>
+<td>5.5</td>
+</tr>
+
+<tr>
+<td>0.95</td>
+<td>3.15</td>
+<td>10.5</td>
+</tr>
+
+<tr>
+<td>0.99</td>
+<td>4.66</td>
+<td>&mdash;</td>
+</tr>
+</tbody>
+</table></section>
+
+
+<section class="slide entry"><h2>
+        Анализ сложности
+    </h2>Для метода линейных проб получаем</p>
+
+<div class="equation">
+\[
+ET(\mathrm{get / set}) = \frac{1 - \alpha/2}{1 - \alpha}
+\]
+</div></section>
+
+
+<section id="real" class="slide entry section"><h2>
+        Без допущений
+    </h2></section>
+
+
+<section class="slide entry"><h2>
+        Без допущений
+    </h2><p>\(h\colon K \to N\) &mdash; случайные величины.</p>
+
+<p>Пусть \(\mathscr H = {h\colon K \to N}\) &mdash; некоторое семейство хеш-функций. И пусть существует равномерная вероятностная мера выбора \(h \in \mathscr H\).</p>
+
+<p>Для сохранения оценок \(ET(\mathrm{get / set}) = O(1 + \alpha)\) необходимо, чтобы</p>
+
+<div class="equation">
+\[
+EX_{a, b} = \begin{cases}
+    \frac{1}{N}, & a \neq b\\
+    1, & a = b.
+\end{cases}
+\]
+</div>
+</section>
+
+
+<section class="slide entry"><h2>
+        Без допущений
+    </h2><dl class="theorem">
+    <dt>Определение</dt>
+    <dd>\(\mathscr H\) является <em>универсальным</em>, если для случайно выбранной \(h \in \mathscr H\) следует, что \(P[h(a) = h(b), a \neq b] \leqslant \frac{1}{N}\).</dd>
+</dl>
+
+<p>То есть мы переносим рандомизацию с построения \(h(k)\) на выбор \(h \in \mathscr H\).</section>
+
+
+<section class="slide entry"><h2>
+        Без допущений
+    </h2><aside class="admonition">
+    <h4>
+        <span class="admonition-icon">ℹ️</span>Замечание</h4>Семейство \(\mathscr H\) должно быть не очень большим, иначе выбор будет долгим и хранение выбранной функции будет занимать много места.</aside></section>
+
+
+<section class="slide entry"><h2>
+        Без допущений
+    </h2><p>Без ограничения общности будем считать, что \(K \subset {0, \ldots, p - 1}\), где \(p\) &mdash; простое число. Тогда</p>
+
+<div class="equation">
+\[
+\mathscr H = \{h_{ab}(k) = ak + b \mod p \mod N \colon a, b \in p, a \neq 0\}.
+\]
+</div>
+
+<p>То есть выбор \(h\) сводится к выбору \(a\) и \(b\).</p>
+
+<dl class="theorem">
+    <dt>Утверждение</dt>
+    <dd>Такое \(\mathscr H\) является универсальным.</dd>
+</dl>
+</section>
+
+
+
+    <footer class="badge">
+        <a href="/">На главную</a>
+    </footer>
+
+    <div class="progress"></div>
+
+    <script src="/assets/shower/shower.min.js"></script><script>window.__assets_js_src="/assets/js/"</script>
+
+<script src='/assets/js/main.67d669ac.js'></script><link rel='stylesheet' href='/assets/katex/katex.min.css'>
+<script src='/assets/katex/katex.min.js'></script>
+<script src='/assets/katex/contrib/auto-render.min.js'></script>
+
+<script type='text/javascript'>
+  renderMathInElement(document.querySelector('.entry-content'),{"throwOnError":true});
+</script><script src='/assets/mermaid.min.js' />
+
+<script type='text/javascript'>
+  mermaid.initialize({});
+</script>
+
+</body>
+</html>

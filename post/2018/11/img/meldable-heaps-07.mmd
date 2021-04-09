@@ -1,0 +1,22 @@
+graph TD
+    subgraph k = 3
+    F((1))
+    F --- G((8))
+    F --- H((2))
+    F --- I((15))
+    H --- J((9))
+    I --- K((21))
+    I --- L((19))
+    L --- M((24))
+    end
+    subgraph k = 2
+    B((4))
+    B --- C((7))
+    B --- D((5))
+    D --- E((12))
+    end
+    subgraph k = 0
+    A((3))
+    end
+    classDef first fill:SpringGreen
+    class A,B,C,D,E,F,G,H,I,J,K,L,M first

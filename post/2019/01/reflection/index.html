@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html lang='ru'><head>
+  <meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='description' content='Выясняем – что такое рефлексия. Плюсы и минусы. Альтернативные подходы'>
+<meta name='theme-color' content='#ffcd00'>
+
+<meta property='og:title' content='Рефлексия в Go • Где-то на дальнем сервере'>
+<meta property='og:description' content='Выясняем – что такое рефлексия. Плюсы и минусы. Альтернативные подходы'>
+<meta property='og:url' content='https://vporoshok.me/post/2019/01/reflection/'>
+<meta property='og:site_name' content='Где-то на дальнем сервере'>
+<meta property='og:type' content='article'><meta property='article:section' content='post'><meta property='article:tag' content='go'><meta property='article:tag' content='architect'><meta property='article:published_time' content='2019-01-20T05:30:33Z'/><meta property='article:modified_time' content='2019-01-20T10:45:22&#43;04:00'/><meta name='twitter:card' content='summary'>
+
+<meta name="generator" content="Hugo 0.57.2" />
+
+  <title>Рефлексия в Go • Где-то на дальнем сервере</title>
+  <link rel='canonical' href='https://vporoshok.me/post/2019/01/reflection/'>
+  
+  
+  <link rel='icon' href='/favicon.ico'>
+<link rel='stylesheet' href='/assets/css/main.6a060eb7.css'><link rel='stylesheet' href='/assets/custom.css'><style>
+:root{--color-accent:#ffcd00;}
+</style>
+
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+	ga('create', 'UA-41042060-2', 'auto');
+	
+	ga('send', 'pageview');
+}
+</script>
+<script async src='https://www.google-analytics.com/analytics.js'></script>
+
+  
+
+</head>
+<body class='page type-post has-sidebar'>
+
+  <div class='site'><div id='sidebar' class='sidebar'>
+  <a class='screen-reader-text' href='#main-menu'>Перейти к основному меню</a>
+
+  <div class='container'><section class='widget widget-about sep-after'>
+  <header>
+    
+    <div class='logo'>
+      <a href='/'>
+        <img src='/images/logo.jpg' alt="Вернуться на главную">
+      </a>
+    </div>
+    
+    <h2 class='title site-title '>
+    vporoshok.me
+    </h2>
+    <div class='desc'>
+    Где-то на дальнем сервере
+    </div>
+  </header>
+
+</section>
+<section class='widget widget-social_menu sep-after'><nav aria-label='Соцсети'>
+    <ul><li>
+        <a href='https://twitter.com/vporoshok' target='_blank' rel='noopener'>
+          <span class='screen-reader-text'>Открыть Twitter-акаунт в новой вкладке</span><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"/>
+  
+</svg>
+</a>
+      </li><li>
+        <a href='https://github.com/vporoshok' target='_blank' rel='noopener'>
+          <span class='screen-reader-text'>Открыть Github-акаунт в новой вкладке</span><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/>
+  
+</svg>
+</a>
+      </li><li>
+        <a href='mailto:vporoshok@gmail.com' target='_blank' rel='noopener'>
+          <span class='screen-reader-text'>Связаться через Email</span><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+  <polyline points="22,6 12,13 2,6"/>
+  
+</svg>
+</a>
+      </li><li>
+        <a href='https://t.me/vporoshok' target='_blank' rel='noopener'>
+          <span class='screen-reader-text'>Открыть Telegram-акаунт в новой вкладке</span><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <path d="m 22.05,1.577 c -0.393,-0.016 -0.784,0.08 -1.117,0.235 -0.484,0.186 -4.92,1.902 -9.41,3.64 C 9.263,6.325 7.005,7.198 5.267,7.867 3.53,8.537 2.222,9.035 2.153,9.059 c -0.46,0.16 -1.082,0.362 -1.61,0.984 -0.79581202,1.058365 0.21077405,1.964825 1.004,2.499 1.76,0.564 3.58,1.102 5.087,1.608 0.556,1.96 1.09,3.927 1.618,5.89 0.174,0.394 0.553,0.54 0.944,0.544 l -0.002,0.02 c 0,0 0.307,0.03 0.606,-0.042 0.3,-0.07 0.677,-0.244 1.02,-0.565 0.377,-0.354 1.4,-1.36 1.98,-1.928 l 4.37,3.226 0.035,0.02 c 0,0 0.484,0.34 1.192,0.388 0.354,0.024 0.82,-0.044 1.22,-0.337 0.403,-0.294 0.67,-0.767 0.795,-1.307 0.374,-1.63 2.853,-13.427 3.276,-15.38 L 23.676,4.725 C 23.972,3.625 23.863,2.617 23.18,2.02 22.838,1.723 22.444,1.593 22.05,1.576 Z"/>
+  
+</svg>
+</a>
+      </li></ul>
+  </nav>
+</section><section class='widget widget-sidebar_menu sep-after'><nav id='sidebar-menu' class='menu sidebar-menu' aria-label='Боковое меню'>
+    <div class='container'>
+      <ul><li class='item'>
+  <a href='/categories/algorithm/'>Алгоритмы</a></li><li class='item'>
+  <a href='/categories/develop/'>Разработка</a></li><li class='item'>
+  <a href='/categories/life-style/'>Образ жизни</a></li><li class='item'>
+  <a href='/categories/book/'>Книги</a></li><li class='item'>
+  <a href='/slides/'>Презентации</a></li><li class='item'>
+  <a href='/categories/project/'>Проекты</a></li></ul>
+    </div>
+  </nav>
+
+</section><section class='widget widget-taxonomy_cloud sep-after'>
+  <header>
+    <h4 class='title widget-title'>Тэги</h4>
+  </header>
+
+  <div class='container list-container'>
+  <ul class='list taxonomy-cloud no-shuffle'><li>
+        <a href='/tags/algorithm/' style='font-size:1em'>algorithm</a>
+      </li><li>
+        <a href='/tags/angular/' style='font-size:1em'>angular</a>
+      </li><li>
+        <a href='/tags/architect/' style='font-size:1.625em'>architect</a>
+      </li><li>
+        <a href='/tags/blog/' style='font-size:1em'>blog</a>
+      </li><li>
+        <a href='/tags/checklist/' style='font-size:1.375em'>checklist</a>
+      </li><li>
+        <a href='/tags/complexity/' style='font-size:1.5em'>complexity</a>
+      </li><li>
+        <a href='/tags/csrf/' style='font-size:1em'>CSRF</a>
+      </li><li>
+        <a href='/tags/data-structure/' style='font-size:1.375em'>data-structure</a>
+      </li><li>
+        <a href='/tags/distributed-system/' style='font-size:1em'>distributed system</a>
+      </li><li>
+        <a href='/tags/event/' style='font-size:1em'>event</a>
+      </li><li>
+        <a href='/tags/git/' style='font-size:1em'>git</a>
+      </li><li>
+        <a href='/tags/go/' style='font-size:2em'>go</a>
+      </li><li>
+        <a href='/tags/graph/' style='font-size:1.125em'>graph</a>
+      </li><li>
+        <a href='/tags/hackathon/' style='font-size:1em'>hackathon</a>
+      </li><li>
+        <a href='/tags/keynote/' style='font-size:1em'>keynote</a>
+      </li><li>
+        <a href='/tags/logging/' style='font-size:1em'>logging</a>
+      </li><li>
+        <a href='/tags/management/' style='font-size:1.125em'>management</a>
+      </li><li>
+        <a href='/tags/memory/' style='font-size:1.25em'>memory</a>
+      </li><li>
+        <a href='/tags/microservices/' style='font-size:1.125em'>microservices</a>
+      </li><li>
+        <a href='/tags/orgmode/' style='font-size:1em'>orgmode</a>
+      </li><li>
+        <a href='/tags/php/' style='font-size:1em'>PHP</a>
+      </li><li>
+        <a href='/tags/python/' style='font-size:1.125em'>python</a>
+      </li><li>
+        <a href='/tags/rules/' style='font-size:1.125em'>rules</a>
+      </li><li>
+        <a href='/tags/rxjs/' style='font-size:1em'>rxjs</a>
+      </li><li>
+        <a href='/tags/scheme/' style='font-size:1.125em'>scheme</a>
+      </li><li>
+        <a href='/tags/scrum/' style='font-size:1.125em'>scrum</a>
+      </li><li>
+        <a href='/tags/security/' style='font-size:1em'>security</a>
+      </li><li>
+        <a href='/tags/sicp/' style='font-size:1.125em'>sicp</a>
+      </li><li>
+        <a href='/tags/sorting/' style='font-size:1em'>sorting</a>
+      </li><li>
+        <a href='/tags/state-machine/' style='font-size:1em'>state-machine</a>
+      </li><li>
+        <a href='/tags/team-lead/' style='font-size:1em'>team-lead</a>
+      </li><li>
+        <a href='/tags/testing/' style='font-size:1.125em'>testing</a>
+      </li><li>
+        <a href='/tags/tips-and-tricks/' style='font-size:1.25em'>tips and tricks</a>
+      </li><li>
+        <a href='/tags/toc/' style='font-size:1em'>toc</a>
+      </li><li>
+        <a href='/tags/tutorial/' style='font-size:1.125em'>tutorial</a>
+      </li><li>
+        <a href='/tags/typescript/' style='font-size:1em'>typescript</a>
+      </li><li>
+        <a href='/tags/web/' style='font-size:1em'>web</a>
+      </li><li>
+        <a href='/tags/work/' style='font-size:1em'>work</a>
+      </li></ul>
+</div>
+
+
+</section>
+</div>
+
+  <div class='sidebar-overlay'></div>
+</div><div class='main'><nav id='main-menu' class='menu main-menu' aria-label='Основное меню'>
+  <div class='container'>
+    <a class='screen-reader-text' href='#content'>Перейти к содержимому</a>
+
+<button id='sidebar-toggler' class='sidebar-toggler' aria-controls='sidebar'>
+  <span class='screen-reader-text'>Скрыть / показать боковую панель</span>
+  <span class='open'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <line x1="3" y1="12" x2="21" y2="12" />
+  <line x1="3" y1="6" x2="21" y2="6" />
+  <line x1="3" y1="18" x2="21" y2="18" />
+  
+</svg>
+</span>
+  <span class='close'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <line x1="18" y1="6" x2="6" y2="18" />
+  <line x1="6" y1="6" x2="18" y2="18" />
+  
+</svg>
+</span>
+</button>
+    <ul><li class='item'>
+        <a href='/post/'>Блог</a>
+      </li><li class='item'>
+        <a href='/page/about/'>Обо мне</a>
+      </li></ul>
+  </div>
+</nav><div class='header-widgets'>
+        <div class='container'></div>
+      </div>
+
+      <header id='header' class='header site-header'>
+        <div class='container sep-after'>
+          <div class='header-info'><p class='site-title title'>Где-то на дальнем сервере</p><p class='desc site-desc'>Заметки о программировании и не только</p>
+          </div>
+        </div>
+      </header>
+
+      <main id='content'>
+
+
+<article lang='ru' class='entry'>
+  <header class='header entry-header'>
+  <div class='container sep-after'>
+    <div class='header-info'>
+      <h1 class='title'>Рефлексия в Go</h1>
+      
+<p class='desc'>Выясняем – что такое рефлексия. Плюсы и минусы. Альтернативные подходы</p>
+
+
+    </div>
+    
+<div class='entry-meta'>
+  <span class='posted-on'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+  <line x1="16" y1="2" x2="16" y2="6"/>
+  <line x1="8" y1="2" x2="8" y2="6"/>
+  <line x1="3" y1="10" x2="21" y2="10"/>
+  
+</svg>
+<span class='screen-reader-text'>Опубликовано </span>
+  <time class='entry-date' datetime='2019-01-20T05:30:33Z'>2019-01-20</time>
+</span>
+
+  
+  
+<span class='reading-time'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <circle cx="12" cy="12" r="10"/>
+  <polyline points="12 6 12 12 15 15"/>
+  
+</svg>
+6 минут на чтение
+</span>
+
+
+  
+</div>
+
+
+  </div>
+</header>
+
+  
+  
+<details class='container entry-toc'>
+  <summary class='title'>
+    <span>Оглавление</span>
+  </summary>
+  <nav id="TableOfContents">
+<ul>
+<li>
+<ul>
+<li><a href="#что-же-такое-рефлексия-и-для-чего-она-нужна">Что же такое рефлексия и для чего она нужна?</a></li>
+<li><a href="#рефлексия-в-go">Рефлексия в Go</a>
+<ul>
+<li><a href="#интерфейсы">Интерфейсы</a></li>
+<li><a href="#reflect-value-и-reflect-type">reflect.Value и reflect.Type</a></li>
+<li><a href="#получение-исходного-типа">Получение исходного типа</a></li>
+<li><a href="#извлечение-полей-структуры">Извлечение полей структуры</a></li>
+<li><a href="#структурные-тэги-как-элемент-аоп">Структурные тэги как элемент АОП</a></li>
+</ul></li>
+<li><a href="#плюсы-и-минусы-рефлексии">Плюсы и минусы рефлексии</a></li>
+<li><a href="#примеры-использования-рефлексии">Примеры использования рефлексии</a></li>
+<li><a href="#альтернативы">Альтернативы</a></li>
+<li><a href="#дополнительное-чтение">Дополнительное чтение</a></li>
+</ul></li>
+</ul>
+</nav>
+</details>
+
+
+  <div class='container entry-content'>
+  
+
+<blockquote>Зачем ты озабочен<br />
+В этот хороший миг одним упорным выяснением,<br />
+Как тебя люди другие видят. Тратишь воображение<br />
+На домыслы пустые о домыслах касательно своей персоны.<br />
+У тебя рефлексия, опасная стадия.<footer>
+        <a href="http://estestest.ru/refleksiya">
+        Есть есть есть
+        <cite title="Рефлексия">«Рефлексия»</cite>
+        </a>
+    </footer>
+</blockquote>
+
+<h2 id="что-же-такое-рефлексия-и-для-чего-она-нужна">Что же такое рефлексия и для чего она нужна?</h2>
+
+<p><em>Рефлексия</em> это механизм, с помощью которого программа может проверять своё состояние, исследовать типы данных и менять свою структуру и поведение во время выполнения. Звучит довольно запутано, но давайте раскладывать по полочкам. Во первых рефлексия как механизм есть не во всех языках программирования. В целом она нужна для оперирования свойствами объектов неизвестных в момент компиляции.</p>
+
+<p>Если говорить про сторону модификации кода в момент выполнения, то тут можно посмотреть на аспектно-ориентированное программирование на примере <a href="https://github.com/goaop/framework">Go! AOP PHP Framework</a> или на механизмы внедрения зависимости, например, в том же <a href="https://github.com/angular/angular/tree/master/packages/core/src/di">Angular</a>.</p>
+
+<p>В этой статье я хочу коснуться интроспекции типов. По сути это механизм, позволяющий обойти строгую типизацию. Задача, которую решает рефлексия в данном случае это получение дополнительной информации о типе объекта в момент исполнения.</p>
+
+<h2 id="рефлексия-в-go">Рефлексия в Go</h2>
+
+<p>Для начала разберёмся что доступно в языке Go. К рефлексии, то есть способности кода получать какие-то данные о программе в момент исполнения в Go отвечают два пакета: <a href="https://godoc.org/runtime">runtime</a> и непосредственно <a href="https://godoc.org/reflect">reflect</a>. С помощью первого можно получать такие данные как стек вызовов или размер занимаемой памяти, но об этом мы поговорим в другой раз. Нас интересует пакет reflect, который предоставляет методы для извлечения информации о типах.</p>
+
+<h3 id="интерфейсы">Интерфейсы</h3>
+
+<p>Прежде чем разбираться с интроспекцией типов надо упомянуть о том как в Go хранятся переменные с типом интерфейс. Хранятся в памяти они в виде пары: (значение, тип). Например:</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#080;font-weight:bold">var</span> x <span style="color:#080;font-weight:bold">interface</span>{}
+
+x = <span style="background-color:#fff0f0">&#34;foo&#34;</span></code></pre></div>
+<p><code>x</code> представляет из себя пару <code>(&quot;foo&quot;, string)</code>. Это относится не только к пустым интерфейсам:</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#080;font-weight:bold">var</span> r io.Reader
+tty, err <span style="color:#333">:=</span> os.<span style="color:#06b;font-weight:bold">OpenFile</span>(<span style="background-color:#fff0f0">&#34;/dev/tty&#34;</span>, os.O_RDWR, <span style="color:#00d;font-weight:bold">0</span>)
+<span style="color:#080;font-weight:bold">if</span> err <span style="color:#333">!=</span> <span style="color:#080;font-weight:bold">nil</span> {
+    <span style="color:#080;font-weight:bold">return</span> <span style="color:#080;font-weight:bold">nil</span>, err
+}
+r = tty</code></pre></div>
+<p><code>r</code> хранит в себе пару <code>(tty, *os.File)</code>. Что позволяет осуществить кастинг типа:</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go">w, ok <span style="color:#333">:=</span> r.(io.Writer) <span style="color:#888">// ok is true
+</span><span style="color:#888"></span>w.<span style="color:#06b;font-weight:bold">Write</span>([]<span style="color:#007020">byte</span>(<span style="background-color:#fff0f0">&#34;hello&#34;</span>))</code></pre></div>
+<p>При этом в <code>w</code> также будет хранится пара: <code>(tty, *os.File)</code>, что позволяет в дальнейшем привести его например к <code>io.ReadCloser</code>. По сути мы уже применяем рефлексию, проверяя скрытый от нас тип оригинального объекта на удовлетворение определённому интерфейсу.</p>
+
+<h3 id="reflect-value-и-reflect-type">reflect.Value и reflect.Type</h3>
+
+<p>Основными концепциями пакета reflect являются как раз эта пара (значение, тип). Для получения информации о них в пакете представлены классы <code>Value</code> и <code>Type</code>. Оба имеют конструктор, принимающий в себя переменную, которую мы хотим исследовать.</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go">reflectType <span style="color:#333">:=</span> reflect.<span style="color:#06b;font-weight:bold">TypeOf</span>(x)
+reflectValue <span style="color:#333">:=</span> reflect.<span style="color:#06b;font-weight:bold">ValueOf</span>(x)</code></pre></div>
+<p>Стоит отметить, что у <code>reflect.Value</code> есть метод <code>Type</code>, позволяющий извлечь информацию о типе в нужный момент, поэтому чаще всего работа производится именно с типом <code>Value</code>, а <code>Type</code> получают по мере необходимости.</p>
+
+<h3 id="получение-исходного-типа">Получение исходного типа</h3>
+
+<p>Первое что можно извлечь с помощью пакета reflect &mdash; это оригинальный тип. То есть, если мы объявим собственный тип как обёртку над стандартным типом, то можно получить какой именно стандартный тип мы обернули. Для этого необходимо воспользоваться методом <code>Kind</code> у <code>Value</code> или <code>Type</code>.</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#080;font-weight:bold">type</span> MyInt <span style="color:#339;font-weight:bold">int</span>
+
+<span style="color:#080;font-weight:bold">var</span> x MyInt = <span style="color:#00d;font-weight:bold">12</span>
+v <span style="color:#333">:=</span> reflect.<span style="color:#06b;font-weight:bold">ValueOf</span>(x)
+fmt.<span style="color:#06b;font-weight:bold">Println</span>(<span style="background-color:#fff0f0">&#34;type:&#34;</span>, v.<span style="color:#06b;font-weight:bold">Type</span>().<span style="color:#06b;font-weight:bold">Name</span>())                   <span style="color:#888">// MyInt.
+</span><span style="color:#888"></span>fmt.<span style="color:#06b;font-weight:bold">Println</span>(<span style="background-color:#fff0f0">&#34;kind is uint8: &#34;</span>, v.<span style="color:#06b;font-weight:bold">Kind</span>() <span style="color:#333">==</span> reflect.Int) <span style="color:#333">//</span> <span style="color:#080;font-weight:bold">true</span>.</code></pre></div>
+<p>В пакете <code>reflect</code> есть константы для всех стандартных типов.</p>
+
+<h3 id="извлечение-полей-структуры">Извлечение полей структуры</h3>
+
+<p>Кроме того можно получить список полей структуры:</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#080;font-weight:bold">type</span> Data <span style="color:#080;font-weight:bold">struct</span> {
+    Foo <span style="color:#339;font-weight:bold">string</span>
+    Bar <span style="color:#339;font-weight:bold">int</span>
+}
+<span style="color:#080;font-weight:bold">var</span> x Data
+t <span style="color:#333">:=</span> reflect.<span style="color:#06b;font-weight:bold">TypeOf</span>(x)
+fmt.<span style="color:#06b;font-weight:bold">Println</span>(<span style="background-color:#fff0f0">&#34;number of fields:&#34;</span>, t.<span style="color:#06b;font-weight:bold">NumField</span>())                 <span style="color:#888">// 2.
+</span><span style="color:#888"></span>fmt.<span style="color:#06b;font-weight:bold">Println</span>(<span style="background-color:#fff0f0">&#34;name of first field:&#34;</span>, t.<span style="color:#06b;font-weight:bold">Field</span>(<span style="color:#00d;font-weight:bold">0</span>).Name)  <span style="color:#888">// Foo.
+</span><span style="color:#888"></span>fmt.<span style="color:#06b;font-weight:bold">Println</span>(<span style="background-color:#fff0f0">&#34;type of first field:&#34;</span>, t.<span style="color:#06b;font-weight:bold">Field</span>(<span style="color:#00d;font-weight:bold">0</span>).Type.<span style="color:#06b;font-weight:bold">Name</span>())  <span style="color:#888">// string.
+</span><span style="color:#888"></span>fmt.<span style="color:#06b;font-weight:bold">Println</span>(<span style="background-color:#fff0f0">&#34;name of second field:&#34;</span>, t.<span style="color:#06b;font-weight:bold">Field</span>(<span style="color:#00d;font-weight:bold">1</span>).Name) <span style="color:#888">// Bar.
+</span><span style="color:#888"></span>fmt.<span style="color:#06b;font-weight:bold">Println</span>(<span style="background-color:#fff0f0">&#34;type of second field:&#34;</span>, t.<span style="color:#06b;font-weight:bold">Field</span>(<span style="color:#00d;font-weight:bold">1</span>).Type.<span style="color:#06b;font-weight:bold">Name</span>()) <span style="color:#333">//</span> <span style="color:#339;font-weight:bold">int</span>.</code></pre></div>
+<p>Аналогично можно обойти все методы, а также получить список ключей и значений хеш-таблицы или список значений массива.</p>
+
+<h3 id="структурные-тэги-как-элемент-аоп">Структурные тэги как элемент АОП</h3>
+
+<p>В последнем примере стоит обратить внимание на то, что метод <code>Field</code> класса <code>Type</code> возвращает объект класса <code>StructField</code>. Этот объект помимо имени и типа поля содержит дополнительную информацию. Из всей доступной информации нас интересует поле: <code>Tag</code>, предоставляющее доступ до структурных тэгов.</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#080;font-weight:bold">type</span> Data <span style="color:#080;font-weight:bold">struct</span> {
+    Foo <span style="color:#339;font-weight:bold">string</span> <span style="background-color:#fff0f0">`json:&#34;foo&#34;`</span>
+    Bar <span style="color:#339;font-weight:bold">int</span>    <span style="background-color:#fff0f0">`json:&#34;bar&#34;`</span>
+}
+<span style="color:#080;font-weight:bold">var</span> x Data
+t <span style="color:#333">:=</span> reflect.<span style="color:#06b;font-weight:bold">TypeOf</span>(x)
+fmt.<span style="color:#06b;font-weight:bold">Println</span>(<span style="background-color:#fff0f0">&#34;json tag of first field:&#34;</span>, t.<span style="color:#06b;font-weight:bold">Field</span>(<span style="color:#00d;font-weight:bold">0</span>).Tag.<span style="color:#06b;font-weight:bold">Get</span>(<span style="background-color:#fff0f0">&#34;json&#34;</span>))  <span style="color:#888">// foo.
+</span><span style="color:#888"></span>fmt.<span style="color:#06b;font-weight:bold">Println</span>(<span style="background-color:#fff0f0">&#34;json tag of second field:&#34;</span>, t.<span style="color:#06b;font-weight:bold">Field</span>(<span style="color:#00d;font-weight:bold">1</span>).Tag.<span style="color:#06b;font-weight:bold">Get</span>(<span style="background-color:#fff0f0">&#34;json&#34;</span>)) <span style="color:#333">//</span> bar.</code></pre></div>
+<p>И этот механизм позволяет использовать структурные тэги для внедрения различных аспектов в описании классов. Например, структурные тэги используются в стандартной библиотеке подпакетами <a href="https://godoc.org/encoding">encoding</a>, а также многими пакетами для валидации, например, <a href="https://godoc.org/gopkg.in/go-playground/validator.v9">validator</a>, ну и, конечно, не обошлось здесь без ORM, которые вообще все поголовно используют структурные тэги.</p>
+
+<p>Конечно, надо помнить, что структурные тэги не проверяются в момент компиляции и с ними необходимо быть аккуратным, но в будущих версиях Go, надеюсь, появится и <a href="https://github.com/golang/go/issues/23637">проверка при компиляции</a>.</p>
+
+<h2 id="плюсы-и-минусы-рефлексии">Плюсы и минусы рефлексии</h2>
+
+<p>Плюсы рефлексии заключаются в том, что можно отделить определённую логику в отдельные аспекты, не дублируя и не усложняя код. При этом, конечно, сложность не исчезает, а переходит в runtime. Отсюда вытекают и минусы рефлексии: оперирование нетипизированными объектами в момент исполнения. Собственно для надёжной работы с рефлексией просто необходимы тесты, которые будут проверять корректность применения аспектов непосредственно к коду бизнес-логики, а также хорошее покрытие аспекта. Это похоже на то, как в нетипизированных языках необходимо покрывать тестами все возможные комбинации типов входных параметров. Конечно, все возможные комбинации покрывать смысла нет, но проверить нормальный случай, граничные случаи и исключения будет не лишним для аспекта, а для кода бизнес-логики будет достаточно прямого сценария.</p>
+
+<p>Кроме того к минусам рефлексии относят падение скорости работы. Это связанно с выделением дополнительной памяти. Как уже упоминалось выше, интерфейсы представляют из себя кортежи из типа и значения, таким образом, как только мы приводим значение к интерфейсу, выделяется память под эту пару. Кроме того, сами объекты рефлексии <code>reflect.Type</code> и <code>reflect.Value</code> тоже требуют памяти. Но по факту для заранее известного числа объектов это немного, тем более в сравнении с теми же задержками сети. Конечно, если необходимо написать приложение реального времени, то рефлексия будет не лучшим выбором, однако, в большинстве случаев использование рефлексии оправдано.</p>
+
+<h2 id="примеры-использования-рефлексии">Примеры использования рефлексии</h2>
+
+<p>Рефлексия широко применяется в стандартной библиотеке для сериализации и десериализации, а также форматирования (json, xml, fmt). При этом надо упомянуть, что рефлексия всегда используется как последнее средство. Сначала производятся попытки привести пустой интерфейс к стандартным типам, затем к объявленным внутренним интерфейсам, и только потом формируются объекты рефлексии. Конечно, это делается потому, что стандартная библиотека должна быть настолько быстрой, насколько это возможно, не усложняя интерфейсы. В сторонних библиотеках рефлексия применяется более аггрессивно: ORM, валидация, (де)сериализация и многие другие области. Часто рефлексия применяется для имитации отсутствующих в языке дженериков (например, стандартный пакет sort).</p>
+
+<h2 id="альтернативы">Альтернативы</h2>
+
+<p>Перед тем как использовать рефлексию в своей библиотеке стоит рассмотреть альтернативы.</p>
+
+<p>Первое, о чём стоит задуматься, это использование <strong>интерфейсов</strong>. Если реализация интерфейса не слишком обременительна для клиента и не составляет основную логику вашей библиотеки, то стоит остановиться на этом варианте. Если достаточно интерфейса из стандартной библиотеки, то это ещё лучше.</p>
+
+<p>Однако, возможно помимо интерфейса клиенту будет удобно передавать также стандартные типы, которые не имеют собственных интерфейсов. Тогда будет удобно реализовать собственные <strong>обёртки над стандартными типами</strong>. В качестве примера подобного подхода можно рассмотреть интерфейс библиотеки логирования <a href="https://github.com/uber-go/zap">https://github.com/uber-go/zap</a>.</p>
+
+<p>Более сложной, но куда более надёжной и быстрой альтернативой является <strong>генерация кода</strong>. Эта тема заслуживает отдельной статьи, но если не терпится посмотреть &mdash; что это такое и как это готовить, то начать можно со знаменитой статьи Роба Пайка <a href="https://blog.golang.org/generate">Generating code</a>, а продолжить чтение такими монстрами как <a href="https://github.com/golang/mock">https://github.com/golang/mock</a>, <a href="https://github.com/go-reform/reform">https://github.com/go-reform/reform</a> и <a href="https://github.com/mailru/easyjson">https://github.com/mailru/easyjson</a>.</p>
+
+<p>Ну, и наконец, если вы всё же решили использовать рефлексию в своей библиотеке, и при этом библиотека достаточно общая и может быть применена в широком кругу приложений, то постарайтесь минимизировать использование рефлексии с помощью приведения к стандартным типам и интерфейсам. За примерами обратитесь к стандартной библиотеке.</p>
+
+<h2 id="дополнительное-чтение">Дополнительное чтение</h2>
+
+<ol>
+<li>Go Data Structures: Interfaces <a href="https://research.swtch.com/interfaces">https://research.swtch.com/interfaces</a>;</li>
+<li>The Laws of Reflection <a href="https://blog.golang.org/laws-of-reflection">https://blog.golang.org/laws-of-reflection</a>;</li>
+<li>Godoc reflect <a href="https://godoc.org/reflect#StructField">https://godoc.org/reflect#StructField</a>;</li>
+</ol>
+
+</div>
+
+  
+<footer class='entry-footer'>
+  <div class='container sep-before'><div class='categories'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <path d="M22,19a2,2,0,0,1-2,2H4a2,2,0,0,1-2-2V5A2,2,0,0,1,4,3H9l2,3h9a2,2,0,0,1,2,2Z"/>
+  
+</svg>
+<span class='screen-reader-text'>category: </span><a class='category' href='/categories/develop/'>Разработка</a></div>
+<div class='tags'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <path d="M20.59,13.41l-7.17,7.17a2,2,0,0,1-2.83,0L2,12V2H12l8.59,8.59A2,2,0,0,1,20.59,13.41Z"/>
+  <line x1="7" y1="7" x2="7" y2="7"/>
+  
+</svg>
+<span class='screen-reader-text'>Тэги: </span><a class='tag' href='/tags/go/'>go</a>, <a class='tag' href='/tags/architect/'>architect</a></div>
+
+  </div>
+</footer>
+
+
+</article>
+
+<nav class='entry-nav'>
+  <div class='container'><div class='prev-entry sep-before'>
+      <a href='/post/2019/01/hackathon/'>
+        <span aria-hidden='true'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <line x1="20" y1="12" x2="4" y2="12"/>
+  <polyline points="10 18 4 12 10 6"/>
+  
+</svg>
+ Предыдущий</span>
+        <span class='screen-reader-text'>Предыдущая запись: </span>Хакатон. Как не перестать улыбаться за 24 часа</a>
+    </div><div class='next-entry sep-before'>
+      <a href='/post/2019/01/decorators/'>
+        <span class='screen-reader-text'>Следующая запись: </span>Декораторы в Go<span aria-hidden='true'>Следующий <svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <line x1="4" y1="12" x2="20" y2="12"/>
+  <polyline points="14 6 20 12 14 18"/>
+  
+</svg>
+</span>
+      </a>
+    </div></div>
+</nav>
+
+
+
+
+      </main>
+
+      <footer id='footer' class='footer'>
+        <div class='container sep-before'><div class='copyright'>
+  <p>Материалы распространяются по <a rel="noreferrer" href="https://creativecommons.org/licenses/by/4.0/" target="_blank">лицензии CC BY</a> &copy; 2018-2021 vporoshok <br>Увидели ошибку? Буду рад <a rel="noreferrer" href="https://github.com/vporoshok/vporoshok.github.io" target="_blank">PR&rsquo;у</a></p>
+</div>
+
+        </div>
+      </footer>
+
+    </div>
+  </div><script>window.__assets_js_src="/assets/js/"</script>
+
+<script src='/assets/js/main.67d669ac.js'></script>
+
+</body>
+
+</html>
+

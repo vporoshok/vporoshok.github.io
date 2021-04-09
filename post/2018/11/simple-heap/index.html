@@ -1,0 +1,1221 @@
+<!DOCTYPE html>
+<html lang='ru'><head>
+  <meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='description' content='А я угадаю этот минимум за O(1)'>
+<meta name='theme-color' content='#ffcd00'>
+
+<meta property='og:title' content='Простая двоичная куча • Где-то на дальнем сервере'>
+<meta property='og:description' content='А я угадаю этот минимум за O(1)'>
+<meta property='og:url' content='https://vporoshok.me/post/2018/11/simple-heap/'>
+<meta property='og:site_name' content='Где-то на дальнем сервере'>
+<meta property='og:type' content='article'><meta property='article:section' content='post'><meta property='article:tag' content='data-structure'><meta property='article:tag' content='memory'><meta property='article:tag' content='complexity'><meta property='article:tag' content='python'><meta property='article:published_time' content='2018-11-02T15:00:00Z'/><meta property='article:modified_time' content='2020-07-04T13:36:24&#43;04:00'/><meta name='twitter:card' content='summary'>
+
+<meta name="generator" content="Hugo 0.57.2" />
+
+  <title>Простая двоичная куча • Где-то на дальнем сервере</title>
+  <link rel='canonical' href='https://vporoshok.me/post/2018/11/simple-heap/'>
+  
+  
+  <link rel='icon' href='/favicon.ico'>
+<link rel='stylesheet' href='/assets/css/main.6a060eb7.css'><link rel='stylesheet' href='/assets/custom.css'><style>
+:root{--color-accent:#ffcd00;}
+</style>
+
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+	ga('create', 'UA-41042060-2', 'auto');
+	
+	ga('send', 'pageview');
+}
+</script>
+<script async src='https://www.google-analytics.com/analytics.js'></script>
+
+  
+
+</head>
+<body class='page type-post has-sidebar'>
+
+  <div class='site'><div id='sidebar' class='sidebar'>
+  <a class='screen-reader-text' href='#main-menu'>Перейти к основному меню</a>
+
+  <div class='container'><section class='widget widget-about sep-after'>
+  <header>
+    
+    <div class='logo'>
+      <a href='/'>
+        <img src='/images/logo.jpg' alt="Вернуться на главную">
+      </a>
+    </div>
+    
+    <h2 class='title site-title '>
+    vporoshok.me
+    </h2>
+    <div class='desc'>
+    Где-то на дальнем сервере
+    </div>
+  </header>
+
+</section>
+<section class='widget widget-social_menu sep-after'><nav aria-label='Соцсети'>
+    <ul><li>
+        <a href='https://twitter.com/vporoshok' target='_blank' rel='noopener'>
+          <span class='screen-reader-text'>Открыть Twitter-акаунт в новой вкладке</span><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"/>
+  
+</svg>
+</a>
+      </li><li>
+        <a href='https://github.com/vporoshok' target='_blank' rel='noopener'>
+          <span class='screen-reader-text'>Открыть Github-акаунт в новой вкладке</span><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/>
+  
+</svg>
+</a>
+      </li><li>
+        <a href='mailto:vporoshok@gmail.com' target='_blank' rel='noopener'>
+          <span class='screen-reader-text'>Связаться через Email</span><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+  <polyline points="22,6 12,13 2,6"/>
+  
+</svg>
+</a>
+      </li><li>
+        <a href='https://t.me/vporoshok' target='_blank' rel='noopener'>
+          <span class='screen-reader-text'>Открыть Telegram-акаунт в новой вкладке</span><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <path d="m 22.05,1.577 c -0.393,-0.016 -0.784,0.08 -1.117,0.235 -0.484,0.186 -4.92,1.902 -9.41,3.64 C 9.263,6.325 7.005,7.198 5.267,7.867 3.53,8.537 2.222,9.035 2.153,9.059 c -0.46,0.16 -1.082,0.362 -1.61,0.984 -0.79581202,1.058365 0.21077405,1.964825 1.004,2.499 1.76,0.564 3.58,1.102 5.087,1.608 0.556,1.96 1.09,3.927 1.618,5.89 0.174,0.394 0.553,0.54 0.944,0.544 l -0.002,0.02 c 0,0 0.307,0.03 0.606,-0.042 0.3,-0.07 0.677,-0.244 1.02,-0.565 0.377,-0.354 1.4,-1.36 1.98,-1.928 l 4.37,3.226 0.035,0.02 c 0,0 0.484,0.34 1.192,0.388 0.354,0.024 0.82,-0.044 1.22,-0.337 0.403,-0.294 0.67,-0.767 0.795,-1.307 0.374,-1.63 2.853,-13.427 3.276,-15.38 L 23.676,4.725 C 23.972,3.625 23.863,2.617 23.18,2.02 22.838,1.723 22.444,1.593 22.05,1.576 Z"/>
+  
+</svg>
+</a>
+      </li></ul>
+  </nav>
+</section><section class='widget widget-sidebar_menu sep-after'><nav id='sidebar-menu' class='menu sidebar-menu' aria-label='Боковое меню'>
+    <div class='container'>
+      <ul><li class='item'>
+  <a href='/categories/algorithm/'>Алгоритмы</a></li><li class='item'>
+  <a href='/categories/develop/'>Разработка</a></li><li class='item'>
+  <a href='/categories/life-style/'>Образ жизни</a></li><li class='item'>
+  <a href='/categories/book/'>Книги</a></li><li class='item'>
+  <a href='/slides/'>Презентации</a></li><li class='item'>
+  <a href='/categories/project/'>Проекты</a></li></ul>
+    </div>
+  </nav>
+
+</section><section class='widget widget-taxonomy_cloud sep-after'>
+  <header>
+    <h4 class='title widget-title'>Тэги</h4>
+  </header>
+
+  <div class='container list-container'>
+  <ul class='list taxonomy-cloud no-shuffle'><li>
+        <a href='/tags/algorithm/' style='font-size:1em'>algorithm</a>
+      </li><li>
+        <a href='/tags/angular/' style='font-size:1em'>angular</a>
+      </li><li>
+        <a href='/tags/architect/' style='font-size:1.625em'>architect</a>
+      </li><li>
+        <a href='/tags/blog/' style='font-size:1em'>blog</a>
+      </li><li>
+        <a href='/tags/checklist/' style='font-size:1.375em'>checklist</a>
+      </li><li>
+        <a href='/tags/complexity/' style='font-size:1.5em'>complexity</a>
+      </li><li>
+        <a href='/tags/csrf/' style='font-size:1em'>CSRF</a>
+      </li><li>
+        <a href='/tags/data-structure/' style='font-size:1.375em'>data-structure</a>
+      </li><li>
+        <a href='/tags/distributed-system/' style='font-size:1em'>distributed system</a>
+      </li><li>
+        <a href='/tags/event/' style='font-size:1em'>event</a>
+      </li><li>
+        <a href='/tags/git/' style='font-size:1em'>git</a>
+      </li><li>
+        <a href='/tags/go/' style='font-size:2em'>go</a>
+      </li><li>
+        <a href='/tags/graph/' style='font-size:1.125em'>graph</a>
+      </li><li>
+        <a href='/tags/hackathon/' style='font-size:1em'>hackathon</a>
+      </li><li>
+        <a href='/tags/keynote/' style='font-size:1em'>keynote</a>
+      </li><li>
+        <a href='/tags/logging/' style='font-size:1em'>logging</a>
+      </li><li>
+        <a href='/tags/management/' style='font-size:1.125em'>management</a>
+      </li><li>
+        <a href='/tags/memory/' style='font-size:1.25em'>memory</a>
+      </li><li>
+        <a href='/tags/microservices/' style='font-size:1.125em'>microservices</a>
+      </li><li>
+        <a href='/tags/orgmode/' style='font-size:1em'>orgmode</a>
+      </li><li>
+        <a href='/tags/php/' style='font-size:1em'>PHP</a>
+      </li><li>
+        <a href='/tags/python/' style='font-size:1.125em'>python</a>
+      </li><li>
+        <a href='/tags/rules/' style='font-size:1.125em'>rules</a>
+      </li><li>
+        <a href='/tags/rxjs/' style='font-size:1em'>rxjs</a>
+      </li><li>
+        <a href='/tags/scheme/' style='font-size:1.125em'>scheme</a>
+      </li><li>
+        <a href='/tags/scrum/' style='font-size:1.125em'>scrum</a>
+      </li><li>
+        <a href='/tags/security/' style='font-size:1em'>security</a>
+      </li><li>
+        <a href='/tags/sicp/' style='font-size:1.125em'>sicp</a>
+      </li><li>
+        <a href='/tags/sorting/' style='font-size:1em'>sorting</a>
+      </li><li>
+        <a href='/tags/state-machine/' style='font-size:1em'>state-machine</a>
+      </li><li>
+        <a href='/tags/team-lead/' style='font-size:1em'>team-lead</a>
+      </li><li>
+        <a href='/tags/testing/' style='font-size:1.125em'>testing</a>
+      </li><li>
+        <a href='/tags/tips-and-tricks/' style='font-size:1.25em'>tips and tricks</a>
+      </li><li>
+        <a href='/tags/toc/' style='font-size:1em'>toc</a>
+      </li><li>
+        <a href='/tags/tutorial/' style='font-size:1.125em'>tutorial</a>
+      </li><li>
+        <a href='/tags/typescript/' style='font-size:1em'>typescript</a>
+      </li><li>
+        <a href='/tags/web/' style='font-size:1em'>web</a>
+      </li><li>
+        <a href='/tags/work/' style='font-size:1em'>work</a>
+      </li></ul>
+</div>
+
+
+</section>
+</div>
+
+  <div class='sidebar-overlay'></div>
+</div><div class='main'><nav id='main-menu' class='menu main-menu' aria-label='Основное меню'>
+  <div class='container'>
+    <a class='screen-reader-text' href='#content'>Перейти к содержимому</a>
+
+<button id='sidebar-toggler' class='sidebar-toggler' aria-controls='sidebar'>
+  <span class='screen-reader-text'>Скрыть / показать боковую панель</span>
+  <span class='open'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <line x1="3" y1="12" x2="21" y2="12" />
+  <line x1="3" y1="6" x2="21" y2="6" />
+  <line x1="3" y1="18" x2="21" y2="18" />
+  
+</svg>
+</span>
+  <span class='close'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <line x1="18" y1="6" x2="6" y2="18" />
+  <line x1="6" y1="6" x2="18" y2="18" />
+  
+</svg>
+</span>
+</button>
+    <ul><li class='item'>
+        <a href='/post/'>Блог</a>
+      </li><li class='item'>
+        <a href='/page/about/'>Обо мне</a>
+      </li></ul>
+  </div>
+</nav><div class='header-widgets'>
+        <div class='container'></div>
+      </div>
+
+      <header id='header' class='header site-header'>
+        <div class='container sep-after'>
+          <div class='header-info'><p class='site-title title'>Где-то на дальнем сервере</p><p class='desc site-desc'>Заметки о программировании и не только</p>
+          </div>
+        </div>
+      </header>
+
+      <main id='content'>
+
+
+<article lang='ru' class='entry'>
+  <header class='header entry-header'>
+  <div class='container sep-after'>
+    <div class='header-info'>
+      <h1 class='title'>Простая двоичная куча</h1>
+      
+<p class='desc'>А я угадаю этот минимум за O(1)</p>
+
+
+    </div>
+    
+<div class='entry-meta'>
+  <span class='posted-on'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+  <line x1="16" y1="2" x2="16" y2="6"/>
+  <line x1="8" y1="2" x2="8" y2="6"/>
+  <line x1="3" y1="10" x2="21" y2="10"/>
+  
+</svg>
+<span class='screen-reader-text'>Опубликовано </span>
+  <time class='entry-date' datetime='2018-11-02T15:00:00Z'>2018-11-02</time>
+</span>
+
+  
+  
+<span class='reading-time'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <circle cx="12" cy="12" r="10"/>
+  <polyline points="12 6 12 12 15 15"/>
+  
+</svg>
+12 минут на чтение
+</span>
+
+
+  <a href="/slides/2018/11/simple-heap/">
+    <svg class="icon" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+        <rect fill="none" height="20" rx="1" ry="1" stroke="rgb(0, 0, 0)" width="22" x="1" y="3"/>
+        <rect fill="none" height="13" stroke="rgb(0, 0, 0)" width="18" x="3" y="5"/>
+        <polygon points="10.6,9 15,11.3 10.6,13.6"/>
+    </svg>
+    <span>Слайды</span>
+</a>
+</div>
+
+
+  </div>
+</header>
+
+  
+  
+<details class='container entry-toc'>
+  <summary class='title'>
+    <span>Оглавление</span>
+  </summary>
+  <nav id="TableOfContents">
+<ul>
+<li>
+<ul>
+<li><a href="#определение-и-базовые-операции">Определение и базовые операции</a>
+<ul>
+<li><a href="#восстановление-свойств-кучи">Восстановление свойств кучи</a>
+<ul>
+<li><a href="#погружение-элемента">Погружение элемента</a></li>
+<li><a href="#всплытие-элемента">Всплытие элемента</a></li>
+</ul></li>
+</ul></li>
+<li><a href="#двоичная-куча">Двоичная куча</a>
+<ul>
+<li><a href="#другие-операции">Другие операции</a>
+<ul>
+<li><a href="#локаторы">Локаторы</a></li>
+<li><a href="#слияние">Слияние</a></li>
+</ul></li>
+<li><a href="#эффективное-построение-кучи">Эффективное построение кучи</a></li>
+</ul></li>
+<li><a href="#пирамидальная-сортировка">Пирамидальная сортировка</a></li>
+<li><a href="#применение">Применение</a></li>
+<li><a href="#вопросы">Вопросы</a></li>
+<li><a href="#задания">Задания</a></li>
+<li><a href="#дополнительное-чтение">Дополнительное чтение</a></li>
+<li><a href="#ссылки">Ссылки</a></li>
+</ul></li>
+</ul>
+</nav>
+</details>
+
+
+  <div class='container entry-content'>
+  
+
+<p>Часто возникает необходимость «сортировать» динамический набор данных. Самым ярким примером такой задачи является очередь с приоритетом. По сути задача сводится к последовательному выбору минимумов из множества, при этом допускающего добавление к множеству новых элементов. Конечно, эту задачу можно решить с помощью сортировки начального множества, а новые элементы можно включать с помощью бинарной вставки. Однако, есть структуры данных, позволяющие реализовать необходимые операции за меньшую стоимость. Такая структура называется <em>куча</em> (heap).</p>
+
+<h2 id="определение-и-базовые-операции">Определение и базовые операции</h2>
+
+<p>Кучей называется дерево, в котором любой элемент не меньше своего родителя. Аналогично можно определить кучу для получения максимума, но в дальнейшем будем рассматривать неубывающую кучу.</p>
+
+<figure>
+    <div class="mermaid">
+graph TD
+    A((1))
+    A---B((3))
+    A---C((2))
+    A---D((4))
+    B---E((4))
+    C---F((8))
+    C---G((8))
+    C---H((5))
+    D---I((5))
+    D---J((4))
+    E---K((9))
+    E---L((17))
+    H---M((9))
+    H---N((21))
+    J---O((10))
+</div>
+<figcaption>
+        Рис.&thinsp;1.
+        
+    </figcaption>
+</figure>
+
+
+<p>На таком дереве несложно реализовать три основные операции, производимые с куче:</p>
+
+<ul>
+<li>получение минимума (peek);</li>
+<li>извлечение минимума (pop);</li>
+<li>добавление элемента (push);</li>
+</ul>
+
+<p>Собственно минимум в такой структуре всегда находится в корне, поэтому его получение имеет сложность \(O(1)\). А две другие операции требуют операций для восстановления кучи.</p>
+
+<h3 id="восстановление-свойств-кучи">Восстановление свойств кучи</h3>
+
+<p>Нарушение свойства кучи «любой элемент не меньше своего родителя» в одном из её элементов будем называть <em>аномалией</em>. Аномалии могут возникнуть по двум причинам: большой элемент оказался слишком высоко в дереве или, наоборот, маленький элемент оказался слишком низко в дереве.</p>
+
+<h4 id="погружение-элемента">Погружение элемента</h4>
+
+<p>Первый случай является результатом извлечения минимума следующим способом: так как непустое дерево не может существовать без корня, поместим на место корня любой листовой элемент (удалив его предварительно).</p>
+
+<figure>
+    <div class="mermaid">
+graph TD
+    A((10))
+    A---B((3))
+    A---C((2))
+    A---D((4))
+    B---E((4))
+    C---F((8))
+    C---G((8))
+    C---H((5))
+    D---I((5))
+    D---J((4))
+    E---K((9))
+    E---L((17))
+    H---M((9))
+    H---N((21))
+    J---O((10))
+
+    style A fill:lightGreen
+    style O fill:pink,opacity:0.2
+</div>
+<figcaption>
+        Рис.&thinsp;2.
+        
+    </figcaption>
+</figure>
+
+
+<p>Таким образом у нас появилась аномалия в корне. Для её устранения необходимо выбрать минимальный элемент из первого уровня дерева и поменять его с корнем.</p>
+
+<figure>
+    <div class="mermaid">
+graph TD
+    A((2))
+    A---B((3))
+    A---C((10))
+    A---D((4))
+    B---E((4))
+    C---F((8))
+    C---G((8))
+    C---H((5))
+    D---I((5))
+    D---J((4))
+    E---K((9))
+    E---L((17))
+    H---M((9))
+    H---N((21))
+
+    style A fill:lightGreen
+    style C fill:pink
+</div>
+<figcaption>
+        Рис.&thinsp;3.
+        
+    </figcaption>
+</figure>
+
+
+<p>При этом аномалия смещается вместе с корнем в узел меньшего сына. Но эта ситуация аналогична предыдущей, только для поддерева от этого узла и решается тем же способом.</p>
+
+<div class="d-flex">
+<figure>
+    <div class="mermaid">
+graph TD
+    C((5))
+    C---F((8))
+    C---G((8))
+    C---H((10))
+    H---M((9))
+    H---N((21))
+
+    style C fill:lightGreen
+    style H fill:pink
+</div>
+<figcaption>
+        Рис.&thinsp;4.
+        
+    </figcaption>
+</figure>
+
+
+<figure>
+    <div class="mermaid">
+graph TD
+    H((9))
+    H---M((10))
+    H---N((21))
+
+    style H fill:lightGreen
+    style M fill:pink
+</div>
+<figcaption>
+        Рис.&thinsp;5.
+        
+    </figcaption>
+</figure>
+
+</div>
+
+<p>При этом очевидно, что подобный спуск не может вызвать аномалии в других частях кучи. Такая перестановка называется погружением элемента (sift down). Очевидно, что сложность такой операции не превышает высоты кучи при ограниченной степени ветвления дерева (но об этом позже).</p>
+
+<h4 id="всплытие-элемента">Всплытие элемента</h4>
+
+<p>Другая аномалия является следствием добавления нового элемента. Новый элемент мы можем добавить как лист к одному из узлов дерева.</p>
+
+<figure>
+    <div class="mermaid">
+graph TD
+    A((2))
+    A---B((3))
+    A---C((5))
+    A---D((4))
+    B---E((4))
+    C---F((8))
+    C---G((8))
+    C---H((9))
+    D---I((5))
+    D---J((4))
+    E---K((9))
+    E---L((17))
+    H---M((10))
+    H---N((21))
+    J---O((2))
+
+    style O fill:lightGreen
+</div>
+<figcaption>
+        Рис.&thinsp;6.
+        
+    </figcaption>
+</figure>
+
+
+<p>Может оказаться, что новый элемент меньше своего родителя, тогда надо поменять местами эти два элемента, а затем повторить эту процедуру от нового местоположения добавленного элемента. Таким образом новый элемент продвигается вверх по одной из ветвей кучи до тех пор, пока не займёт подходящее место.</p>
+
+<figure>
+    <div class="mermaid">
+graph TD
+    A((2))
+    A---B((3))
+    A---C((5))
+    A---D((2))
+    B---E((4))
+    C---F((8))
+    C---G((8))
+    C---H((9))
+    D---I((5))
+    D---J((4))
+    E---K((9))
+    E---L((17))
+    H---M((10))
+    H---N((21))
+    J---O((4))
+
+    style A fill:pink
+    style D fill:lightGreen
+    style J fill:pink
+    style O fill:pink
+</div>
+<figcaption>
+        Рис.&thinsp;7.
+        
+    </figcaption>
+</figure>
+
+
+<p>Такая перестановка называется всплытием элемента (sift up) и также имеет сложность не превышающую глубины кучи, вне зависимости от степени ветвления.</p>
+
+<h2 id="двоичная-куча">Двоичная куча</h2>
+
+<p>Всё бы хорошо, но работа с деревьями произвольной формы не самое приятное занятие для компьютера. Чаще всего это сводится к куче указателей и нелокальности данных. Но, если добавить дополнительных ограничений на кучу, то её можно очень компактно расположить в памяти без единого указателя. Во-первых, необходимо ограничить степень ветвления двумя. Кроме того добавим следующие ограничения:</p>
+
+<ul>
+<li>глубина всех листьев отличается не более, чем на \(1\);</li>
+<li>последний слой заполняется слева направо без пропусков;</li>
+</ul>
+
+<p>Тогда узлы такого дерева могут быть однозначно пронумерованы:</p>
+
+<figure>
+    <div class="mermaid">
+graph TD
+    A((0))
+    A---B((1))
+    A---C((2))
+    B---D((3))
+    B---E((4))
+    C---F((5))
+    C---G((6))
+    D---H((7))
+    D---I((8))
+    E---J((9))
+    E---K((10))
+    F---L((11))
+    F---M((12))
+    G---N((13))
+    G---O((14))
+
+    style M opacity:0.2
+    style N opacity:0.2
+    style O opacity:0.2
+</div>
+<figcaption>
+        Рис.&thinsp;8.
+        
+    </figcaption>
+</figure>
+
+
+<p>Для \(i\)-го узла следует, что его родитель будет иметь индекс \(\lfloor (i - 1) / 2 \rfloor\), а его сыновья — \(2i + 1\) и \(2i + 2\). Это позволяет хранить элементы такого дерева в массиве, однозначно определяя связи в дереве через индексы. Такая структура и называется <em>двоичной кучей</em>.</p>
+
+<p>Давайте рассмотрим реализацию этой структуры.</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#080;font-weight:bold">class</span> <span style="color:#b06;font-weight:bold">BinaryHeap</span>:
+    _items <span style="color:#333">=</span> []
+
+    <span style="color:#080;font-weight:bold">def</span> <span style="color:#06b;font-weight:bold">peek</span>(self):
+        <span style="color:#080;font-weight:bold">if</span> <span style="color:#007020">len</span>(self<span style="color:#333">.</span>_items) <span style="color:#333">&gt;</span> <span style="color:#00d;font-weight:bold">0</span>:
+            <span style="color:#080;font-weight:bold">return</span> self<span style="color:#333">.</span>_items[<span style="color:#00d;font-weight:bold">0</span>]
+
+    <span style="color:#080;font-weight:bold">def</span> <span style="color:#06b;font-weight:bold">push</span>(self, x):
+        self<span style="color:#333">.</span>_items<span style="color:#333">.</span>append(x)
+        self<span style="color:#333">.</span>_sift_up(<span style="color:#007020">len</span>(self<span style="color:#333">.</span>_items) <span style="color:#333">-</span> <span style="color:#00d;font-weight:bold">1</span>)
+
+    <span style="color:#080;font-weight:bold">def</span> <span style="color:#06b;font-weight:bold">pop</span>(self):
+        <span style="color:#080;font-weight:bold">if</span> <span style="color:#007020">len</span>(self<span style="color:#333">.</span>_items) <span style="color:#333">&gt;</span> <span style="color:#00d;font-weight:bold">0</span>:
+            x <span style="color:#333">=</span> self<span style="color:#333">.</span>_items[<span style="color:#00d;font-weight:bold">0</span>]
+            self<span style="color:#333">.</span>_items[<span style="color:#00d;font-weight:bold">0</span>] <span style="color:#333">=</span> self<span style="color:#333">.</span>_items[<span style="color:#007020">len</span>(self<span style="color:#333">.</span>_items)<span style="color:#333">-</span><span style="color:#00d;font-weight:bold">1</span>]
+            self<span style="color:#333">.</span>_items<span style="color:#333">.</span>pop()
+            self<span style="color:#333">.</span>_sift_down(<span style="color:#00d;font-weight:bold">0</span>)
+            <span style="color:#080;font-weight:bold">return</span> x
+
+    <span style="color:#080;font-weight:bold">def</span> <span style="color:#06b;font-weight:bold">_sift_up</span>(self, i):
+        <span style="color:#080;font-weight:bold">while</span> i <span style="color:#333">&gt;</span> <span style="color:#00d;font-weight:bold">0</span>:
+            j <span style="color:#333">=</span> (i <span style="color:#333">-</span> <span style="color:#00d;font-weight:bold">1</span>) <span style="color:#333">//</span> <span style="color:#00d;font-weight:bold">2</span>
+            <span style="color:#080;font-weight:bold">if</span> self<span style="color:#333">.</span>_items[j] <span style="color:#333">&lt;=</span> self<span style="color:#333">.</span>_items[i]:
+                <span style="color:#080;font-weight:bold">break</span>
+            self<span style="color:#333">.</span>_items[j], self<span style="color:#333">.</span>_items[i] <span style="color:#333">=</span> self<span style="color:#333">.</span>_items[i], self<span style="color:#333">.</span>_items[j]
+            i <span style="color:#333">=</span> j
+
+    <span style="color:#080;font-weight:bold">def</span> <span style="color:#06b;font-weight:bold">_sift_down</span>(self, i):
+        <span style="color:#080;font-weight:bold">while</span> True:
+            j <span style="color:#333">=</span> self<span style="color:#333">.</span>_min_son(i)
+            <span style="color:#080;font-weight:bold">if</span> <span style="color:#000;font-weight:bold">not</span> j <span style="color:#000;font-weight:bold">or</span> self<span style="color:#333">.</span>_items[i] <span style="color:#333">&lt;=</span> self<span style="color:#333">.</span>_items[j]:
+                <span style="color:#080;font-weight:bold">break</span>
+
+            self<span style="color:#333">.</span>_items[i], self<span style="color:#333">.</span>_items[j] <span style="color:#333">=</span> self<span style="color:#333">.</span>_items[j], self<span style="color:#333">.</span>_items[i]
+            i <span style="color:#333">=</span> j
+
+    <span style="color:#080;font-weight:bold">def</span> <span style="color:#06b;font-weight:bold">_min_son</span>(self, i):
+        l_son <span style="color:#333">=</span> i <span style="color:#333">*</span> <span style="color:#00d;font-weight:bold">2</span> <span style="color:#333">+</span> <span style="color:#00d;font-weight:bold">1</span>
+        r_son <span style="color:#333">=</span> i <span style="color:#333">*</span> <span style="color:#00d;font-weight:bold">2</span> <span style="color:#333">+</span> <span style="color:#00d;font-weight:bold">2</span>
+        <span style="color:#080;font-weight:bold">if</span> <span style="color:#007020">len</span>(self<span style="color:#333">.</span>_items) <span style="color:#333">&lt;=</span> l_son:
+            <span style="color:#080;font-weight:bold">return</span> None
+
+        <span style="color:#080;font-weight:bold">if</span> <span style="color:#007020">len</span>(self<span style="color:#333">.</span>_items) <span style="color:#333">&lt;=</span> r_son <span style="color:#000;font-weight:bold">or</span> self<span style="color:#333">.</span>_items[l_son] <span style="color:#333">&lt;</span> self<span style="color:#333">.</span>_items[r_son]:
+            <span style="color:#080;font-weight:bold">return</span> l_son
+
+        <span style="color:#080;font-weight:bold">return</span> r_son</code></pre></div>
+<p>Здесь используется вспомогательный метод <code>_min_son</code>, который возвращает индекс меньшего сына, если хотя бы один из сыновей существует, отдавая предпочтение правому сыну среди равных (<a id="qback-1" href="#qlink-1">?</a>).</p>
+
+<p>Заметим, что двоичная куча представляет собой полностью сбалансированное двоичное дерево, а значит его высота равна \(\lfloor 1 + \log n \rfloor\), где \(n\) — количество его узлов. Таким образом сложность операций извлечения минимума и добавление элемента равна \(O(\log n)\).</p>
+
+<h3 id="другие-операции">Другие операции</h3>
+
+<p>Помимо описанных операций, часто требуется поддержка таких операций как <em>уменьшение ключа</em> (decrease_key), <em>удаление</em> (delete) и <em>слияние</em> (meld). Первая операция предоставляет возможность уменьшить значение определённого элемента. По сути можно просто обновить значение ключа в дереве, после чего выполнить всплытие этого элемента. Операция удаления в целом аналогична извлечению минимума, то есть удаляемый элемент заменяется последним листом, после чего выполняется погружение этого элемента.</p>
+
+<h4 id="локаторы">Локаторы</h4>
+
+<p>Отдельно стоит упомянуть о том, что для эффективной реализации этих двух операций необходимо поддерживать так называемые <em>локаторы</em>, то есть динамические указатели на элементы кучи. Для их реализации можно воспользоваться дополнительным массивом, где каждому элементу при вставке выдавать следующую ячейку массива, возвращая в качестве локатора индекс этой ячейки. В значение ячейки необходимо записывать индекс элемента в основном массиве. А рядом с элементом в основном массиве хранить его локатор.</p>
+
+<p>Поддерживать такие локаторы достаточно просто: по сути все операции изменения кучи можно реализовать с помощью примитива \(swap(i, j)\), обменивающего два элемента в массиве. Тогда в рамках этой операции можно также обменивать значения по локаторам.</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#080;font-weight:bold">class</span> <span style="color:#b06;font-weight:bold">BinaryHeapWithLocators</span>:
+    _items <span style="color:#333">=</span> []
+    _locators <span style="color:#333">=</span> []
+
+    <span style="color:#080;font-weight:bold">def</span> <span style="color:#06b;font-weight:bold">peek</span>(self):
+        <span style="color:#080;font-weight:bold">if</span> <span style="color:#007020">len</span>(self<span style="color:#333">.</span>_items) <span style="color:#333">&gt;</span> <span style="color:#00d;font-weight:bold">0</span>:
+            <span style="color:#080;font-weight:bold">return</span> self<span style="color:#333">.</span>_items[<span style="color:#00d;font-weight:bold">0</span>][<span style="color:#00d;font-weight:bold">0</span>]
+
+    <span style="color:#080;font-weight:bold">def</span> <span style="color:#06b;font-weight:bold">push</span>(self, x):
+        p <span style="color:#333">=</span> <span style="color:#007020">len</span>(self<span style="color:#333">.</span>_locators)
+        self<span style="color:#333">.</span>_locators<span style="color:#333">.</span>append(<span style="color:#007020">len</span>(self<span style="color:#333">.</span>_items))
+        self<span style="color:#333">.</span>_items<span style="color:#333">.</span>append((x, p))
+        self<span style="color:#333">.</span>_sift_up(<span style="color:#007020">len</span>(self<span style="color:#333">.</span>_items) <span style="color:#333">-</span> <span style="color:#00d;font-weight:bold">1</span>)
+        <span style="color:#080;font-weight:bold">return</span> p
+
+    <span style="color:#080;font-weight:bold">def</span> <span style="color:#06b;font-weight:bold">pop</span>(self):
+        <span style="color:#080;font-weight:bold">if</span> <span style="color:#007020">len</span>(self<span style="color:#333">.</span>_items) <span style="color:#333">&gt;</span> <span style="color:#00d;font-weight:bold">0</span>:
+            x <span style="color:#333">=</span> self<span style="color:#333">.</span>_items[<span style="color:#00d;font-weight:bold">0</span>]
+            self<span style="color:#333">.</span>_swap(<span style="color:#00d;font-weight:bold">0</span>, <span style="color:#007020">len</span>(self<span style="color:#333">.</span>_items)<span style="color:#333">-</span><span style="color:#00d;font-weight:bold">1</span>)
+            self<span style="color:#333">.</span>_items<span style="color:#333">.</span>pop()
+            self<span style="color:#333">.</span>_sift_down(<span style="color:#00d;font-weight:bold">0</span>)
+            <span style="color:#080;font-weight:bold">return</span> x[<span style="color:#00d;font-weight:bold">0</span>]
+
+    <span style="color:#080;font-weight:bold">def</span> <span style="color:#06b;font-weight:bold">decrease</span>(self, p, x):
+        i <span style="color:#333">=</span> self<span style="color:#333">.</span>_locators[p]
+        self<span style="color:#333">.</span>_items[i] <span style="color:#333">=</span> (self<span style="color:#333">.</span>_items[i][<span style="color:#00d;font-weight:bold">0</span>] <span style="color:#333">-</span> x, p)
+        self<span style="color:#333">.</span>_sift_up(i)
+
+    <span style="color:#080;font-weight:bold">def</span> <span style="color:#06b;font-weight:bold">_sift_up</span>(self, i):
+        <span style="color:#080;font-weight:bold">while</span> i <span style="color:#333">&gt;</span> <span style="color:#00d;font-weight:bold">0</span>:
+            j <span style="color:#333">=</span> (i <span style="color:#333">-</span> <span style="color:#00d;font-weight:bold">1</span>) <span style="color:#333">//</span> <span style="color:#00d;font-weight:bold">2</span>
+            <span style="color:#080;font-weight:bold">if</span> self<span style="color:#333">.</span>_items[j][<span style="color:#00d;font-weight:bold">0</span>] <span style="color:#333">&lt;=</span> self<span style="color:#333">.</span>_items[i][<span style="color:#00d;font-weight:bold">0</span>]:
+                <span style="color:#080;font-weight:bold">break</span>
+            self<span style="color:#333">.</span>_swap(i, j)
+            i <span style="color:#333">=</span> j
+
+    <span style="color:#080;font-weight:bold">def</span> <span style="color:#06b;font-weight:bold">_sift_down</span>(self, i):
+        <span style="color:#080;font-weight:bold">while</span> True:
+            j <span style="color:#333">=</span> self<span style="color:#333">.</span>_min_son(i)
+            <span style="color:#080;font-weight:bold">if</span> <span style="color:#000;font-weight:bold">not</span> j <span style="color:#000;font-weight:bold">or</span> self<span style="color:#333">.</span>_items[i][<span style="color:#00d;font-weight:bold">0</span>] <span style="color:#333">&lt;=</span> self<span style="color:#333">.</span>_items[j][<span style="color:#00d;font-weight:bold">0</span>]:
+                <span style="color:#080;font-weight:bold">break</span>
+            self<span style="color:#333">.</span>_swap(i, j)
+            i <span style="color:#333">=</span> j
+
+    <span style="color:#080;font-weight:bold">def</span> <span style="color:#06b;font-weight:bold">_swap</span>(self, i, j):
+        self<span style="color:#333">.</span>_locators[self<span style="color:#333">.</span>_items[i][<span style="color:#00d;font-weight:bold">1</span>]] <span style="color:#333">=</span> j
+        self<span style="color:#333">.</span>_locators[self<span style="color:#333">.</span>_items[j][<span style="color:#00d;font-weight:bold">1</span>]] <span style="color:#333">=</span> i
+        self<span style="color:#333">.</span>_items[i], self<span style="color:#333">.</span>_items[j] <span style="color:#333">=</span> self<span style="color:#333">.</span>_items[j], self<span style="color:#333">.</span>_items[i]
+
+    <span style="color:#080;font-weight:bold">def</span> <span style="color:#06b;font-weight:bold">_min_son</span>(self, i):
+        l_son <span style="color:#333">=</span> i <span style="color:#333">*</span> <span style="color:#00d;font-weight:bold">2</span> <span style="color:#333">+</span> <span style="color:#00d;font-weight:bold">1</span>
+        r_son <span style="color:#333">=</span> i <span style="color:#333">*</span> <span style="color:#00d;font-weight:bold">2</span> <span style="color:#333">+</span> <span style="color:#00d;font-weight:bold">2</span>
+        <span style="color:#080;font-weight:bold">if</span> <span style="color:#007020">len</span>(self<span style="color:#333">.</span>_items) <span style="color:#333">&lt;=</span> l_son:
+            <span style="color:#080;font-weight:bold">return</span> None
+
+        <span style="color:#080;font-weight:bold">if</span> <span style="color:#007020">len</span>(self<span style="color:#333">.</span>_items) <span style="color:#333">&lt;=</span> r_son <span style="color:#000;font-weight:bold">or</span> self<span style="color:#333">.</span>_items[l_son][<span style="color:#00d;font-weight:bold">0</span>] <span style="color:#333">&lt;</span> self<span style="color:#333">.</span>_items[r_son][<span style="color:#00d;font-weight:bold">0</span>]:
+            <span style="color:#080;font-weight:bold">return</span> l_son
+
+        <span style="color:#080;font-weight:bold">return</span> r_son</code></pre></div>
+<p>В целом такое решение выглядит неплохо, пока куча не начинает использоваться как очередь. Использование же её как очереди означает то, что при более или менее постоянном размере кучи через неё будет проходить большое число сообщений. В этих условиях такая реализация локаторов будет сильно разрастаться. По факту массив локаторов будет увеличиваться с каждым новым элементом и никогда не будет уменьшаться. Для работы в таком режиме необходимо переиспользовать локаторы удалённых элементов.</p>
+
+<h4 id="слияние">Слияние</h4>
+
+<p>Операция слияния также часто востребована, однако, двоичная куча не позволяет эффективно её реализовать. Если требуется слияние, то необходимо воспользоваться другими имплементациями, например, <a href="https://ru.wikipedia.org/wiki/Биномиальная_куча">биномиальной</a> или <a href="https://en.wikipedia.org/wiki/Leftist_tree">левацкой</a> кучами.</p>
+
+<h3 id="эффективное-построение-кучи">Эффективное построение кучи</h3>
+
+<p>В текущей реализации куча инициализируется пустой. Добавление элемента имеет сложность \(O(\log n)\), таким образом добавление \(n\) элементов будет стоить \(O(n \log n)\). Пытливый читатель заметит, что сложность добавления зависит от совсем другого \(n\), а именно от количества элементов в куче, но это не имеет особого значение, потому что сложность всех операций будет равна
+\[
+T(n) = O\left(\log 1 + \log 2 + \ldots + \log(n - 1)\right) =
+\]
+\[
+= O\left(n \left(\frac{\log 1 + \log 2 + \ldots + \log(n - 1)}{n}\right)\right).
+\]
+Воспользуемся <a href="https://ru.wikipedia.org/wiki/Неравенство_Йенсена">неравенством Йенсена</a>:
+\[
+T(n) = O\left(n \log\left(\frac{1 + 2 + \ldots + n - 1}{n}\right)\right)
+= O\left(n \log\left(\frac{n - 1}{2}\right)\right).
+\]
+И в итоге получаем \(O(n \log n)\). Несмотря на некоторые допущения (<a id="qback-2" href="#qlink-2">?</a>), подобное построение нельзя назвать эффективным.</p>
+
+<p>Куда лучшим способом является перестановка начальных элементов так, чтобы выполнялись свойства кучи. При этом рассматривать надо элементы с конца. Итак, пусть нам дан некоторый массив начальных элементов, например, \((4, 2, 12, 83, 45, 3, 21, 67, 11, 32, 37, 9, 1, 15, 7)\). Представим его в виде бинарного дерева.</p>
+
+<figure>
+    <div class="mermaid">
+graph TD
+    A((4))
+    A---B((2))
+    A---C((12))
+    B---D((83))
+    B---E((45))
+    C---F((3))
+    C---G((21))
+    D---H((67))
+    D---I((11))
+    E---J((32))
+    E---K((37))
+    F---L((9))
+    F---M((1))
+    G---N((15))
+    G---O((7))
+</div>
+<figcaption>
+        Рис.&thinsp;9.
+        
+    </figcaption>
+</figure>
+
+
+<p>Начиная с последнего элемента будем выполнять процедуру погружения элемента. Собственно с листями ничего не произойдёт, потому как их больше некуда погружать. Так что начинать надо с 6-го элемента.</p>
+
+<figure>
+    <div class="mermaid">
+graph TD
+    A((4))
+    A---B((2))
+    A---C((12))
+    B---D((83))
+    B---E((45))
+    C---F((3))
+    C---G((7))
+    D---H((67))
+    D---I((11))
+    E---J((32))
+    E---K((37))
+    F---L((9))
+    F---M((1))
+    G---N((15))
+    G---O((21))
+
+    style G fill:lightGreen
+    style O fill:pink
+</div>
+<figcaption>
+        Рис.&thinsp;10.
+        
+    </figcaption>
+</figure>
+
+
+<p>Продолжим итерирование по элементам 2-го слоя. ПОд конец получим следующее дерево.</p>
+
+<figure>
+    <div class="mermaid">
+graph TD
+    A((4))
+    A---B((2))
+    A---C((12))
+    B---D((11))
+    B---E((32))
+    C---F((1))
+    C---G((7))
+    D---H((67))
+    D---I((83))
+    E---J((45))
+    E---K((37))
+    F---L((9))
+    F---M((3))
+    G---N((15))
+    G---O((21))
+
+    style D fill:lightGreen
+    style E fill:lightGreen
+    style F fill:lightGreen
+    style G fill:lightGreen
+    style H fill:lightGreen
+    style I fill:lightGreen
+    style J fill:lightGreen
+    style K fill:lightGreen
+    style L fill:lightGreen
+    style M fill:lightGreen
+    style N fill:lightGreen
+    style O fill:lightGreen
+</div>
+<figcaption>
+        Рис.&thinsp;11.
+        
+    </figcaption>
+</figure>
+
+
+<p>Продолжив погружение элементов вплоть до нулевого, получим дерево, в каждой вершине удовлетворяющее условиям кучи.</p>
+
+<figure>
+    <div class="mermaid">
+graph TD
+    A((1))
+    A---B((2))
+    A---C((3))
+    B---D((11))
+    B---E((32))
+    C---F((4))
+    C---G((7))
+    D---H((67))
+    D---I((83))
+    E---J((45))
+    E---K((37))
+    F---L((9))
+    F---M((12))
+    G---N((15))
+    G---O((21))
+
+    style A fill:lightGreen
+    style B fill:lightGreen
+    style C fill:lightGreen
+    style D fill:lightGreen
+    style E fill:lightGreen
+    style F fill:lightGreen
+    style G fill:lightGreen
+    style H fill:lightGreen
+    style I fill:lightGreen
+    style J fill:lightGreen
+    style K fill:lightGreen
+    style L fill:lightGreen
+    style M fill:lightGreen
+    style N fill:lightGreen
+    style O fill:lightGreen
+</div>
+<figcaption>
+        Рис.&thinsp;12.
+        
+    </figcaption>
+</figure>
+
+
+<p>Заметим, что для любого рассмотренного элемента, поддерево с корнем в этом элементе удовлетворяет условиям кучи. Таким образом для каждого вновь рассматриваемого элемента мы имеем следующее:</p>
+
+<figure>
+    <div class="mermaid">
+graph TD
+    A((x))
+    A---B{α}
+    A---C{β}
+</div>
+<figcaption>
+        Рис.&thinsp;13.
+        
+    </figcaption>
+</figure>
+
+
+<p>Где \(\alpha\) и \(\beta\) являются кучами, и аномалия возможна только в вершине \(x\). Отметим также, что для \(i\)-го элемента максимальная глубина его погружения будет равна разнице между его глубиной и глубиной всего дерева \(O(\log n - \log i)\). Тогда суммарное сложность всех операций будет состоять из одной операции погружения корня, двух операций погружения его сыновей, четырёх операций погружения внуков и так далее. Для \(k\)-го (снизу) слоя будет произведено не более чем \(n / 2^k\) операций погружения. При этом каждая операция погружения будет иметь сложность \(O(k)\).
+\[
+T(n) = \sum_{k = 0}^{\log n} \frac{n}{2^k} O(k) = O\left(\sum_{k = 0}^{\log n} \frac{n}{2^k} k\right)
+= O\left(n \sum_{k = 0}^{\log n} \frac{k}{2^k} k\right) \leqslant O\left(n \sum_{k = 0}^{\infty} \frac{k}{2^k} \right)
+\]</p>
+
+<p>Ряд является сходящимся, а значит можно принять его за константу и отбросить по свойству \(O\). В итоге получаем \(T(n) = O(n)\).</p>
+
+<p>Эту же оценку можно получить с помощью рекурентной формулы:
+\[
+T(1) = 1 \quad\text{и}\quad T(h) \leqslant O(2T(h - 1) + ch),
+\]
+где \(h\) высота преобразуемого дерева, а \(c\) некоторая константа. Дальше легко видеть, что
+\[
+T(h) \leqslant O(c(2^{h + 1} - h - 2)) \leqslant O(c2^{h + 1}) \leqslant O(2cn).
+\]</p>
+
+<h2 id="пирамидальная-сортировка">Пирамидальная сортировка</h2>
+
+<p>Пирамидальная сортировка является своего рода улучшением <a href="https://ru.wikipedia.org/wiki/Сортировка_выбором">сортировки выбором</a>, где, вместо линейного поиска минимума на каждом шаге, входной массив преобразуется в двоичную кучу и на каждом шаге из неё извлекается минимум, что требует \(\log n\) операций. Таким образом сложность всей сортировки равна \(O(n \log n)\) (<a id="qback-3" href="#qlink-3">?</a>). Этот алгоритм можно реализовать без дополнительной памяти. Для этого на каждом шаге будем менять первый и последний элемент кучи, после чего будем считать, что куча становится на 1 элемент короче. После этого будем выполнять погружение корня. Таким образом мы получим убывающую последовательность минимумов в конце массива. На последнем шаге куча станет нулевой длинны, а массив будет отсортирован в порядке убывания.</p>
+
+<figure>
+    <div class="mermaid">
+graph TD
+    A((21))
+    A---B((2))
+    A---C((3))
+    B---D((11))
+    B---E((32))
+    C---F((4))
+    C---G((7))
+    D---H((67))
+    D---I((83))
+    E---J((45))
+    E---K((37))
+    F---L((9))
+    F---M((12))
+    G---N((15))
+    G---O((1))
+
+    style O fill:lightGreen, opacity:0.5
+    style A fill:pink
+</div>
+<figcaption>
+        Рис.&thinsp;14.
+        
+    </figcaption>
+</figure>
+
+
+<figure>
+    <div class="mermaid">
+graph TD
+    A((2))
+    A---B((11))
+    A---C((3))
+    B---D((21))
+    B---E((32))
+    C---F((4))
+    C---G((7))
+    D---H((67))
+    D---I((83))
+    E---J((45))
+    E---K((37))
+    F---L((9))
+    F---M((12))
+    G---N((15))
+    G---O((1))
+
+    style O fill:lightGreen, opacity:0.5
+    style A fill:yellow
+    style B fill:yellow
+    style D fill:pink
+</div>
+<figcaption>
+        Рис.&thinsp;15.
+        
+    </figcaption>
+</figure>
+
+
+<figure>
+    <div class="mermaid">
+graph TD
+    A((15))
+    A---B((11))
+    A---C((3))
+    B---D((21))
+    B---E((32))
+    C---F((4))
+    C---G((7))
+    D---H((67))
+    D---I((83))
+    E---J((45))
+    E---K((37))
+    F---L((9))
+    F---M((12))
+    G---N((2))
+    G---O((1))
+
+    style O fill:lightGreen, opacity:0.5
+    style N fill:lightGreen, opacity:0.5
+    style A fill:pink
+</div>
+<figcaption>
+        Рис.&thinsp;16.
+        
+    </figcaption>
+</figure>
+
+
+<figure>
+    <div class="mermaid">
+graph TD
+    A((3))
+    A---B((11))
+    A---C((4))
+    B---D((21))
+    B---E((32))
+    C---F((9))
+    C---G((7))
+    D---H((67))
+    D---I((83))
+    E---J((45))
+    E---K((37))
+    F---L((15))
+    F---M((12))
+    G---N((2))
+    G---O((1))
+
+    style O fill:lightGreen, opacity:0.5
+    style N fill:lightGreen, opacity:0.5
+    style A fill:yellow
+    style C fill:yellow
+    style F fill:yellow
+    style L fill:pink
+</div>
+<figcaption>
+        Рис.&thinsp;17.
+        
+    </figcaption>
+</figure>
+
+
+<figure>
+    <div class="mermaid">
+graph TD
+    A((12))
+    A---B((11))
+    A---C((4))
+    B---D((21))
+    B---E((32))
+    C---F((9))
+    C---G((7))
+    D---H((67))
+    D---I((83))
+    E---J((45))
+    E---K((37))
+    F---L((15))
+    F---M((3))
+    G---N((2))
+    G---O((1))
+
+    style O fill:lightGreen, opacity:0.5
+    style N fill:lightGreen, opacity:0.5
+    style M fill:lightGreen, opacity:0.5
+    style A fill:pink
+</div>
+<figcaption>
+        Рис.&thinsp;18.
+        
+    </figcaption>
+</figure>
+
+
+<figure>
+    <div class="mermaid">
+graph TD
+    A((4))
+    A---B((11))
+    A---C((7))
+    B---D((21))
+    B---E((32))
+    C---F((9))
+    C---G((12))
+    D---H((67))
+    D---I((83))
+    E---J((45))
+    E---K((37))
+    F---L((15))
+    F---M((3))
+    G---N((2))
+    G---O((1))
+
+    style O fill:lightGreen, opacity:0.5
+    style N fill:lightGreen, opacity:0.5
+    style M fill:lightGreen, opacity:0.5
+    style A fill:yellow
+    style C fill:yellow
+    style G fill:pink
+</div>
+<figcaption>
+        Рис.&thinsp;19.
+        
+    </figcaption>
+</figure>
+
+
+<p>Одним из главных недостатков пирамидальной сортировки является то, что её невозможно сделать стабильной без дополнительной памяти. Поэтому она практически не встречается, в отличии от самой структуры данных.</p>
+
+<h2 id="применение">Применение</h2>
+
+<p>Кучи имеют широкое применение в других алгоритмах. Наиболее известный, использующий кучу в виде очереди с приоритетом, <a href="https://ru.wikipedia.org/wiki/Алгоритм_Дейкстры">алгоритм Дейкстры</a> поиска кратчайшего пути в графе. Другой, не менее значимый алгоритм — параллельное слияние множества отсортированных массивов. Интересным применением кучи является структура под названием <a href="https://ru.wikipedia.org/wiki/Декартово_дерево">дуча или декартово дерево</a>.</p>
+
+<h2 id="вопросы">Вопросы</h2>
+
+<ol>
+<li><a id="qlink-1" href="#qback-1">^</a> Почему надо отдавать предпочтение именно правому сыну, если они равны?</li>
+<li><a id="qlink-2" href="#qback-2">^</a> Какие допущения сделаны в рассуждениях? Почему эти допущения разрешены?</li>
+<li><a id="qlink-3" href="#qback-3">^</a> Можно ли улучшить оценку в лучшем случае? Если можно, то как? Если нельзя, то почему?</li>
+</ol>
+
+<h2 id="задания">Задания</h2>
+
+<ol>
+<li>Реализуйте кучу с итераторами, переиспользующую свободные ячейки массива локаторов. Напишите тест, позволяющий проверить, что при многократном цикле push-pop память структуры не растёт.</li>
+<li>Реализуйте конструктор, принимающий массив данных и преобразующий их в кучу за линейное время.</li>
+<li>Реализуйте пирамидальную сортировку.</li>
+</ol>
+
+<h2 id="дополнительное-чтение">Дополнительное чтение</h2>
+
+<ol>
+<li>Ryan Hayward, Ryan, and McDiarmid, Colin. &ldquo;Average Case Analysis of Heap Building.&rdquo; <em>Journal of algorithms</em>, vol. 12, no. 1, 1991, pp. 126–153. <a href="https://webdocs.cs.ualberta.ca/~hayward/papers/heap.pdf">https://webdocs.cs.ualberta.ca/~hayward/papers/heap.pdf</a></li>
+<li>Atkinson, M.D., Sack, J.-R., Santoro, N., and Strothotte, T. &ldquo;Min-max heaps and generalized priority queues.&rdquo; <em>Programming techniques and Data structures. Comm. ACM</em>, vol. 29, no. 10, 1986, pp. 996–1000. <a href="http://cglab.ca/~morin/teaching/5408/refs/minmax.pdf">http://cglab.ca/~morin/teaching/5408/refs/minmax.pdf</a></li>
+<li>Brodal, Gerth S. &ldquo;Worst-Case Efficient Priority Queues.&rdquo; <em>Proc. 7th Annual ACM-SIAM Symposium on Discrete Algorithms</em>, 1996, pp. 52–58. <a href="http://tildeweb.au.dk/au121/papers/soda96.pdf">http://tildeweb.au.dk/au121/papers/soda96.pdf</a></li>
+</ol>
+
+<h2 id="ссылки">Ссылки</h2>
+
+<ol>
+<li>Вирт, Никлаус. <em>Алгоритмы и структуры данных. Новая версия для Оберона</em>. Перевод Ткачев, Ф. В., М.: ДМК Пресс, 2016.</li>
+<li>Асанов, М. О., Баранский, В. А., и Расин, В. В. <em>Дискретная математика: графы, матроиды, алгоритмы</em>. 2-е издание, СПб.: Издательство «Лань», 2010.</li>
+</ol>
+
+</div>
+
+  
+<footer class='entry-footer'>
+  <div class='container sep-before'><div class='categories'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <path d="M22,19a2,2,0,0,1-2,2H4a2,2,0,0,1-2-2V5A2,2,0,0,1,4,3H9l2,3h9a2,2,0,0,1,2,2Z"/>
+  
+</svg>
+<span class='screen-reader-text'>category: </span><a class='category' href='/categories/algorithm/'>Алгоритмы</a></div>
+<div class='tags'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <path d="M20.59,13.41l-7.17,7.17a2,2,0,0,1-2.83,0L2,12V2H12l8.59,8.59A2,2,0,0,1,20.59,13.41Z"/>
+  <line x1="7" y1="7" x2="7" y2="7"/>
+  
+</svg>
+<span class='screen-reader-text'>Тэги: </span><a class='tag' href='/tags/data-structure/'>data-structure</a>, <a class='tag' href='/tags/memory/'>memory</a>, <a class='tag' href='/tags/complexity/'>complexity</a>, <a class='tag' href='/tags/python/'>python</a></div>
+
+  </div>
+</footer>
+
+
+</article>
+
+<nav class='entry-nav'>
+  <div class='container'><div class='prev-entry sep-before'>
+      <a href='/post/2018/10/merge-sort/'>
+        <span aria-hidden='true'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <line x1="20" y1="12" x2="4" y2="12"/>
+  <polyline points="10 18 4 12 10 6"/>
+  
+</svg>
+ Предыдущий</span>
+        <span class='screen-reader-text'>Предыдущая запись: </span>Сортировка слиянием</a>
+    </div><div class='next-entry sep-before'>
+      <a href='/post/2018/11/merge-sort-2/'>
+        <span class='screen-reader-text'>Следующая запись: </span>Слияние больших массивов данных<span aria-hidden='true'>Следующий <svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <line x1="4" y1="12" x2="20" y2="12"/>
+  <polyline points="14 6 20 12 14 18"/>
+  
+</svg>
+</span>
+      </a>
+    </div></div>
+</nav>
+
+
+
+
+      </main>
+
+      <footer id='footer' class='footer'>
+        <div class='container sep-before'><div class='copyright'>
+  <p>Материалы распространяются по <a rel="noreferrer" href="https://creativecommons.org/licenses/by/4.0/" target="_blank">лицензии CC BY</a> &copy; 2018-2021 vporoshok <br>Увидели ошибку? Буду рад <a rel="noreferrer" href="https://github.com/vporoshok/vporoshok.github.io" target="_blank">PR&rsquo;у</a></p>
+</div>
+
+        </div>
+      </footer>
+
+    </div>
+  </div><script>window.__assets_js_src="/assets/js/"</script>
+
+<script src='/assets/js/main.67d669ac.js'></script><link rel='stylesheet' href='/assets/katex/katex.min.css'>
+<script src='/assets/katex/katex.min.js'></script>
+<script src='/assets/katex/contrib/auto-render.min.js'></script>
+
+<script type='text/javascript'>
+  renderMathInElement(document.querySelector('.entry-content'),{"throwOnError":true});
+</script><script src='/assets/mermaid.min.js' />
+
+<script type='text/javascript'>
+  mermaid.initialize({});
+</script>
+
+</body>
+
+</html>
+

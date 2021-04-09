@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang='ru'><head>
+  <meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='description' content='Как написать удобную библиотеку'>
+<meta name='theme-color' content='#ffcd00'>
+
+<meta property='og:title' content='Readme Driven Development • Где-то на дальнем сервере'>
+<meta property='og:description' content='Как написать удобную библиотеку'>
+<meta property='og:url' content='https://vporoshok.me/post/2019/10/rdd/'>
+<meta property='og:site_name' content='Где-то на дальнем сервере'>
+<meta property='og:type' content='article'><meta property='article:section' content='post'><meta property='article:tag' content='architect'><meta property='article:tag' content='checklist'><meta property='article:published_time' content='2019-10-13T10:21:26Z'/><meta property='article:modified_time' content='2019-10-13T14:22:14&#43;04:00'/><meta name='twitter:card' content='summary'>
+
+<meta name="generator" content="Hugo 0.57.2" />
+
+  <title>Readme Driven Development • Где-то на дальнем сервере</title>
+  <link rel='canonical' href='https://vporoshok.me/post/2019/10/rdd/'>
+  
+  
+  <link rel='icon' href='/favicon.ico'>
+<link rel='stylesheet' href='/assets/css/main.6a060eb7.css'><link rel='stylesheet' href='/assets/custom.css'><style>
+:root{--color-accent:#ffcd00;}
+</style>
+
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+	ga('create', 'UA-41042060-2', 'auto');
+	
+	ga('send', 'pageview');
+}
+</script>
+<script async src='https://www.google-analytics.com/analytics.js'></script>
+
+  
+
+</head>
+<body class='page type-post has-sidebar'>
+
+  <div class='site'><div id='sidebar' class='sidebar'>
+  <a class='screen-reader-text' href='#main-menu'>Перейти к основному меню</a>
+
+  <div class='container'><section class='widget widget-about sep-after'>
+  <header>
+    
+    <div class='logo'>
+      <a href='/'>
+        <img src='/images/logo.jpg' alt="Вернуться на главную">
+      </a>
+    </div>
+    
+    <h2 class='title site-title '>
+    vporoshok.me
+    </h2>
+    <div class='desc'>
+    Где-то на дальнем сервере
+    </div>
+  </header>
+
+</section>
+<section class='widget widget-social_menu sep-after'><nav aria-label='Соцсети'>
+    <ul><li>
+        <a href='https://twitter.com/vporoshok' target='_blank' rel='noopener'>
+          <span class='screen-reader-text'>Открыть Twitter-акаунт в новой вкладке</span><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"/>
+  
+</svg>
+</a>
+      </li><li>
+        <a href='https://github.com/vporoshok' target='_blank' rel='noopener'>
+          <span class='screen-reader-text'>Открыть Github-акаунт в новой вкладке</span><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/>
+  
+</svg>
+</a>
+      </li><li>
+        <a href='mailto:vporoshok@gmail.com' target='_blank' rel='noopener'>
+          <span class='screen-reader-text'>Связаться через Email</span><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+  <polyline points="22,6 12,13 2,6"/>
+  
+</svg>
+</a>
+      </li><li>
+        <a href='https://t.me/vporoshok' target='_blank' rel='noopener'>
+          <span class='screen-reader-text'>Открыть Telegram-акаунт в новой вкладке</span><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <path d="m 22.05,1.577 c -0.393,-0.016 -0.784,0.08 -1.117,0.235 -0.484,0.186 -4.92,1.902 -9.41,3.64 C 9.263,6.325 7.005,7.198 5.267,7.867 3.53,8.537 2.222,9.035 2.153,9.059 c -0.46,0.16 -1.082,0.362 -1.61,0.984 -0.79581202,1.058365 0.21077405,1.964825 1.004,2.499 1.76,0.564 3.58,1.102 5.087,1.608 0.556,1.96 1.09,3.927 1.618,5.89 0.174,0.394 0.553,0.54 0.944,0.544 l -0.002,0.02 c 0,0 0.307,0.03 0.606,-0.042 0.3,-0.07 0.677,-0.244 1.02,-0.565 0.377,-0.354 1.4,-1.36 1.98,-1.928 l 4.37,3.226 0.035,0.02 c 0,0 0.484,0.34 1.192,0.388 0.354,0.024 0.82,-0.044 1.22,-0.337 0.403,-0.294 0.67,-0.767 0.795,-1.307 0.374,-1.63 2.853,-13.427 3.276,-15.38 L 23.676,4.725 C 23.972,3.625 23.863,2.617 23.18,2.02 22.838,1.723 22.444,1.593 22.05,1.576 Z"/>
+  
+</svg>
+</a>
+      </li></ul>
+  </nav>
+</section><section class='widget widget-sidebar_menu sep-after'><nav id='sidebar-menu' class='menu sidebar-menu' aria-label='Боковое меню'>
+    <div class='container'>
+      <ul><li class='item'>
+  <a href='/categories/algorithm/'>Алгоритмы</a></li><li class='item'>
+  <a href='/categories/develop/'>Разработка</a></li><li class='item'>
+  <a href='/categories/life-style/'>Образ жизни</a></li><li class='item'>
+  <a href='/categories/book/'>Книги</a></li><li class='item'>
+  <a href='/slides/'>Презентации</a></li><li class='item'>
+  <a href='/categories/project/'>Проекты</a></li></ul>
+    </div>
+  </nav>
+
+</section><section class='widget widget-taxonomy_cloud sep-after'>
+  <header>
+    <h4 class='title widget-title'>Тэги</h4>
+  </header>
+
+  <div class='container list-container'>
+  <ul class='list taxonomy-cloud no-shuffle'><li>
+        <a href='/tags/algorithm/' style='font-size:1em'>algorithm</a>
+      </li><li>
+        <a href='/tags/angular/' style='font-size:1em'>angular</a>
+      </li><li>
+        <a href='/tags/architect/' style='font-size:1.625em'>architect</a>
+      </li><li>
+        <a href='/tags/blog/' style='font-size:1em'>blog</a>
+      </li><li>
+        <a href='/tags/checklist/' style='font-size:1.375em'>checklist</a>
+      </li><li>
+        <a href='/tags/complexity/' style='font-size:1.5em'>complexity</a>
+      </li><li>
+        <a href='/tags/csrf/' style='font-size:1em'>CSRF</a>
+      </li><li>
+        <a href='/tags/data-structure/' style='font-size:1.375em'>data-structure</a>
+      </li><li>
+        <a href='/tags/distributed-system/' style='font-size:1em'>distributed system</a>
+      </li><li>
+        <a href='/tags/event/' style='font-size:1em'>event</a>
+      </li><li>
+        <a href='/tags/git/' style='font-size:1em'>git</a>
+      </li><li>
+        <a href='/tags/go/' style='font-size:2em'>go</a>
+      </li><li>
+        <a href='/tags/graph/' style='font-size:1.125em'>graph</a>
+      </li><li>
+        <a href='/tags/hackathon/' style='font-size:1em'>hackathon</a>
+      </li><li>
+        <a href='/tags/keynote/' style='font-size:1em'>keynote</a>
+      </li><li>
+        <a href='/tags/logging/' style='font-size:1em'>logging</a>
+      </li><li>
+        <a href='/tags/management/' style='font-size:1.125em'>management</a>
+      </li><li>
+        <a href='/tags/memory/' style='font-size:1.25em'>memory</a>
+      </li><li>
+        <a href='/tags/microservices/' style='font-size:1.125em'>microservices</a>
+      </li><li>
+        <a href='/tags/orgmode/' style='font-size:1em'>orgmode</a>
+      </li><li>
+        <a href='/tags/php/' style='font-size:1em'>PHP</a>
+      </li><li>
+        <a href='/tags/python/' style='font-size:1.125em'>python</a>
+      </li><li>
+        <a href='/tags/rules/' style='font-size:1.125em'>rules</a>
+      </li><li>
+        <a href='/tags/rxjs/' style='font-size:1em'>rxjs</a>
+      </li><li>
+        <a href='/tags/scheme/' style='font-size:1.125em'>scheme</a>
+      </li><li>
+        <a href='/tags/scrum/' style='font-size:1.125em'>scrum</a>
+      </li><li>
+        <a href='/tags/security/' style='font-size:1em'>security</a>
+      </li><li>
+        <a href='/tags/sicp/' style='font-size:1.125em'>sicp</a>
+      </li><li>
+        <a href='/tags/sorting/' style='font-size:1em'>sorting</a>
+      </li><li>
+        <a href='/tags/state-machine/' style='font-size:1em'>state-machine</a>
+      </li><li>
+        <a href='/tags/team-lead/' style='font-size:1em'>team-lead</a>
+      </li><li>
+        <a href='/tags/testing/' style='font-size:1.125em'>testing</a>
+      </li><li>
+        <a href='/tags/tips-and-tricks/' style='font-size:1.25em'>tips and tricks</a>
+      </li><li>
+        <a href='/tags/toc/' style='font-size:1em'>toc</a>
+      </li><li>
+        <a href='/tags/tutorial/' style='font-size:1.125em'>tutorial</a>
+      </li><li>
+        <a href='/tags/typescript/' style='font-size:1em'>typescript</a>
+      </li><li>
+        <a href='/tags/web/' style='font-size:1em'>web</a>
+      </li><li>
+        <a href='/tags/work/' style='font-size:1em'>work</a>
+      </li></ul>
+</div>
+
+
+</section>
+</div>
+
+  <div class='sidebar-overlay'></div>
+</div><div class='main'><nav id='main-menu' class='menu main-menu' aria-label='Основное меню'>
+  <div class='container'>
+    <a class='screen-reader-text' href='#content'>Перейти к содержимому</a>
+
+<button id='sidebar-toggler' class='sidebar-toggler' aria-controls='sidebar'>
+  <span class='screen-reader-text'>Скрыть / показать боковую панель</span>
+  <span class='open'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <line x1="3" y1="12" x2="21" y2="12" />
+  <line x1="3" y1="6" x2="21" y2="6" />
+  <line x1="3" y1="18" x2="21" y2="18" />
+  
+</svg>
+</span>
+  <span class='close'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <line x1="18" y1="6" x2="6" y2="18" />
+  <line x1="6" y1="6" x2="18" y2="18" />
+  
+</svg>
+</span>
+</button>
+    <ul><li class='item'>
+        <a href='/post/'>Блог</a>
+      </li><li class='item'>
+        <a href='/page/about/'>Обо мне</a>
+      </li></ul>
+  </div>
+</nav><div class='header-widgets'>
+        <div class='container'></div>
+      </div>
+
+      <header id='header' class='header site-header'>
+        <div class='container sep-after'>
+          <div class='header-info'><p class='site-title title'>Где-то на дальнем сервере</p><p class='desc site-desc'>Заметки о программировании и не только</p>
+          </div>
+        </div>
+      </header>
+
+      <main id='content'>
+
+
+<article lang='ru' class='entry'>
+  <header class='header entry-header'>
+  <div class='container sep-after'>
+    <div class='header-info'>
+      <h1 class='title'>Readme Driven Development</h1>
+      
+<p class='desc'>Как написать удобную библиотеку</p>
+
+
+    </div>
+    
+<div class='entry-meta'>
+  <span class='posted-on'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+  <line x1="16" y1="2" x2="16" y2="6"/>
+  <line x1="8" y1="2" x2="8" y2="6"/>
+  <line x1="3" y1="10" x2="21" y2="10"/>
+  
+</svg>
+<span class='screen-reader-text'>Опубликовано </span>
+  <time class='entry-date' datetime='2019-10-13T10:21:26Z'>2019-10-13</time>
+</span>
+
+  
+  
+<span class='reading-time'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <circle cx="12" cy="12" r="10"/>
+  <polyline points="12 6 12 12 15 15"/>
+  
+</svg>
+4 минуты на чтение
+</span>
+
+
+  
+</div>
+
+
+  </div>
+</header>
+
+  
+  
+
+  <div class='container entry-content'>
+  
+
+<blockquote>Технари всегда начинают разговор с «нет», потому что думают о том, как это реализовывать, а тут надо «парить»…<footer>
+        
+        Будин А.В.
+        
+        
+    </footer>
+</blockquote>
+
+<p>В этой статье попробуем разобраться о том, как проектировать программные интерфейсы. Интерфейсы могут быть совершенно разными, однако, есть в них одна общая черта: программисты разрабатывают их для других программистов. И это будет нашим большим плюсом, потому что мы также можем выступать в роли потребителей собственных продуктов. Итак, вы решили разработать библиотеку или сервис. С чего начать?</p>
+
+<p>Один из подходов к проектированию программ был предложен Томом Престоном&ndash;Вернером<sup class="footnote-ref" id="fnref:1"><a href="#fn:1">1</a></sup> одним из основателей GitHub, а услышал я о нём впервые в одном из выпусков DevZen<sup class="footnote-ref" id="fnref:2"><a href="#fn:2">2</a></sup>. Этот подход называется RDD или Readme Driven Development и предлагает начинать проект с написания одного документа: README.md.</p>
+
+<h2 id="мотивация">Мотивация</h2>
+
+<p>Я довольно технически настроенный человек. И каждый раз, когда слышу о какой-то проблеме / задаче / вопросе, мозг сразу начинает искать решение. Хотелось бы чтоб это было достоинством, но скорее это недостаток. Представьте, что рядом с вами ребёнок, пытаясь забить гвоздь, ударил себя по пальцу. Последнее, что поможет ситуации, это объяснение ему, что он не так держал молоток. Эту ситуацию не надо решать аналитически. Но мне довольно трудно оценить ситуацию в целом. Привычка закапываться в детали, когда за мелочами перестаёшь видеть целое.</p>
+
+<p>Поэтому важным моментом при написании readme для меня является отказ от попыток анализа внутренностей. Представьте себе идеальный чёрный ящик. То, каким бы вы хотели его видеть. Только интерфейс, ни шагу внутрь. Представьте, что вы ищете библиотеку для решения своей проблемы, что где-то на Земле есть просветлённый программист, который написал для вас идеальную библиотеку и выложил её в открытом доступе. При таком подходе мелочи и детали не отвлекают с самого начала, а появляются постепенно по мере уточнения интерфейса.</p>
+
+<p>При этом сразу вычерчиваются те механизмы, которыми вы бы хотели управлять как потребитель библиотеки, а от каких быть изолированными. Проблемой многих библиотек, которые я писал, оказывалось то, что они имели слишком большую ответственность. Бэкофы и ретраи, параллелизация и валидация. Я всегда думал на два шага вперёд. Но в итоге это оказывалось слишком жёстким, хрупким, несогласованным. Когда смотришь на интерфейс издалека начинаешь думать интерфейсами и находить, что бэкофы и ретраи в разных случаях должны вести себя похоже, так что это можно реализовать в отдельной библиотеке. А параллелизация слишком сильно зависит от контекста и лучше реализовать её в месте использования.</p>
+
+<h3 id="философия">Философия</h3>
+
+<p>В противовес подходу проектирования от реализации часто приводят DDD (Document-Driven Development<sup class="footnote-ref" id="fnref:3"><a href="#fn:3">3</a></sup>). Но полное следование такому подходу приводит к разработке довольно большими итерациями, практически водопадному циклу разработки. В отличии от этого RDD не требует чрезмерно-детального прорабатывания всей системы. Наоборот, написание readme должно быть максимально оторвано от реализации (в адекватном ключе, конечно), то есть не надо закапываться в детали при его написании. Это приводит к такому плюсу, что при написании кода его интерфейс, а значит и readme практически не меняются. Это документ, который будучи написан один раз в дальнейшем лишь развивается, но ни в коем случае не переписывается.</p>
+
+<p>Ещё одним неоценимым плюсом такого подхода является быстрое ревью проекта. Прочитав один короткий документ у человека должно сложиться целостное понимание чтО перед ним находится, какую задачу эта программа решает и как эту программу предполагается использовать. Часто это пригождается и самому автору проекта, ведь время идёт и определённые решения забываются.</p>
+
+<h2 id="использование">Использование</h2>
+
+<p>Для того, чтобы использовать такой подход неплохо обзавестись шаблонным readme. Посмотрите на описания проектов, которые вам нравятся (есть неплохая подборка проектов с хорошими readme<sup class="footnote-ref" id="fnref:4"><a href="#fn:4">4</a></sup>). Подумайте над тем, что бы вы хотели узнать о проекте при первом взгляде на него. Выберите пункты и попробуйте написать readme для своего или чужого проекта. И следующий проект начните с написания readme на основе сформированного вами шаблона. Например, вот тут можно найти мой шаблон: <a href="https://gist.github.com/vporoshok/24d584cb7b52e56f77d9b91d890c3b4c">https://gist.github.com/vporoshok/24d584cb7b52e56f77d9b91d890c3b4c</a>.</p>
+
+<p>Не забудьте включить в документ примеры использования вашей программы. Именно эти примеры и станут основой для тестов, а дальше и для кода проекта.</p>
+
+<h2 id="как-это-работает">Как это работает</h2>
+
+<p>Перед началом движения хорошо бы знать точку назначения. Ну или хотя бы направление. Перед написанием программы, конечно, в первую очередь надо сформулировать задачу, которую она будет решать. Довольно часто я сам подходил к этой части довольно халатно, мол сервис авторизации, будет делать всё, что связанно с авторизацией. А управление пользователями: создание, приглашение, блокировка &mdash; тоже в этом сервисе будет происходить? На многие вопросы ответы находятся в момент написания или проектирования кода. Таким образом я подстраивал интерфейс программы для упрощения её внутреннего устройства. Но потребитель нашей программы не будет смотреть на её внутренности, он будет использовать её как чёрный ящик. И менять форму ящика под содержимое оказывается порочной практикой.</p>
+
+<p>Можно сказать, что RDD позволяет проектировать сложные системы сверху вниз, а не снизу вверх, как это часто происходит.</p>
+
+<h2 id="ключевые-особенности">Ключевые особенности</h2>
+
+<ul>
+<li>формулирование задачи с чёткими границами ответственности;</li>
+<li>проектирование удобного и гибкого интерфейса;</li>
+<li>примеры использования, которые можно легко превратить в e2e-тесты для проекта;</li>
+<li>минимальная документация (для многих проектов этой документации оказывается достаточно);</li>
+<li>помощь в принятии решения другим людям, выбирающих проект для своих нужд;</li>
+</ul>
+
+<h2 id="смотрите-также">Смотрите также</h2>
+
+<ul>
+<li><a href="https://krasimirtsonev.com/blog/article/readme-driven-development">https://krasimirtsonev.com/blog/article/readme-driven-development</a></li>
+<li><a href="https://medium.com/@elliotchance/readme-driven-development-3a434b7e253c">https://medium.com/@elliotchance/readme-driven-development-3a434b7e253c</a></li>
+<li><a href="https://deterministic.space/readme-driven-development.html">https://deterministic.space/readme-driven-development.html</a></li>
+<li><a href="https://github.com/noffle/art-of-readme#readme">https://github.com/noffle/art-of-readme#readme</a></li>
+<li><a href="http://thinkrelevance.com/blog/2011/11/15/documenting-architecture-decisions">http://thinkrelevance.com/blog/2011/11/15/documenting-architecture-decisions</a></li>
+</ul>
+
+<h2 id="заключение">Заключение</h2>
+
+<p>Если присмотреться, то можно заметить, что эта статья написана по моему шаблону readme. Полезная штука не только для описания программ, да?</p>
+
+<h2 id="ссылки">Ссылки</h2>
+<div class="footnotes">
+
+<hr />
+
+<ol>
+<li id="fn:1"><a href="http://tom.preston-werner.com/2010/08/23/readme-driven-development.html">http://tom.preston-werner.com/2010/08/23/readme-driven-development.html</a>
+ <a class="footnote-return" href="#fnref:1"><sup>[return]</sup></a></li>
+<li id="fn:2"><a href="https://devzen.ru/episode-0144/">https://devzen.ru/episode-0144/</a>
+ <a class="footnote-return" href="#fnref:2"><sup>[return]</sup></a></li>
+<li id="fn:3"><a href="https://gist.github.com/zsup/9434452">https://gist.github.com/zsup/9434452</a>
+ <a class="footnote-return" href="#fnref:3"><sup>[return]</sup></a></li>
+<li id="fn:4"><a href="https://github.com/matiassingers/awesome-readme">https://github.com/matiassingers/awesome-readme</a>
+ <a class="footnote-return" href="#fnref:4"><sup>[return]</sup></a></li>
+</ol>
+</div>
+
+</div>
+
+  
+<footer class='entry-footer'>
+  <div class='container sep-before'><div class='categories'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <path d="M22,19a2,2,0,0,1-2,2H4a2,2,0,0,1-2-2V5A2,2,0,0,1,4,3H9l2,3h9a2,2,0,0,1,2,2Z"/>
+  
+</svg>
+<span class='screen-reader-text'>category: </span><a class='category' href='/categories/life-style/'>Образ жизни</a></div>
+<div class='tags'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <path d="M20.59,13.41l-7.17,7.17a2,2,0,0,1-2.83,0L2,12V2H12l8.59,8.59A2,2,0,0,1,20.59,13.41Z"/>
+  <line x1="7" y1="7" x2="7" y2="7"/>
+  
+</svg>
+<span class='screen-reader-text'>Тэги: </span><a class='tag' href='/tags/architect/'>architect</a>, <a class='tag' href='/tags/checklist/'>checklist</a></div>
+
+  </div>
+</footer>
+
+
+</article>
+
+<nav class='entry-nav'>
+  <div class='container'><div class='prev-entry sep-before'>
+      <a href='/post/2019/10/sicp-elementary/'>
+        <span aria-hidden='true'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <line x1="20" y1="12" x2="4" y2="12"/>
+  <polyline points="10 18 4 12 10 6"/>
+  
+</svg>
+ Предыдущий</span>
+        <span class='screen-reader-text'>Предыдущая запись: </span>SICP: 1.1 Элементы программирования</a>
+    </div><div class='next-entry sep-before'>
+      <a href='/post/2020/01/distributed-algorithms/'>
+        <span class='screen-reader-text'>Следующая запись: </span>Распределённые алгоритмы<span aria-hidden='true'>Следующий <svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <line x1="4" y1="12" x2="20" y2="12"/>
+  <polyline points="14 6 20 12 14 18"/>
+  
+</svg>
+</span>
+      </a>
+    </div></div>
+</nav>
+
+
+
+
+      </main>
+
+      <footer id='footer' class='footer'>
+        <div class='container sep-before'><div class='copyright'>
+  <p>Материалы распространяются по <a rel="noreferrer" href="https://creativecommons.org/licenses/by/4.0/" target="_blank">лицензии CC BY</a> &copy; 2018-2021 vporoshok <br>Увидели ошибку? Буду рад <a rel="noreferrer" href="https://github.com/vporoshok/vporoshok.github.io" target="_blank">PR&rsquo;у</a></p>
+</div>
+
+        </div>
+      </footer>
+
+    </div>
+  </div><script>window.__assets_js_src="/assets/js/"</script>
+
+<script src='/assets/js/main.67d669ac.js'></script>
+
+</body>
+
+</html>
+

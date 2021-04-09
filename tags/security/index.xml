@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>security on Где-то на дальнем сервере</title>
+    <link>https://vporoshok.me/tags/security/</link>
+    <description>Recent content in security on Где-то на дальнем сервере</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>ru</language>
+    <lastBuildDate>Sun, 28 May 2017 17:33:45 +0000</lastBuildDate>
+    
+	<atom:link href="https://vporoshok.me/tags/security/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Ещё раз о безопасности или где хранить токен</title>
+      <link>https://vporoshok.me/post/2017/05/token-placement/</link>
+      <pubDate>Sun, 28 May 2017 17:33:45 +0000</pubDate>
+      
+      <guid>https://vporoshok.me/post/2017/05/token-placement/</guid>
+      <description>В очередной раз встал вопрос о том где и как хранить токен авторизации. Первое что приходит в голову это cookie. Итак, давайте сделаем простенький сайт со странице авторизации и использованием cookie для определения пользователя, а затем попробуем его поломать. Использовать мы будем CSRF атаку. Об этих атаках написано уже немало статей, небольшой список будет в конце. В данном посте хочется добавить практики в эти объяснения на пальцах. Для удобства используем репозиторий с тегами эволюции проекта https://github.</description>
+    </item>
+    
+  </channel>
+</rss>

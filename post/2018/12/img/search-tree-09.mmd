@@ -1,0 +1,30 @@
+graph TD
+    subgraph После
+    a2((5))
+    a2 --- b2((4))
+    a2 --- c2((2))
+    b2 --- d2((1))
+    b2 --- e2((3))
+    c2 --- f2((1))
+    c2 --- g2((1))
+    e2 --- h2((1))
+    e2 --- i2((2))
+    i2 --- j2((0))
+    i2 --- k2((1))
+
+    classDef stack fill:Yellow
+
+    class a2,b2,e2,i2,k2 stack
+    end
+
+    subgraph До
+    a((4))
+    a --- b((3))
+    a --- c((2))
+    b --- d((1))
+    b --- e((2))
+    c --- f((1))
+    c --- g((1))
+    e --- h((1))
+    e --- i((1))
+    end

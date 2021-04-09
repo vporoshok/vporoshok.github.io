@@ -1,0 +1,616 @@
+<!DOCTYPE html>
+<html lang='ru'><head>
+  <meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='description' content='Комбинации, переменные, функции и условные выражения'>
+<meta name='theme-color' content='#ffcd00'>
+
+<meta property='og:title' content='SICP: 1.1 Элементы программирования • Где-то на дальнем сервере'>
+<meta property='og:description' content='Комбинации, переменные, функции и условные выражения'>
+<meta property='og:url' content='https://vporoshok.me/post/2019/10/sicp-elementary/'>
+<meta property='og:site_name' content='Где-то на дальнем сервере'>
+<meta property='og:type' content='article'><meta property='article:section' content='post'><meta property='article:tag' content='sicp'><meta property='article:tag' content='scheme'><meta property='article:published_time' content='2019-10-04T15:17:31Z'/><meta property='article:modified_time' content='2019-10-04T19:19:32&#43;04:00'/><meta name='twitter:card' content='summary'>
+
+<meta name="generator" content="Hugo 0.57.2" />
+
+  <title>SICP: 1.1 Элементы программирования • Где-то на дальнем сервере</title>
+  <link rel='canonical' href='https://vporoshok.me/post/2019/10/sicp-elementary/'>
+  
+  
+  <link rel='icon' href='/favicon.ico'>
+<link rel='stylesheet' href='/assets/css/main.6a060eb7.css'><link rel='stylesheet' href='/assets/custom.css'><style>
+:root{--color-accent:#ffcd00;}
+</style>
+
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+	ga('create', 'UA-41042060-2', 'auto');
+	
+	ga('send', 'pageview');
+}
+</script>
+<script async src='https://www.google-analytics.com/analytics.js'></script>
+
+  
+
+</head>
+<body class='page type-post has-sidebar'>
+
+  <div class='site'><div id='sidebar' class='sidebar'>
+  <a class='screen-reader-text' href='#main-menu'>Перейти к основному меню</a>
+
+  <div class='container'><section class='widget widget-about sep-after'>
+  <header>
+    
+    <div class='logo'>
+      <a href='/'>
+        <img src='/images/logo.jpg' alt="Вернуться на главную">
+      </a>
+    </div>
+    
+    <h2 class='title site-title '>
+    vporoshok.me
+    </h2>
+    <div class='desc'>
+    Где-то на дальнем сервере
+    </div>
+  </header>
+
+</section>
+<section class='widget widget-social_menu sep-after'><nav aria-label='Соцсети'>
+    <ul><li>
+        <a href='https://twitter.com/vporoshok' target='_blank' rel='noopener'>
+          <span class='screen-reader-text'>Открыть Twitter-акаунт в новой вкладке</span><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"/>
+  
+</svg>
+</a>
+      </li><li>
+        <a href='https://github.com/vporoshok' target='_blank' rel='noopener'>
+          <span class='screen-reader-text'>Открыть Github-акаунт в новой вкладке</span><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/>
+  
+</svg>
+</a>
+      </li><li>
+        <a href='mailto:vporoshok@gmail.com' target='_blank' rel='noopener'>
+          <span class='screen-reader-text'>Связаться через Email</span><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+  <polyline points="22,6 12,13 2,6"/>
+  
+</svg>
+</a>
+      </li><li>
+        <a href='https://t.me/vporoshok' target='_blank' rel='noopener'>
+          <span class='screen-reader-text'>Открыть Telegram-акаунт в новой вкладке</span><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <path d="m 22.05,1.577 c -0.393,-0.016 -0.784,0.08 -1.117,0.235 -0.484,0.186 -4.92,1.902 -9.41,3.64 C 9.263,6.325 7.005,7.198 5.267,7.867 3.53,8.537 2.222,9.035 2.153,9.059 c -0.46,0.16 -1.082,0.362 -1.61,0.984 -0.79581202,1.058365 0.21077405,1.964825 1.004,2.499 1.76,0.564 3.58,1.102 5.087,1.608 0.556,1.96 1.09,3.927 1.618,5.89 0.174,0.394 0.553,0.54 0.944,0.544 l -0.002,0.02 c 0,0 0.307,0.03 0.606,-0.042 0.3,-0.07 0.677,-0.244 1.02,-0.565 0.377,-0.354 1.4,-1.36 1.98,-1.928 l 4.37,3.226 0.035,0.02 c 0,0 0.484,0.34 1.192,0.388 0.354,0.024 0.82,-0.044 1.22,-0.337 0.403,-0.294 0.67,-0.767 0.795,-1.307 0.374,-1.63 2.853,-13.427 3.276,-15.38 L 23.676,4.725 C 23.972,3.625 23.863,2.617 23.18,2.02 22.838,1.723 22.444,1.593 22.05,1.576 Z"/>
+  
+</svg>
+</a>
+      </li></ul>
+  </nav>
+</section><section class='widget widget-sidebar_menu sep-after'><nav id='sidebar-menu' class='menu sidebar-menu' aria-label='Боковое меню'>
+    <div class='container'>
+      <ul><li class='item'>
+  <a href='/categories/algorithm/'>Алгоритмы</a></li><li class='item'>
+  <a href='/categories/develop/'>Разработка</a></li><li class='item'>
+  <a href='/categories/life-style/'>Образ жизни</a></li><li class='item'>
+  <a href='/categories/book/'>Книги</a></li><li class='item'>
+  <a href='/slides/'>Презентации</a></li><li class='item'>
+  <a href='/categories/project/'>Проекты</a></li></ul>
+    </div>
+  </nav>
+
+</section><section class='widget widget-taxonomy_cloud sep-after'>
+  <header>
+    <h4 class='title widget-title'>Тэги</h4>
+  </header>
+
+  <div class='container list-container'>
+  <ul class='list taxonomy-cloud no-shuffle'><li>
+        <a href='/tags/algorithm/' style='font-size:1em'>algorithm</a>
+      </li><li>
+        <a href='/tags/angular/' style='font-size:1em'>angular</a>
+      </li><li>
+        <a href='/tags/architect/' style='font-size:1.625em'>architect</a>
+      </li><li>
+        <a href='/tags/blog/' style='font-size:1em'>blog</a>
+      </li><li>
+        <a href='/tags/checklist/' style='font-size:1.375em'>checklist</a>
+      </li><li>
+        <a href='/tags/complexity/' style='font-size:1.5em'>complexity</a>
+      </li><li>
+        <a href='/tags/csrf/' style='font-size:1em'>CSRF</a>
+      </li><li>
+        <a href='/tags/data-structure/' style='font-size:1.375em'>data-structure</a>
+      </li><li>
+        <a href='/tags/distributed-system/' style='font-size:1em'>distributed system</a>
+      </li><li>
+        <a href='/tags/event/' style='font-size:1em'>event</a>
+      </li><li>
+        <a href='/tags/git/' style='font-size:1em'>git</a>
+      </li><li>
+        <a href='/tags/go/' style='font-size:2em'>go</a>
+      </li><li>
+        <a href='/tags/graph/' style='font-size:1.125em'>graph</a>
+      </li><li>
+        <a href='/tags/hackathon/' style='font-size:1em'>hackathon</a>
+      </li><li>
+        <a href='/tags/keynote/' style='font-size:1em'>keynote</a>
+      </li><li>
+        <a href='/tags/logging/' style='font-size:1em'>logging</a>
+      </li><li>
+        <a href='/tags/management/' style='font-size:1.125em'>management</a>
+      </li><li>
+        <a href='/tags/memory/' style='font-size:1.25em'>memory</a>
+      </li><li>
+        <a href='/tags/microservices/' style='font-size:1.125em'>microservices</a>
+      </li><li>
+        <a href='/tags/orgmode/' style='font-size:1em'>orgmode</a>
+      </li><li>
+        <a href='/tags/php/' style='font-size:1em'>PHP</a>
+      </li><li>
+        <a href='/tags/python/' style='font-size:1.125em'>python</a>
+      </li><li>
+        <a href='/tags/rules/' style='font-size:1.125em'>rules</a>
+      </li><li>
+        <a href='/tags/rxjs/' style='font-size:1em'>rxjs</a>
+      </li><li>
+        <a href='/tags/scheme/' style='font-size:1.125em'>scheme</a>
+      </li><li>
+        <a href='/tags/scrum/' style='font-size:1.125em'>scrum</a>
+      </li><li>
+        <a href='/tags/security/' style='font-size:1em'>security</a>
+      </li><li>
+        <a href='/tags/sicp/' style='font-size:1.125em'>sicp</a>
+      </li><li>
+        <a href='/tags/sorting/' style='font-size:1em'>sorting</a>
+      </li><li>
+        <a href='/tags/state-machine/' style='font-size:1em'>state-machine</a>
+      </li><li>
+        <a href='/tags/team-lead/' style='font-size:1em'>team-lead</a>
+      </li><li>
+        <a href='/tags/testing/' style='font-size:1.125em'>testing</a>
+      </li><li>
+        <a href='/tags/tips-and-tricks/' style='font-size:1.25em'>tips and tricks</a>
+      </li><li>
+        <a href='/tags/toc/' style='font-size:1em'>toc</a>
+      </li><li>
+        <a href='/tags/tutorial/' style='font-size:1.125em'>tutorial</a>
+      </li><li>
+        <a href='/tags/typescript/' style='font-size:1em'>typescript</a>
+      </li><li>
+        <a href='/tags/web/' style='font-size:1em'>web</a>
+      </li><li>
+        <a href='/tags/work/' style='font-size:1em'>work</a>
+      </li></ul>
+</div>
+
+
+</section>
+</div>
+
+  <div class='sidebar-overlay'></div>
+</div><div class='main'><nav id='main-menu' class='menu main-menu' aria-label='Основное меню'>
+  <div class='container'>
+    <a class='screen-reader-text' href='#content'>Перейти к содержимому</a>
+
+<button id='sidebar-toggler' class='sidebar-toggler' aria-controls='sidebar'>
+  <span class='screen-reader-text'>Скрыть / показать боковую панель</span>
+  <span class='open'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <line x1="3" y1="12" x2="21" y2="12" />
+  <line x1="3" y1="6" x2="21" y2="6" />
+  <line x1="3" y1="18" x2="21" y2="18" />
+  
+</svg>
+</span>
+  <span class='close'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <line x1="18" y1="6" x2="6" y2="18" />
+  <line x1="6" y1="6" x2="18" y2="18" />
+  
+</svg>
+</span>
+</button>
+    <ul><li class='item'>
+        <a href='/post/'>Блог</a>
+      </li><li class='item'>
+        <a href='/page/about/'>Обо мне</a>
+      </li></ul>
+  </div>
+</nav><div class='header-widgets'>
+        <div class='container'></div>
+      </div>
+
+      <header id='header' class='header site-header'>
+        <div class='container sep-after'>
+          <div class='header-info'><p class='site-title title'>Где-то на дальнем сервере</p><p class='desc site-desc'>Заметки о программировании и не только</p>
+          </div>
+        </div>
+      </header>
+
+      <main id='content'>
+
+
+<article lang='ru' class='entry'>
+  <header class='header entry-header'>
+  <div class='container sep-after'>
+    <div class='header-info'>
+      <h1 class='title'>SICP: 1.1 Элементы программирования</h1>
+      
+<p class='desc'>Комбинации, переменные, функции и условные выражения</p>
+
+
+    </div>
+    
+<div class='entry-meta'>
+  <span class='posted-on'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+  <line x1="16" y1="2" x2="16" y2="6"/>
+  <line x1="8" y1="2" x2="8" y2="6"/>
+  <line x1="3" y1="10" x2="21" y2="10"/>
+  
+</svg>
+<span class='screen-reader-text'>Опубликовано </span>
+  <time class='entry-date' datetime='2019-10-04T15:17:31Z'>2019-10-04</time>
+</span>
+
+  
+  
+<span class='reading-time'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <circle cx="12" cy="12" r="10"/>
+  <polyline points="12 6 12 12 15 15"/>
+  
+</svg>
+8 минут на чтение
+</span>
+
+
+  
+</div>
+
+
+  </div>
+</header>
+
+  
+  
+<details class='container entry-toc'>
+  <summary class='title'>
+    <span>Оглавление</span>
+  </summary>
+  <nav id="TableOfContents">
+<ul>
+<li>
+<ul>
+<li><a href="#префиксная-нотация-и-комбинации">Префиксная нотация и комбинации</a></li>
+<li><a href="#имена-и-окружение">Имена и окружение</a></li>
+<li><a href="#функции">Функции</a></li>
+<li><a href="#условные-выражения-и-предикаты">Условные выражения и предикаты</a></li>
+<li><a href="#пример-вычисление-квадратного-корня-методом-ньютона">Пример: вычисление квадратного корня методом Ньютона</a></li>
+<li><a href="#процедуры-как-абстракции-типа-черный-ящик">Процедуры как абстракции типа «черный ящик»</a>
+<ul>
+<li><a href="#локальные-имена">Локальные имена</a></li>
+</ul></li>
+<li><a href="#упражнения">Упражнения</a></li>
+</ul></li>
+</ul>
+</nav>
+</details>
+
+
+  <div class='container entry-content'>
+  
+
+<h2 id="префиксная-нотация-и-комбинации">Префиксная нотация и комбинации</h2>
+
+<p>Программа на языке Лисп представляет из себя набор комбинаций (combination) и особых форм (special form). Комбинациями называются кортежи, состоящие из команды и операндов (аргументов):</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-scheme" data-lang="scheme">(<span style="color:#06b;font-weight:bold">&lt;op&gt;</span> <span style="color:#963">&lt;arg1&gt;</span> [<span style="color:#333">...</span><span style="color:#963">&lt;args&gt;</span>])</code></pre></div>
+<p>В качестве операции могут выступать базовые арифметические операции, встроенные в язык (+, -, * и /). Например</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-scheme" data-lang="scheme">(<span style="color:#007020">+ </span><span style="color:#00d;font-weight:bold">8</span> <span style="color:#00d;font-weight:bold">4</span>)
+<span style="color:#888">;&gt; 12</span></code></pre></div>
+<p>(здесь и далее ответы интерпретатора пишутся в комментарии, начинающемся с <code>;&gt;</code>)</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-scheme" data-lang="scheme">(<span style="color:#007020">/ </span><span style="color:#00d;font-weight:bold">128</span> <span style="color:#00d;font-weight:bold">8</span>)
+<span style="color:#888">;&gt; 16</span></code></pre></div>
+<p>Первое время кажется сложным воспринимать такую запись, где операция предшествует операндам. Такая запись называется префиксной нотацией. Но она оказывается близкой к модели выполнения программ в компьютере и достаточно понятной для человека. Также важной особенностью такой нотации является описание операций с переменным числом операндов:</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-scheme" data-lang="scheme">(<span style="color:#007020">+ </span><span style="color:#00d;font-weight:bold">21</span> <span style="color:#00d;font-weight:bold">35</span> <span style="color:#00d;font-weight:bold">12</span> <span style="color:#00d;font-weight:bold">7</span>)
+<span style="color:#888">;&gt; 75</span></code></pre></div>
+<p>К тому же комбинации можно вкладывать друг в друга, образовывая сложные, но однозначные конструкции:</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-scheme" data-lang="scheme">(<span style="color:#007020">+ </span>(<span style="color:#007020">* </span><span style="color:#00d;font-weight:bold">3</span> <span style="color:#00d;font-weight:bold">5</span>) (<span style="color:#007020">- </span><span style="color:#00d;font-weight:bold">10</span> <span style="color:#00d;font-weight:bold">6</span>))
+<span style="color:#888">;&gt; 19</span></code></pre></div>
+<p>Но большие выражения, записанные в префиксной нотации читаются достаточно тяжело, поэтому применяется так называемая красивая печать (pretty printing), например, выражение</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-scheme" data-lang="scheme">(<span style="color:#007020">+ </span>(<span style="color:#007020">* </span><span style="color:#00d;font-weight:bold">3</span> (<span style="color:#007020">+ </span>(<span style="color:#007020">* </span><span style="color:#00d;font-weight:bold">2</span> <span style="color:#00d;font-weight:bold">4</span>) (<span style="color:#007020">+ </span><span style="color:#00d;font-weight:bold">3</span> <span style="color:#00d;font-weight:bold">5</span>))) (<span style="color:#007020">+ </span>(<span style="color:#007020">- </span><span style="color:#00d;font-weight:bold">10</span> <span style="color:#00d;font-weight:bold">7</span>) <span style="color:#00d;font-weight:bold">6</span>))</code></pre></div>
+<p>можно записать следующим образом:</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-scheme" data-lang="scheme">(<span style="color:#007020">+ </span>(<span style="color:#007020">* </span><span style="color:#00d;font-weight:bold">3</span>
+      (<span style="color:#007020">+ </span>(<span style="color:#007020">* </span><span style="color:#00d;font-weight:bold">2</span> <span style="color:#00d;font-weight:bold">4</span>)
+         (<span style="color:#007020">+ </span><span style="color:#00d;font-weight:bold">3</span> <span style="color:#00d;font-weight:bold">5</span>)))
+   (<span style="color:#007020">+ </span>(<span style="color:#007020">- </span><span style="color:#00d;font-weight:bold">10</span> <span style="color:#00d;font-weight:bold">7</span>)
+      <span style="color:#00d;font-weight:bold">6</span>))</code></pre></div>
+<p>В общем случае:</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-scheme" data-lang="scheme">(<span style="color:#06b;font-weight:bold">&lt;op&gt;</span> <span style="color:#963">arg1</span>
+      <span style="color:#963">arg2</span>
+      <span style="color:#333">...</span>)</code></pre></div>
+<h2 id="имена-и-окружение">Имена и окружение</h2>
+
+<p>Часто необходимо переиспользовать вычисленный результат. Для этого можно давать имена результатам вычислений с помощью особой формы</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-scheme" data-lang="scheme">(<span style="color:#080;font-weight:bold">define </span><span style="color:#963">&lt;name&gt;</span> <span style="color:#963">&lt;expr&gt;</span>)<span style="color:#963">:</span></code></pre></div>
+<p>Например,</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-scheme" data-lang="scheme">(<span style="color:#080;font-weight:bold">define </span><span style="color:#963">pi</span> <span style="color:#60e;font-weight:bold">3.14159</span>)
+(<span style="color:#080;font-weight:bold">define </span><span style="color:#963">radius</span> <span style="color:#00d;font-weight:bold">10</span>)
+(<span style="color:#080;font-weight:bold">define </span><span style="color:#963">circumference</span> (<span style="color:#007020">* </span><span style="color:#00d;font-weight:bold">2</span> <span style="color:#963">pi</span> <span style="color:#963">radius</span>))
+<span style="color:#963">circumference</span>
+<span style="color:#888">;&gt; 62.8318</span></code></pre></div>
+<p>Таким образом можно пошагово строить сложные выражения. Именованные значения сохраняются в окружении. Изначально есть глобальное окружение, помимо него существуют окружения подпрограмм (функций), о которых мы поговорим позже.</p>
+
+<h2 id="функции">Функции</h2>
+
+<p>Помимо именования результатов вычислений, можно также именовать выражения, формируя таким образом функции. Для этого используется специальная форма define:</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-scheme" data-lang="scheme">(<span style="color:#080;font-weight:bold">define </span>(<span style="color:#06b;font-weight:bold">&lt;name&gt;</span> <span style="color:#333">...</span><span style="color:#963">&lt;args&gt;</span>) <span style="color:#963">&lt;expr&gt;</span>)</code></pre></div>
+<p>Например,</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-scheme" data-lang="scheme">(<span style="color:#080;font-weight:bold">define </span>(<span style="color:#06b;font-weight:bold">square</span> <span style="color:#963">x</span>) (<span style="color:#007020">* </span><span style="color:#963">x</span> <span style="color:#963">x</span>))
+(<span style="color:#080;font-weight:bold">define </span>(<span style="color:#06b;font-weight:bold">sum-of-squares</span> <span style="color:#963">x</span> <span style="color:#963">y</span>)
+  (<span style="color:#007020">+ </span>(<span style="color:#06b;font-weight:bold">square</span> <span style="color:#963">x</span>) (<span style="color:#06b;font-weight:bold">square</span> <span style="color:#963">y</span>)))</code></pre></div>
+<p>Получившиеся функции можно использовать аналогично встроенным в язык операциям.</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-scheme" data-lang="scheme">(<span style="color:#06b;font-weight:bold">sum-of-squares</span> <span style="color:#00d;font-weight:bold">3</span> <span style="color:#00d;font-weight:bold">4</span>)
+<span style="color:#888">;&gt; 25</span></code></pre></div>
+<p>Можно определить вычисление комбинации следующим образом:</p>
+
+<ol>
+<li>вычислить все подвыражения комбинации;</li>
+<li>использовать результат первого подвыражения как функцию, которую применить к оставшимся подвыражениям.</li>
+</ol>
+
+<p>Таким образом можно интерпретировать вычисление выражения</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-scheme" data-lang="scheme">(<span style="color:#06b;font-weight:bold">sum-of-squares</span> (<span style="color:#007020">+ </span><span style="color:#00d;font-weight:bold">1</span> <span style="color:#00d;font-weight:bold">2</span>) (<span style="color:#007020">* </span><span style="color:#00d;font-weight:bold">2</span> <span style="color:#00d;font-weight:bold">2</span>))</code></pre></div>
+<p>следующей последовательностью преобразований:</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-scheme" data-lang="scheme">(<span style="color:#06b;font-weight:bold">sum-of-squares</span> <span style="color:#00d;font-weight:bold">3</span> <span style="color:#00d;font-weight:bold">4</span>)      <span style="color:#888">; вычисляются все подвыражения</span>
+(<span style="color:#007020">+ </span>(<span style="color:#06b;font-weight:bold">square</span> <span style="color:#00d;font-weight:bold">3</span>) (<span style="color:#06b;font-weight:bold">square</span> <span style="color:#00d;font-weight:bold">4</span>)) <span style="color:#888">; выполняется подстановка функции</span>
+(<span style="color:#007020">+ </span>(<span style="color:#007020">* </span><span style="color:#00d;font-weight:bold">3</span> <span style="color:#00d;font-weight:bold">3</span>) (<span style="color:#007020">* </span><span style="color:#00d;font-weight:bold">4</span> <span style="color:#00d;font-weight:bold">4</span>))       <span style="color:#888">; выполняется подстановка функции</span>
+(<span style="color:#007020">+ </span><span style="color:#00d;font-weight:bold">9</span> <span style="color:#00d;font-weight:bold">16</span>)                  <span style="color:#888">; вычисляются все подвыражения</span>
+<span style="color:#888">;&gt; 25                     ; первое подвыражение применяется к остальным</span></code></pre></div>
+<p>Это не то, что реально происходит в интерпретаторе, это упрощённая модель, которой достаточно на текущем этапе. Позже мы рассмотрим случаи, когда такой модели оказывается недостаточно, и рассмотрим другую модель подстановки функций. Но уже из этой модели очевидно то, что подвыражения комбинации вычисляются до вычисления самой операции. Такая модель вычисления называется нормальным порядком вычисления. Также существует альтернативная модель, называемая аппликативным порядком или ленивыми вычислениями, когда подвыражения вычисляются в момент обращения к ним. Тогда вычисление предыдущего выражения можно представить следующей последовательностью:</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-scheme" data-lang="scheme">(<span style="color:#06b;font-weight:bold">sum-of-squares</span> (<span style="color:#007020">+ </span><span style="color:#00d;font-weight:bold">1</span> <span style="color:#00d;font-weight:bold">2</span>) (<span style="color:#007020">* </span><span style="color:#00d;font-weight:bold">2</span> <span style="color:#00d;font-weight:bold">2</span>))
+(<span style="color:#007020">+ </span>(<span style="color:#06b;font-weight:bold">square</span> (<span style="color:#007020">+ </span><span style="color:#00d;font-weight:bold">1</span> <span style="color:#00d;font-weight:bold">2</span>)) (<span style="color:#06b;font-weight:bold">square</span> (<span style="color:#007020">* </span><span style="color:#00d;font-weight:bold">2</span> <span style="color:#00d;font-weight:bold">2</span>)))
+(<span style="color:#007020">+ </span>(<span style="color:#007020">* </span>(<span style="color:#007020">+ </span><span style="color:#00d;font-weight:bold">1</span> <span style="color:#00d;font-weight:bold">2</span>) (<span style="color:#007020">+ </span><span style="color:#00d;font-weight:bold">1</span> <span style="color:#00d;font-weight:bold">2</span>)) (<span style="color:#007020">* </span>(<span style="color:#007020">* </span><span style="color:#00d;font-weight:bold">2</span> <span style="color:#00d;font-weight:bold">2</span>) (<span style="color:#007020">* </span><span style="color:#00d;font-weight:bold">2</span> <span style="color:#00d;font-weight:bold">2</span>)))</code></pre></div>
+<p>После чего производится редукция выражений:</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-scheme" data-lang="scheme">(<span style="color:#007020">+ </span>(<span style="color:#007020">* </span><span style="color:#00d;font-weight:bold">3</span> <span style="color:#00d;font-weight:bold">3</span>) (<span style="color:#007020">* </span><span style="color:#00d;font-weight:bold">4</span> <span style="color:#00d;font-weight:bold">4</span>))
+(<span style="color:#007020">+ </span><span style="color:#00d;font-weight:bold">9</span> <span style="color:#00d;font-weight:bold">16</span>)
+<span style="color:#888">;&gt; 25</span></code></pre></div>
+<p>И нормальный, и аппликативный порядки приводят к одинаковому результату, если все подвыражения корректно вычислимы, однако, это не всегда так (см. Упражнение 1.5).</p>
+
+<h2 id="условные-выражения-и-предикаты">Условные выражения и предикаты</h2>
+
+<p>Для полноценного языка программирования не хватает ещё одного класса выражений: условного ветвления. Лисп предоставляет два вида условных выржений:</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-scheme" data-lang="scheme">(<span style="color:#080;font-weight:bold">cond </span>(<span style="color:#06b;font-weight:bold">&lt;pred&gt;</span> <span style="color:#963">&lt;expr&gt;</span>)
+      (<span style="color:#06b;font-weight:bold">&lt;pred&gt;</span> <span style="color:#963">&lt;expr&gt;</span>)
+      <span style="color:#333">...</span>
+     [(<span style="color:#080;font-weight:bold">else </span><span style="color:#963">&lt;expr&gt;</span>)]))</code></pre></div>
+<p>и, в случае двух веток:</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-scheme" data-lang="scheme">(<span style="color:#080;font-weight:bold">if </span><span style="color:#963">&lt;pred&gt;</span> <span style="color:#963">&lt;expr&gt;</span> <span style="color:#963">&lt;expr&gt;</span>)</code></pre></div>
+<p>Через <code>&lt;pred&gt;</code> обозначается предикат, выражение, результатом которого может быть либо ложь (<code>#f</code>), либо любое другое значение, которое будет интерпретироваться как истина (<code>#t</code>). Результатом таких выражений будет результат первого выражения с верным предикатом. Например, можно выразить функцию модуля числа следующим образом:</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-scheme" data-lang="scheme">(<span style="color:#080;font-weight:bold">define </span>(<span style="color:#007020">abs </span><span style="color:#963">x</span>)
+    (<span style="color:#080;font-weight:bold">if </span>(<span style="color:#007020">&lt; </span><span style="color:#963">x</span> <span style="color:#00d;font-weight:bold">0</span>)
+        (<span style="color:#007020">- </span><span style="color:#963">x</span>)
+        <span style="color:#963">x</span>))</code></pre></div>
+<p>или</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-scheme" data-lang="scheme">(<span style="color:#080;font-weight:bold">define </span>(<span style="color:#007020">abs </span><span style="color:#963">x</span>)
+    (<span style="color:#080;font-weight:bold">cond </span>((<span style="color:#007020">&lt; </span><span style="color:#963">x</span> <span style="color:#00d;font-weight:bold">0</span>) (<span style="color:#007020">- </span><span style="color:#963">x</span>))
+          (<span style="color:#080;font-weight:bold">else </span><span style="color:#963">x</span>)))</code></pre></div>
+<p>Условные выражения являются специальными формами. При этом вычисляются только те предикаты и выражения, которые необходимы (все предикаты до первого истинного и выражение, следующее за истинным предикатом). То есть условные выражения имеют аппликативный порядок вычисления.</p>
+
+<p>Базовыми предикатами являются &gt;, &lt; и =. Помимо них есть ещё 3 логических выражения:</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-scheme" data-lang="scheme">(<span style="color:#080;font-weight:bold">and </span><span style="color:#333">...</span><span style="color:#963">&lt;preds&gt;</span>)
+(<span style="color:#080;font-weight:bold">or </span><span style="color:#333">...</span><span style="color:#963">&lt;preds&gt;</span>)
+(<span style="color:#007020">not </span><span style="color:#963">&lt;pred&gt;</span>)</code></pre></div>
+<p>Выражения <code>and</code> и <code>or</code> являются особыми формами, потому что в первом случае вычисляются предикаты до первого ложного, а во втором до первого истинного. Выражения же <code>not</code> можно интерпретировать как обычную функцию.</p>
+
+<aside class="admonition">
+    <h4>
+        <span class="admonition-icon">ℹ️</span>Замечание</h4><p>Кстати, при вычислении комбинаций первым пунктом является «вычислить все подвыражения». Это можно применить как к аргументам функции, так и к самой функции. Например, функцию модуля можно записать следующим образом:</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-scheme" data-lang="scheme">(<span style="color:#080;font-weight:bold">define </span>(<span style="color:#007020">abs </span><span style="color:#963">x</span>) ((<span style="color:#080;font-weight:bold">if </span>(<span style="color:#007020">&lt; </span><span style="color:#963">x</span> <span style="color:#00d;font-weight:bold">0</span>) <span style="color:#963">-</span> <span style="color:#963">+</span>) <span style="color:#963">x</span>))</code></pre></div>
+<p>Подумайте как это можно интерпетировать. Какой будет последовательность преобразований выражения <code>(abs 5)</code>? <code>(abs -5)</code>?</p>
+</aside>
+
+
+<h2 id="пример-вычисление-квадратного-корня-методом-ньютона">Пример: вычисление квадратного корня методом Ньютона</h2>
+
+<p>Функции, описанные выше очень похожи на математическое понятие отображений и функций. Но, как быть с функциями, выходящими за рамки элементарных арифметических операций? Как, например, добиться от компьютера вычисления квадратного корня? Вообще, в современных компьютерах на аппаратном уровне вшита возможность вычисления экспоненты числа через приближение рядом Тейлора. Имея экспоненту легко вычислить любую степень числа, в том числе и дробную, например, <sup>1</sup>&frasl;<sub>2</sub>. Но представим, что нам достался компьютер, который не умеет считать экспоненту, а корень нам надо посчитать. Для этого воспользуемся <a href="https://ru.wikipedia.org/wiki/Метод_Ньютона">методом Ньютона</a> приближённого вычисления значения функции.</p>
+
+<aside class="admonition">
+    <h4>
+        <span class="admonition-icon">ℹ️</span>Вкратце</h4>Для нахождения корня функции можно воспользоваться итеративным процессом приближения. Пусть нам дана функция \(f\colon \mathbb R \to \mathbb R\) и нам необходимо найти её корень. Выберем \(x_0\) &mdash; некоторое значение, близкое к нулю функции. Вычислим \(x_{i+1}\) как корень касательной \(f\) в точке \(x_i\).
+\[
+  x_{i+1} = x_i - \frac{f(x_i)}{f^\prime(x_i)}
+\]
+<figure>
+  <img src="https://upload.wikimedia.org/wikipedia/ru/e/e0/Newton_ex.PNG"/>
+  <figcaption><h4>График последовательных приближений</h4></figcaption>
+</figure></aside>
+
+
+<p>В нашем случае мы хотим найти квадратный корень числа \(a\), то есть при каком значении \(x\) функция \(x^2\) будет равна \(a\) или, другими словами, необходимо найти корень функции \(f(x) = x^2 - a\). Для функции \(f\) производная в любой точке равна \(f^\prime(x) = 2x\), поэтому следующий шаг можно выразить следующей формулой:
+<div class="equation">
+\[
+  x_{i+1} = x_i - \frac{f(x_i)}{f^\prime(x_i)} = x_i - \frac{x_i^2 - a}{2x_i} = \frac{x_i^2 + a}{2x_i} = \frac{x_i + \frac{a}{x_i}}{2}
+\]
+</div>
+или, немного, перефразировав, можно говорить, что \(x_{i+1}\) можно вычислить как среднеарифметическое между \(x_i\) и \(\frac{a}{x_i}\).</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-scheme" data-lang="scheme">(<span style="color:#080;font-weight:bold">define </span>(<span style="color:#06b;font-weight:bold">imporve</span> <span style="color:#963">x</span> <span style="color:#963">a</span>)
+  (<span style="color:#06b;font-weight:bold">average</span> <span style="color:#963">x</span> (<span style="color:#007020">/ </span><span style="color:#963">a</span> <span style="color:#963">x</span>)))</code></pre></div>
+<p>где</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-scheme" data-lang="scheme">(<span style="color:#080;font-weight:bold">define </span>(<span style="color:#06b;font-weight:bold">average</span> <span style="color:#963">a</span> <span style="color:#963">b</span>)
+  (<span style="color:#007020">/ </span>(<span style="color:#007020">+ </span><span style="color:#963">a</span> <span style="color:#963">b</span>) <span style="color:#00d;font-weight:bold">2</span>))</code></pre></div>
+<p>Не спешите хвататься за рекурсию, для начала надо понять, когда же остановиться? Для этого определим ещё одну функцию, в которой будем сравнивать квадрат вычисленного значения с исходным числом, корень которого мы пытаемся найти:</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-scheme" data-lang="scheme">(<span style="color:#080;font-weight:bold">define </span>(<span style="color:#06b;font-weight:bold">good-enough?</span> <span style="color:#963">x</span> <span style="color:#963">a</span>)
+  (<span style="color:#007020">&lt; </span>(<span style="color:#007020">abs </span>(<span style="color:#007020">- </span>(<span style="color:#06b;font-weight:bold">square</span> <span style="color:#963">x</span>) <span style="color:#963">a</span>)) <span style="color:#60e;font-weight:bold">0.001</span>))</code></pre></div>
+<p>Наконец, можно определить функцию итеративного вычисления квадратного корня:</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-scheme" data-lang="scheme">(<span style="color:#080;font-weight:bold">define </span>(<span style="color:#06b;font-weight:bold">sqrt-iter</span> <span style="color:#963">x</span> <span style="color:#963">a</span>)
+  (<span style="color:#080;font-weight:bold">if </span>(<span style="color:#06b;font-weight:bold">good-enough?</span> <span style="color:#963">x</span> <span style="color:#963">a</span>)
+      <span style="color:#963">x</span>
+      (<span style="color:#06b;font-weight:bold">sqrt-iter</span> (<span style="color:#06b;font-weight:bold">improve</span> <span style="color:#963">x</span> <span style="color:#963">a</span>) <span style="color:#963">a</span>)))</code></pre></div>
+<p>Для упрощения, предположим, что начальная оценка любого корня будет равна единице:</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-scheme" data-lang="scheme">(<span style="color:#080;font-weight:bold">define </span>(<span style="color:#007020">sqrt </span><span style="color:#963">x</span>)
+  (<span style="color:#06b;font-weight:bold">sqrt-iter</span> <span style="color:#60e;font-weight:bold">1.0</span> <span style="color:#963">x</span>))</code></pre></div>
+<p>Проверим:</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-scheme" data-lang="scheme">(<span style="color:#007020">sqrt </span><span style="color:#00d;font-weight:bold">9</span>)
+<span style="color:#888">;&gt; 3.00009155413138</span>
+(<span style="color:#007020">sqrt </span>(<span style="color:#007020">+ </span><span style="color:#00d;font-weight:bold">100</span> <span style="color:#00d;font-weight:bold">37</span>))
+<span style="color:#888">;&gt; 11.704699917758145</span>
+(<span style="color:#007020">sqrt </span>(<span style="color:#007020">+ </span>(<span style="color:#007020">sqrt </span><span style="color:#00d;font-weight:bold">2</span>) (<span style="color:#007020">sqrt </span><span style="color:#00d;font-weight:bold">3</span>)))
+<span style="color:#888">;&gt; 1.7739279023207892</span>
+(<span style="color:#06b;font-weight:bold">square</span> (<span style="color:#007020">sqrt </span><span style="color:#00d;font-weight:bold">1000</span>))
+<span style="color:#888">;&gt; 1000.000369924366</span></code></pre></div>
+<p>Этот пример показывает как сложные программы органично разбиваются на простые функции и их комбинирование, а также то, как выразить циклический (итеративный) процесс без использования особых конструкций, а с помощью рекурсии, для которой достаточно возможности вызывать функцию.</p>
+
+<h2 id="процедуры-как-абстракции-типа-черный-ящик">Процедуры как абстракции типа «черный ящик»</h2>
+
+<p>Итак, мы получили желаемый результат: функция <code>sqrt x</code> вычисляет значение квадратного корня числа. При этом алгоритм вычисления разбит на небольшие функции, связанные следующей иерархией:
+<figure>
+    <div class="mermaid align-center">
+graph TD
+  A(sqrt)
+  A --- B(sqrt-iter)
+  B --- C(good-enough?)
+  B --- D(improve)
+  C --- E(square)
+  C --- F(abs)
+  D --- G(average)
+</div>
+<figcaption>
+        Рис.&thinsp;1.
+        Функциональная декомпозиция программы sqrt
+    </figcaption>
+</figure>
+</p>
+
+<p>Важной особенностью такой декомпозиции является то, что каждый элемент, каждая функция имеет определённую задачу, область ответственности. Каждая функция может быть переписана с сохранением интерфейса без необходимости переписывать всю программу. Например, можно переписать функцию <code>good-enough?</code>, что предлагается сделать в упражнении 1.7. И для функции <code>sqrt-iter</code> ничего не измениться, для неё функция <code>good-enough?</code> является чёрным ящиком, чем-то, куда передаются два числа и получается ответ: Да или Нет. Для функции <code>sqrt-iter</code> совершенно неважно &mdash; как этот ответ будет получен. Например, следующие две функции <code>square</code> неотличимы для внешнего наблюдателя:</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-scheme" data-lang="scheme">(<span style="color:#080;font-weight:bold">define </span>(<span style="color:#06b;font-weight:bold">square1</span> <span style="color:#963">x</span>) (<span style="color:#007020">* </span><span style="color:#963">x</span> <span style="color:#963">x</span>))
+
+(<span style="color:#080;font-weight:bold">define </span>(<span style="color:#06b;font-weight:bold">square2</span> <span style="color:#963">x</span>)
+  (<span style="color:#007020">exp </span>(<span style="color:#007020">* </span><span style="color:#00d;font-weight:bold">2</span> (<span style="color:#007020">log </span><span style="color:#963">x</span>))))</code></pre></div>
+<p>Мы как бы скрываем внутреннее устройство функции от вызывающей стороны. Но это, конечно, лукаво, ведь внутренние части нашей программы доступны снаружи: все функции <code>sqrt-iter</code>, <code>good-enough?</code> и так далее доступны везде в нашей программе. Давайте спрячем их. Для этого нам потребуется понимание зоны видимости.</p>
+
+<h3 id="локальные-имена">Локальные имена</h3>
+
+<p>Функция скрывает от вызывающей стороны своё внутреннее устройство. Это также означает, что снаружи недоступны внутренние данные и их имена. Так функции</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-scheme" data-lang="scheme">(<span style="color:#080;font-weight:bold">define </span>(<span style="color:#06b;font-weight:bold">square1</span> <span style="color:#963">x</span>) (<span style="color:#007020">* </span><span style="color:#963">x</span> <span style="color:#963">x</span>))
+
+(<span style="color:#080;font-weight:bold">define </span>(<span style="color:#06b;font-weight:bold">square2</span> <span style="color:#963">y</span>) (<span style="color:#007020">* </span><span style="color:#963">y</span> <span style="color:#963">y</span>))</code></pre></div>
+<p>совершенно неотличимы снаружи. Внутренние или локальные имена оказываются приоритетнее внешних. Например, следующая программа</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-scheme" data-lang="scheme">(<span style="color:#080;font-weight:bold">define </span><span style="color:#963">x</span> <span style="color:#00d;font-weight:bold">5</span>)
+
+(<span style="color:#080;font-weight:bold">define </span>(<span style="color:#06b;font-weight:bold">square</span> <span style="color:#963">x</span>) (<span style="color:#007020">* </span><span style="color:#963">x</span> <span style="color:#963">x</span>))
+
+(<span style="color:#06b;font-weight:bold">square</span> <span style="color:#00d;font-weight:bold">10</span>)</code></pre></div>
+<p>Вернёт 100, а не 25. Потому что <code>x</code> внутри функции <code>square</code> переписан и уже не равен внешней константе <code>x</code>. равной 5.</p>
+
+<p>Это позволяет нам также создать локальные определения и функции:</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-scheme" data-lang="scheme">(<span style="color:#080;font-weight:bold">define </span>(<span style="color:#06b;font-weight:bold">square</span> <span style="color:#963">x</span>)
+  (<span style="color:#080;font-weight:bold">define </span>(<span style="color:#06b;font-weight:bold">double</span> <span style="color:#963">x</span>) (<span style="color:#007020">+ </span><span style="color:#963">x</span> <span style="color:#963">x</span>))
+  (<span style="color:#007020">exp </span>(<span style="color:#06b;font-weight:bold">double</span> (<span style="color:#007020">log </span><span style="color:#963">x</span>))))</code></pre></div>
+<p>То есть мы объявили функцию <code>double</code> внутри функции <code>square</code> и она стала доступна в этом блоке выполнения. А снаружи она будет недоступна, не будет существовать за пределами функции <code>square</code>. Давайте используя такой подход «спрячем» вспомогательные функции внутри <code>sqrt</code>:</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-scheme" data-lang="scheme">(<span style="color:#080;font-weight:bold">define </span>(<span style="color:#007020">sqrt </span><span style="color:#963">a</span>)
+  (<span style="color:#080;font-weight:bold">define </span>(<span style="color:#06b;font-weight:bold">good-enough?</span> <span style="color:#963">x</span>)
+    (<span style="color:#007020">&lt; </span>(<span style="color:#007020">abs </span>(<span style="color:#007020">- </span>(<span style="color:#06b;font-weight:bold">square</span> <span style="color:#963">x</span>) <span style="color:#963">a</span>)) <span style="color:#60e;font-weight:bold">0.001</span>))
+  (<span style="color:#080;font-weight:bold">define </span>(<span style="color:#06b;font-weight:bold">improve</span> <span style="color:#963">x</span>)
+    (<span style="color:#06b;font-weight:bold">average</span> <span style="color:#963">x</span> (<span style="color:#007020">/ </span><span style="color:#963">a</span> <span style="color:#963">x</span>)))
+  (<span style="color:#080;font-weight:bold">define </span>(<span style="color:#06b;font-weight:bold">sqrt-iter</span> <span style="color:#963">x</span>)
+    (<span style="color:#080;font-weight:bold">if </span>(<span style="color:#06b;font-weight:bold">good-enough?</span> <span style="color:#963">x</span>)
+        <span style="color:#963">x</span>
+        (<span style="color:#06b;font-weight:bold">sqrt-iter</span> (<span style="color:#06b;font-weight:bold">improve</span> <span style="color:#963">x</span>))))
+  (<span style="color:#06b;font-weight:bold">sqrt-iter</span> <span style="color:#60e;font-weight:bold">1.0</span>))</code></pre></div>
+<p>Также внутри функции <code>sqrt</code> можно изолировать определения функций <code>abs</code>, <code>square</code> и <code>average</code>. В дальнейшем такая блочная структура найдёт широкое применение в рамках примеров этой книги.</p>
+
+<h2 id="упражнения">Упражнения</h2>
+
+<p>Упражнения представлены в курсе <a href="https://repl.it/classroom/invite/cTpCI6u">https://repl.it/classroom/invite/cTpCI6u</a></p>
+
+</div>
+
+  
+<footer class='entry-footer'>
+  <div class='container sep-before'><div class='categories'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <path d="M22,19a2,2,0,0,1-2,2H4a2,2,0,0,1-2-2V5A2,2,0,0,1,4,3H9l2,3h9a2,2,0,0,1,2,2Z"/>
+  
+</svg>
+<span class='screen-reader-text'>category: </span><a class='category' href='/categories/algorithm/'>Алгоритмы</a></div>
+<div class='tags'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <path d="M20.59,13.41l-7.17,7.17a2,2,0,0,1-2.83,0L2,12V2H12l8.59,8.59A2,2,0,0,1,20.59,13.41Z"/>
+  <line x1="7" y1="7" x2="7" y2="7"/>
+  
+</svg>
+<span class='screen-reader-text'>Тэги: </span><a class='tag' href='/tags/sicp/'>sicp</a>, <a class='tag' href='/tags/scheme/'>scheme</a></div>
+
+  </div>
+</footer>
+
+
+</article>
+
+<nav class='entry-nav'>
+  <div class='container'><div class='prev-entry sep-before'>
+      <a href='/post/2019/08/quick-test/'>
+        <span aria-hidden='true'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <line x1="20" y1="12" x2="4" y2="12"/>
+  <polyline points="10 18 4 12 10 6"/>
+  
+</svg>
+ Предыдущий</span>
+        <span class='screen-reader-text'>Предыдущая запись: </span>Быстро пишем функциональные тесты</a>
+    </div><div class='next-entry sep-before'>
+      <a href='/post/2019/10/rdd/'>
+        <span class='screen-reader-text'>Следующая запись: </span>Readme Driven Development<span aria-hidden='true'>Следующий <svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <line x1="4" y1="12" x2="20" y2="12"/>
+  <polyline points="14 6 20 12 14 18"/>
+  
+</svg>
+</span>
+      </a>
+    </div></div>
+</nav>
+
+
+
+
+      </main>
+
+      <footer id='footer' class='footer'>
+        <div class='container sep-before'><div class='copyright'>
+  <p>Материалы распространяются по <a rel="noreferrer" href="https://creativecommons.org/licenses/by/4.0/" target="_blank">лицензии CC BY</a> &copy; 2018-2021 vporoshok <br>Увидели ошибку? Буду рад <a rel="noreferrer" href="https://github.com/vporoshok/vporoshok.github.io" target="_blank">PR&rsquo;у</a></p>
+</div>
+
+        </div>
+      </footer>
+
+    </div>
+  </div><script>window.__assets_js_src="/assets/js/"</script>
+
+<script src='/assets/js/main.67d669ac.js'></script><link rel='stylesheet' href='/assets/katex/katex.min.css'>
+<script src='/assets/katex/katex.min.js'></script>
+<script src='/assets/katex/contrib/auto-render.min.js'></script>
+
+<script type='text/javascript'>
+  renderMathInElement(document.querySelector('.entry-content'),{"throwOnError":true});
+</script><script src='/assets/mermaid.min.js' />
+
+<script type='text/javascript'>
+  mermaid.initialize({});
+</script>
+
+</body>
+
+</html>
+

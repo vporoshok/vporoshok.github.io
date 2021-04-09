@@ -1,0 +1,357 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Tags on Где-то на дальнем сервере</title>
+    <link>https://vporoshok.me/tags/</link>
+    <description>Recent content in Tags on Где-то на дальнем сервере</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>ru</language>
+    <lastBuildDate>Fri, 09 Apr 2021 12:34:13 +0000</lastBuildDate>
+    
+	<atom:link href="https://vporoshok.me/tags/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>management</title>
+      <link>https://vporoshok.me/tags/management/</link>
+      <pubDate>Fri, 09 Apr 2021 12:34:13 +0000</pubDate>
+      
+      <guid>https://vporoshok.me/tags/management/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>tutorial</title>
+      <link>https://vporoshok.me/tags/tutorial/</link>
+      <pubDate>Fri, 09 Apr 2021 12:34:13 +0000</pubDate>
+      
+      <guid>https://vporoshok.me/tags/tutorial/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>work</title>
+      <link>https://vporoshok.me/tags/work/</link>
+      <pubDate>Fri, 09 Apr 2021 12:34:13 +0000</pubDate>
+      
+      <guid>https://vporoshok.me/tags/work/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>go</title>
+      <link>https://vporoshok.me/tags/go/</link>
+      <pubDate>Wed, 15 Jul 2020 19:25:46 +0000</pubDate>
+      
+      <guid>https://vporoshok.me/tags/go/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>logging</title>
+      <link>https://vporoshok.me/tags/logging/</link>
+      <pubDate>Wed, 15 Jul 2020 19:25:46 +0000</pubDate>
+      
+      <guid>https://vporoshok.me/tags/logging/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>distributed system</title>
+      <link>https://vporoshok.me/tags/distributed-system/</link>
+      <pubDate>Tue, 07 Jan 2020 13:37:25 +0000</pubDate>
+      
+      <guid>https://vporoshok.me/tags/distributed-system/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>graph</title>
+      <link>https://vporoshok.me/tags/graph/</link>
+      <pubDate>Tue, 07 Jan 2020 13:37:25 +0000</pubDate>
+      
+      <guid>https://vporoshok.me/tags/graph/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>state-machine</title>
+      <link>https://vporoshok.me/tags/state-machine/</link>
+      <pubDate>Tue, 07 Jan 2020 13:37:25 +0000</pubDate>
+      
+      <guid>https://vporoshok.me/tags/state-machine/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>architect</title>
+      <link>https://vporoshok.me/tags/architect/</link>
+      <pubDate>Sun, 13 Oct 2019 10:21:26 +0000</pubDate>
+      
+      <guid>https://vporoshok.me/tags/architect/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>checklist</title>
+      <link>https://vporoshok.me/tags/checklist/</link>
+      <pubDate>Sun, 13 Oct 2019 10:21:26 +0000</pubDate>
+      
+      <guid>https://vporoshok.me/tags/checklist/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>scheme</title>
+      <link>https://vporoshok.me/tags/scheme/</link>
+      <pubDate>Fri, 04 Oct 2019 15:17:31 +0000</pubDate>
+      
+      <guid>https://vporoshok.me/tags/scheme/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>sicp</title>
+      <link>https://vporoshok.me/tags/sicp/</link>
+      <pubDate>Fri, 04 Oct 2019 15:17:31 +0000</pubDate>
+      
+      <guid>https://vporoshok.me/tags/sicp/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>testing</title>
+      <link>https://vporoshok.me/tags/testing/</link>
+      <pubDate>Sun, 25 Aug 2019 15:44:33 +0000</pubDate>
+      
+      <guid>https://vporoshok.me/tags/testing/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>microservices</title>
+      <link>https://vporoshok.me/tags/microservices/</link>
+      <pubDate>Wed, 21 Aug 2019 03:25:57 +0000</pubDate>
+      
+      <guid>https://vporoshok.me/tags/microservices/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>tips and tricks</title>
+      <link>https://vporoshok.me/tags/tips-and-tricks/</link>
+      <pubDate>Wed, 21 Aug 2019 03:25:57 +0000</pubDate>
+      
+      <guid>https://vporoshok.me/tags/tips-and-tricks/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>scrum</title>
+      <link>https://vporoshok.me/tags/scrum/</link>
+      <pubDate>Sun, 17 Mar 2019 17:35:25 +0000</pubDate>
+      
+      <guid>https://vporoshok.me/tags/scrum/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>event</title>
+      <link>https://vporoshok.me/tags/event/</link>
+      <pubDate>Thu, 03 Jan 2019 08:08:58 +0000</pubDate>
+      
+      <guid>https://vporoshok.me/tags/event/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>hackathon</title>
+      <link>https://vporoshok.me/tags/hackathon/</link>
+      <pubDate>Thu, 03 Jan 2019 08:08:58 +0000</pubDate>
+      
+      <guid>https://vporoshok.me/tags/hackathon/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>keynote</title>
+      <link>https://vporoshok.me/tags/keynote/</link>
+      <pubDate>Thu, 03 Jan 2019 08:08:58 +0000</pubDate>
+      
+      <guid>https://vporoshok.me/tags/keynote/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>complexity</title>
+      <link>https://vporoshok.me/tags/complexity/</link>
+      <pubDate>Thu, 20 Dec 2018 14:00:00 +0000</pubDate>
+      
+      <guid>https://vporoshok.me/tags/complexity/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>data-structure</title>
+      <link>https://vporoshok.me/tags/data-structure/</link>
+      <pubDate>Thu, 20 Dec 2018 14:00:00 +0000</pubDate>
+      
+      <guid>https://vporoshok.me/tags/data-structure/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>memory</title>
+      <link>https://vporoshok.me/tags/memory/</link>
+      <pubDate>Thu, 08 Nov 2018 14:00:00 +0000</pubDate>
+      
+      <guid>https://vporoshok.me/tags/memory/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>python</title>
+      <link>https://vporoshok.me/tags/python/</link>
+      <pubDate>Fri, 02 Nov 2018 15:00:00 +0000</pubDate>
+      
+      <guid>https://vporoshok.me/tags/python/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>sorting</title>
+      <link>https://vporoshok.me/tags/sorting/</link>
+      <pubDate>Sat, 27 Oct 2018 08:53:31 +0000</pubDate>
+      
+      <guid>https://vporoshok.me/tags/sorting/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>rules</title>
+      <link>https://vporoshok.me/tags/rules/</link>
+      <pubDate>Sat, 18 Aug 2018 16:51:41 +0000</pubDate>
+      
+      <guid>https://vporoshok.me/tags/rules/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>team-lead</title>
+      <link>https://vporoshok.me/tags/team-lead/</link>
+      <pubDate>Sat, 18 Aug 2018 16:51:41 +0000</pubDate>
+      
+      <guid>https://vporoshok.me/tags/team-lead/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>blog</title>
+      <link>https://vporoshok.me/tags/blog/</link>
+      <pubDate>Sat, 16 Jun 2018 17:33:45 +0000</pubDate>
+      
+      <guid>https://vporoshok.me/tags/blog/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>orgmode</title>
+      <link>https://vporoshok.me/tags/orgmode/</link>
+      <pubDate>Sat, 16 Jun 2018 17:33:45 +0000</pubDate>
+      
+      <guid>https://vporoshok.me/tags/orgmode/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>git</title>
+      <link>https://vporoshok.me/tags/git/</link>
+      <pubDate>Sun, 08 Apr 2018 07:49:35 +0000</pubDate>
+      
+      <guid>https://vporoshok.me/tags/git/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>angular</title>
+      <link>https://vporoshok.me/tags/angular/</link>
+      <pubDate>Sun, 08 Apr 2018 07:24:33 +0000</pubDate>
+      
+      <guid>https://vporoshok.me/tags/angular/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>rxjs</title>
+      <link>https://vporoshok.me/tags/rxjs/</link>
+      <pubDate>Sun, 08 Apr 2018 07:24:33 +0000</pubDate>
+      
+      <guid>https://vporoshok.me/tags/rxjs/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>toc</title>
+      <link>https://vporoshok.me/tags/toc/</link>
+      <pubDate>Sun, 08 Apr 2018 07:24:33 +0000</pubDate>
+      
+      <guid>https://vporoshok.me/tags/toc/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>typescript</title>
+      <link>https://vporoshok.me/tags/typescript/</link>
+      <pubDate>Sun, 08 Apr 2018 07:24:33 +0000</pubDate>
+      
+      <guid>https://vporoshok.me/tags/typescript/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>algorithm</title>
+      <link>https://vporoshok.me/tags/algorithm/</link>
+      <pubDate>Sun, 04 Jun 2017 17:00:30 +0000</pubDate>
+      
+      <guid>https://vporoshok.me/tags/algorithm/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>CSRF</title>
+      <link>https://vporoshok.me/tags/csrf/</link>
+      <pubDate>Sun, 28 May 2017 17:33:45 +0000</pubDate>
+      
+      <guid>https://vporoshok.me/tags/csrf/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>PHP</title>
+      <link>https://vporoshok.me/tags/php/</link>
+      <pubDate>Sun, 28 May 2017 17:33:45 +0000</pubDate>
+      
+      <guid>https://vporoshok.me/tags/php/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>security</title>
+      <link>https://vporoshok.me/tags/security/</link>
+      <pubDate>Sun, 28 May 2017 17:33:45 +0000</pubDate>
+      
+      <guid>https://vporoshok.me/tags/security/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>web</title>
+      <link>https://vporoshok.me/tags/web/</link>
+      <pubDate>Sun, 28 May 2017 17:33:45 +0000</pubDate>
+      
+      <guid>https://vporoshok.me/tags/web/</guid>
+      <description></description>
+    </item>
+    
+  </channel>
+</rss>

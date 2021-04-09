@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>orgmode on Где-то на дальнем сервере</title>
+    <link>https://vporoshok.me/tags/orgmode/</link>
+    <description>Recent content in orgmode on Где-то на дальнем сервере</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>ru</language>
+    <lastBuildDate>Sat, 16 Jun 2018 17:33:45 +0000</lastBuildDate>
+    
+	<atom:link href="https://vporoshok.me/tags/orgmode/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Отдельный блог</title>
+      <link>https://vporoshok.me/post/2018/06/goto-standalone-blog/</link>
+      <pubDate>Sat, 16 Jun 2018 17:33:45 +0000</pubDate>
+      
+      <guid>https://vporoshok.me/post/2018/06/goto-standalone-blog/</guid>
+      <description>Уже несколько раз я пытался вести собственный блог. Какое-то время вёл ЖЖ, по большей части похожий на дневник. Потом я несколько раз пытался завести технический блог, но хватало меня на пару постов, после чего всё угасало. И вот недавно я всё же решил вести технический блог на регулярной основе (регулярностью, конечно, и не пахнет, но всё же). Несмотря на то, что я уже пробовал различные генераторы статических сайтов, сделал выбор в сторону платформы и завёл https://medium.</description>
+    </item>
+    
+  </channel>
+</rss>

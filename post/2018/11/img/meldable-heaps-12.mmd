@@ -1,0 +1,23 @@
+graph TD
+    subgraph k = 4
+    F((1))
+    F --- G((8))
+    F --- H((2))
+    F --- I((15))
+    H --- J((9))
+    I --- K((21))
+    I --- L((19))
+    L --- M((24))
+    F --- A((3))
+    A --- N((4))
+    A --- O((7))
+    O --- P((30))
+    A --- B((4))
+    B --- C((7))
+    B --- D((5))
+    D --- E((12))
+    end
+    classDef first fill:SpringGreen
+    class A,B,C,D,E,F,G,H,I,J,K,L,M first
+    classDef second fill:LightCoral
+    class N,O,P second

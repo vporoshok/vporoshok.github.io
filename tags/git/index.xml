@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>git on Где-то на дальнем сервере</title>
+    <link>https://vporoshok.me/tags/git/</link>
+    <description>Recent content in git on Где-то на дальнем сервере</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>ru</language>
+    <lastBuildDate>Sun, 08 Apr 2018 07:49:35 +0000</lastBuildDate>
+    
+	<atom:link href="https://vporoshok.me/tags/git/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Чек-лист разработчика</title>
+      <link>https://vporoshok.me/post/2018/04/developer-check-list/</link>
+      <pubDate>Sun, 08 Apr 2018 07:49:35 +0000</pubDate>
+      
+      <guid>https://vporoshok.me/post/2018/04/developer-check-list/</guid>
+      <description>Всегда В первую очередь надо не забывать о правилах хорошего тона. Оскорбления не разрешаются никому и никогда. Мат тоже желательно исключить из лексикона. Мы должны работать вместе, а не против друг друга, поэтому иногда надо идти на компромиссы. Ясно и чётко излагай свои мысли, аргументируй и доказывай, и тебя услышат.
+TL;DR Git
+ сообщение должно точно описано где, что и почему было сделано; обновление завендоренных зависимостей, изменения, не относящиеся напрямую к задаче и правки по ревью всегда оформляются отдельным коммитом;  Отчёты</description>
+    </item>
+    
+  </channel>
+</rss>

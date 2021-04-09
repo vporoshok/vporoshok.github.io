@@ -1,0 +1,738 @@
+<!DOCTYPE html>
+<html lang='ru'><head>
+  <meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='description' content='Тестируй не вход и выход, а свойства'>
+<meta name='theme-color' content='#ffcd00'>
+
+<meta property='og:title' content='Property-based testing • Где-то на дальнем сервере'>
+<meta property='og:description' content='Тестируй не вход и выход, а свойства'>
+<meta property='og:url' content='https://vporoshok.me/post/2018/06/property-based-testing/'>
+<meta property='og:site_name' content='Где-то на дальнем сервере'>
+<meta property='og:type' content='article'><meta property='og:image' content='https://vporoshok.me/post/2018/06/img/properties.jpg'><meta property='article:section' content='post'><meta property='article:tag' content='testing'><meta property='article:tag' content='go'><meta property='article:published_time' content='2018-06-12T16:09:44Z'/><meta property='article:modified_time' content='2018-11-10T12:14:22&#43;04:00'/><meta name='twitter:card' content='summary_large_image'><meta property='twitter:image' content='https://vporoshok.me/post/2018/06/img/properties.jpg'><meta property='twitter:image:alt' content='“The symmetrical apartment units with orange doors in Osaka“ by Tim Easley on Unsplash'>
+
+<meta name="generator" content="Hugo 0.57.2" />
+
+  <title>Property-based testing • Где-то на дальнем сервере</title>
+  <link rel='canonical' href='https://vporoshok.me/post/2018/06/property-based-testing/'>
+  
+  
+  <link rel='icon' href='/favicon.ico'>
+<link rel='stylesheet' href='/assets/css/main.6a060eb7.css'><link rel='stylesheet' href='/assets/custom.css'><style>
+:root{--color-accent:#ffcd00;}
+</style>
+
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+	ga('create', 'UA-41042060-2', 'auto');
+	
+	ga('send', 'pageview');
+}
+</script>
+<script async src='https://www.google-analytics.com/analytics.js'></script>
+
+  
+
+</head>
+<body class='page type-post has-cover has-sidebar has-emoji'>
+
+  <div class='site'><div id='sidebar' class='sidebar'>
+  <a class='screen-reader-text' href='#main-menu'>Перейти к основному меню</a>
+
+  <div class='container'><section class='widget widget-about sep-after'>
+  <header>
+    
+    <div class='logo'>
+      <a href='/'>
+        <img src='/images/logo.jpg' alt="Вернуться на главную">
+      </a>
+    </div>
+    
+    <h2 class='title site-title '>
+    vporoshok.me
+    </h2>
+    <div class='desc'>
+    Где-то на дальнем сервере
+    </div>
+  </header>
+
+</section>
+<section class='widget widget-social_menu sep-after'><nav aria-label='Соцсети'>
+    <ul><li>
+        <a href='https://twitter.com/vporoshok' target='_blank' rel='noopener'>
+          <span class='screen-reader-text'>Открыть Twitter-акаунт в новой вкладке</span><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"/>
+  
+</svg>
+</a>
+      </li><li>
+        <a href='https://github.com/vporoshok' target='_blank' rel='noopener'>
+          <span class='screen-reader-text'>Открыть Github-акаунт в новой вкладке</span><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/>
+  
+</svg>
+</a>
+      </li><li>
+        <a href='mailto:vporoshok@gmail.com' target='_blank' rel='noopener'>
+          <span class='screen-reader-text'>Связаться через Email</span><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+  <polyline points="22,6 12,13 2,6"/>
+  
+</svg>
+</a>
+      </li><li>
+        <a href='https://t.me/vporoshok' target='_blank' rel='noopener'>
+          <span class='screen-reader-text'>Открыть Telegram-акаунт в новой вкладке</span><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <path d="m 22.05,1.577 c -0.393,-0.016 -0.784,0.08 -1.117,0.235 -0.484,0.186 -4.92,1.902 -9.41,3.64 C 9.263,6.325 7.005,7.198 5.267,7.867 3.53,8.537 2.222,9.035 2.153,9.059 c -0.46,0.16 -1.082,0.362 -1.61,0.984 -0.79581202,1.058365 0.21077405,1.964825 1.004,2.499 1.76,0.564 3.58,1.102 5.087,1.608 0.556,1.96 1.09,3.927 1.618,5.89 0.174,0.394 0.553,0.54 0.944,0.544 l -0.002,0.02 c 0,0 0.307,0.03 0.606,-0.042 0.3,-0.07 0.677,-0.244 1.02,-0.565 0.377,-0.354 1.4,-1.36 1.98,-1.928 l 4.37,3.226 0.035,0.02 c 0,0 0.484,0.34 1.192,0.388 0.354,0.024 0.82,-0.044 1.22,-0.337 0.403,-0.294 0.67,-0.767 0.795,-1.307 0.374,-1.63 2.853,-13.427 3.276,-15.38 L 23.676,4.725 C 23.972,3.625 23.863,2.617 23.18,2.02 22.838,1.723 22.444,1.593 22.05,1.576 Z"/>
+  
+</svg>
+</a>
+      </li></ul>
+  </nav>
+</section><section class='widget widget-sidebar_menu sep-after'><nav id='sidebar-menu' class='menu sidebar-menu' aria-label='Боковое меню'>
+    <div class='container'>
+      <ul><li class='item'>
+  <a href='/categories/algorithm/'>Алгоритмы</a></li><li class='item'>
+  <a href='/categories/develop/'>Разработка</a></li><li class='item'>
+  <a href='/categories/life-style/'>Образ жизни</a></li><li class='item'>
+  <a href='/categories/book/'>Книги</a></li><li class='item'>
+  <a href='/slides/'>Презентации</a></li><li class='item'>
+  <a href='/categories/project/'>Проекты</a></li></ul>
+    </div>
+  </nav>
+
+</section><section class='widget widget-taxonomy_cloud sep-after'>
+  <header>
+    <h4 class='title widget-title'>Тэги</h4>
+  </header>
+
+  <div class='container list-container'>
+  <ul class='list taxonomy-cloud no-shuffle'><li>
+        <a href='/tags/algorithm/' style='font-size:1em'>algorithm</a>
+      </li><li>
+        <a href='/tags/angular/' style='font-size:1em'>angular</a>
+      </li><li>
+        <a href='/tags/architect/' style='font-size:1.625em'>architect</a>
+      </li><li>
+        <a href='/tags/blog/' style='font-size:1em'>blog</a>
+      </li><li>
+        <a href='/tags/checklist/' style='font-size:1.375em'>checklist</a>
+      </li><li>
+        <a href='/tags/complexity/' style='font-size:1.5em'>complexity</a>
+      </li><li>
+        <a href='/tags/csrf/' style='font-size:1em'>CSRF</a>
+      </li><li>
+        <a href='/tags/data-structure/' style='font-size:1.375em'>data-structure</a>
+      </li><li>
+        <a href='/tags/distributed-system/' style='font-size:1em'>distributed system</a>
+      </li><li>
+        <a href='/tags/event/' style='font-size:1em'>event</a>
+      </li><li>
+        <a href='/tags/git/' style='font-size:1em'>git</a>
+      </li><li>
+        <a href='/tags/go/' style='font-size:2em'>go</a>
+      </li><li>
+        <a href='/tags/graph/' style='font-size:1.125em'>graph</a>
+      </li><li>
+        <a href='/tags/hackathon/' style='font-size:1em'>hackathon</a>
+      </li><li>
+        <a href='/tags/keynote/' style='font-size:1em'>keynote</a>
+      </li><li>
+        <a href='/tags/logging/' style='font-size:1em'>logging</a>
+      </li><li>
+        <a href='/tags/management/' style='font-size:1.125em'>management</a>
+      </li><li>
+        <a href='/tags/memory/' style='font-size:1.25em'>memory</a>
+      </li><li>
+        <a href='/tags/microservices/' style='font-size:1.125em'>microservices</a>
+      </li><li>
+        <a href='/tags/orgmode/' style='font-size:1em'>orgmode</a>
+      </li><li>
+        <a href='/tags/php/' style='font-size:1em'>PHP</a>
+      </li><li>
+        <a href='/tags/python/' style='font-size:1.125em'>python</a>
+      </li><li>
+        <a href='/tags/rules/' style='font-size:1.125em'>rules</a>
+      </li><li>
+        <a href='/tags/rxjs/' style='font-size:1em'>rxjs</a>
+      </li><li>
+        <a href='/tags/scheme/' style='font-size:1.125em'>scheme</a>
+      </li><li>
+        <a href='/tags/scrum/' style='font-size:1.125em'>scrum</a>
+      </li><li>
+        <a href='/tags/security/' style='font-size:1em'>security</a>
+      </li><li>
+        <a href='/tags/sicp/' style='font-size:1.125em'>sicp</a>
+      </li><li>
+        <a href='/tags/sorting/' style='font-size:1em'>sorting</a>
+      </li><li>
+        <a href='/tags/state-machine/' style='font-size:1em'>state-machine</a>
+      </li><li>
+        <a href='/tags/team-lead/' style='font-size:1em'>team-lead</a>
+      </li><li>
+        <a href='/tags/testing/' style='font-size:1.125em'>testing</a>
+      </li><li>
+        <a href='/tags/tips-and-tricks/' style='font-size:1.25em'>tips and tricks</a>
+      </li><li>
+        <a href='/tags/toc/' style='font-size:1em'>toc</a>
+      </li><li>
+        <a href='/tags/tutorial/' style='font-size:1.125em'>tutorial</a>
+      </li><li>
+        <a href='/tags/typescript/' style='font-size:1em'>typescript</a>
+      </li><li>
+        <a href='/tags/web/' style='font-size:1em'>web</a>
+      </li><li>
+        <a href='/tags/work/' style='font-size:1em'>work</a>
+      </li></ul>
+</div>
+
+
+</section>
+</div>
+
+  <div class='sidebar-overlay'></div>
+</div><div class='main'><nav id='main-menu' class='menu main-menu' aria-label='Основное меню'>
+  <div class='container'>
+    <a class='screen-reader-text' href='#content'>Перейти к содержимому</a>
+
+<button id='sidebar-toggler' class='sidebar-toggler' aria-controls='sidebar'>
+  <span class='screen-reader-text'>Скрыть / показать боковую панель</span>
+  <span class='open'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <line x1="3" y1="12" x2="21" y2="12" />
+  <line x1="3" y1="6" x2="21" y2="6" />
+  <line x1="3" y1="18" x2="21" y2="18" />
+  
+</svg>
+</span>
+  <span class='close'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <line x1="18" y1="6" x2="6" y2="18" />
+  <line x1="6" y1="6" x2="18" y2="18" />
+  
+</svg>
+</span>
+</button>
+    <ul><li class='item'>
+        <a href='/post/'>Блог</a>
+      </li><li class='item'>
+        <a href='/page/about/'>Обо мне</a>
+      </li></ul>
+  </div>
+</nav><div class='header-widgets'>
+        <div class='container'></div>
+      </div>
+
+      <header id='header' class='header site-header'>
+        <div class='container sep-after'>
+          <div class='header-info'><p class='site-title title'>Где-то на дальнем сервере</p><p class='desc site-desc'>Заметки о программировании и не только</p>
+          </div>
+        </div>
+      </header>
+
+      <main id='content'>
+
+
+<article lang='ru' class='entry'>
+  <header class='header entry-header'>
+  <div class='container sep-after'>
+    <div class='header-info'>
+      <h1 class='title'>Property-based testing</h1>
+      
+<p class='desc'>Тестируй не вход и выход, а свойства</p>
+
+
+    </div>
+    
+<div class='entry-meta'>
+  <span class='posted-on'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+  <line x1="16" y1="2" x2="16" y2="6"/>
+  <line x1="8" y1="2" x2="8" y2="6"/>
+  <line x1="3" y1="10" x2="21" y2="10"/>
+  
+</svg>
+<span class='screen-reader-text'>Опубликовано </span>
+  <time class='entry-date' datetime='2018-06-12T16:09:44Z'>2018-06-12</time>
+</span>
+
+  
+  
+<span class='reading-time'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <circle cx="12" cy="12" r="10"/>
+  <polyline points="12 6 12 12 15 15"/>
+  
+</svg>
+8 минут на чтение
+</span>
+
+
+  
+</div>
+
+
+  </div>
+</header>
+
+  <div class='entry-cover'>
+  <figure class='container cover-normal'>
+    <img src='/post/2018/06/img/properties.jpg' alt='“The symmetrical apartment units with orange doors in Osaka“ by Tim Easley on Unsplash'/>
+    
+      
+      <figcaption class='container'>
+        <span>“The symmetrical apartment units with orange doors in Osaka“ by Tim Easley on Unsplash</span>
+      </figcaption>
+      
+    
+  </figure>
+</div>
+  
+<details class='container entry-toc'>
+  <summary class='title'>
+    <span>Оглавление</span>
+  </summary>
+  <nav id="TableOfContents">
+<ul>
+<li>
+<ul>
+<li><a href="#простой-пример">Простой пример</a></li>
+<li><a href="#генератор">Генератор</a></li>
+<li><a href="#что-почитать-посмотреть">Что почитать (посмотреть)</a></li>
+</ul></li>
+</ul>
+</nav>
+</details>
+
+
+  <div class='container entry-content'>
+  
+
+<p>Сегодня хотелось бы рассмотреть такой подход к тестированию как property-based тесты, или, по-русски говоря, тесты основанные на свойствах. Раньше, когда я слышал это название, то думал, что это способы тестирования свойств классов, в смысле <a href="https://docs.python.org/3/library/functions.html?property">property</a>. А при учёте того, что я <a href="https://devzen.ru/episode-0049/">слышал</a> <a href="https://devzen.ru/episode-0099/">об этом</a> <a href="https://devzen.ru/episode-0134/">исключительно</a> <a href="https://devzen.ru/episode-0150/">в подкасте</a> <a href="https://devzen.ru/episode-0166/">DevZen</a>, где за этими словами следовали слова: haskell, scala и erlang, то не особо вдавался в подробности. Однако, на <a href="https://devzen.ru/episode-0190/">выпуске</a> про <a href="http://lamport.azurewebsites.net/tla/tla.html">TLA+</a> эта тема меня всё же зацепила, так что я пошёл гуглить и читать. И вот теперь окончательно дозрев, готов поделиться тем, что сумел найти и понять.</p>
+
+<h2 id="простой-пример">Простой пример</h2>
+
+<p>Итак, первое, что нужно понимать, property-based тесты используют подход чёрного ящика. При этом они запускаются в достаточно больших количествах и должны быть воспроизводимы, так что будет хорошо тестировать чистую функцию. Таким образом самое подходящее место для их применения это модульные тесты.
+Для начала соорудим наш чёрный ящик. Пусть это будет банальный <a href="https://habr.com/post/278867/">FizzBuzz</a></p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#080;font-weight:bold">package</span> fizzbuzz
+
+<span style="color:#080;font-weight:bold">import</span> (
+	<span style="background-color:#fff0f0">&#34;strconv&#34;</span>
+	<span style="background-color:#fff0f0">&#34;strings&#34;</span>
+)
+
+<span style="color:#888">// FizzBuzz return &#34;Fizz&#34; for 3*n number, &#34;Buzz&#34; for 5*n number,
+</span><span style="color:#888">// &#34;FizzBuzz&#34; for 15*n number and number as string otherwise.
+</span><span style="color:#888"></span><span style="color:#080;font-weight:bold">func</span> <span style="color:#06b;font-weight:bold">FizzBuzz</span>(n <span style="color:#339;font-weight:bold">int</span>) <span style="color:#339;font-weight:bold">string</span> {
+	res <span style="color:#333">:=</span> strings.Builder{}
+	<span style="color:#080;font-weight:bold">if</span> n<span style="color:#333">%</span><span style="color:#00d;font-weight:bold">3</span> <span style="color:#333">==</span> <span style="color:#00d;font-weight:bold">0</span> {
+		res.<span style="color:#06b;font-weight:bold">WriteString</span>(<span style="background-color:#fff0f0">&#34;Fizz&#34;</span>)
+	}
+	<span style="color:#080;font-weight:bold">if</span> n<span style="color:#333">%</span><span style="color:#00d;font-weight:bold">5</span> <span style="color:#333">==</span> <span style="color:#00d;font-weight:bold">0</span> {
+		res.<span style="color:#06b;font-weight:bold">WriteString</span>(<span style="background-color:#fff0f0">&#34;Buzz&#34;</span>)
+	}
+	<span style="color:#080;font-weight:bold">if</span> res.<span style="color:#06b;font-weight:bold">Len</span>() <span style="color:#333">==</span> <span style="color:#00d;font-weight:bold">0</span> {
+		res.<span style="color:#06b;font-weight:bold">WriteString</span>(strconv.<span style="color:#06b;font-weight:bold">Itoa</span>(n))
+	}
+
+	<span style="color:#080;font-weight:bold">return</span> res.<span style="color:#06b;font-weight:bold">String</span>()
+}</code></pre></div>
+<p>Теперь попробуем его потестировать. Собственно первое, что приходит на ум, это использовать <a href="https://www.youtube.com/watch?v=ndmB0bj7eyw&amp;t=2497s">Table-driven tests</a>, например:</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#080;font-weight:bold">package</span> fizzbuzz
+
+<span style="color:#080;font-weight:bold">import</span> (
+	<span style="background-color:#fff0f0">&#34;strconv&#34;</span>
+	<span style="background-color:#fff0f0">&#34;testing&#34;</span>
+)
+
+<span style="color:#080;font-weight:bold">func</span> <span style="color:#06b;font-weight:bold">TestFizzBuzzCases</span>(t <span style="color:#333">*</span>testing.T) {
+	cases <span style="color:#333">:=</span> []<span style="color:#080;font-weight:bold">struct</span> {
+		input  <span style="color:#339;font-weight:bold">int</span>
+		output <span style="color:#339;font-weight:bold">string</span>
+	}{
+		{
+			input:  <span style="color:#00d;font-weight:bold">2</span>,
+			output: <span style="background-color:#fff0f0">&#34;2&#34;</span>,
+		},
+		{
+			input:  <span style="color:#00d;font-weight:bold">12</span>,
+			output: <span style="background-color:#fff0f0">&#34;Fizz&#34;</span>,
+		},
+		{
+			input:  <span style="color:#00d;font-weight:bold">25</span>,
+			output: <span style="background-color:#fff0f0">&#34;Buzz&#34;</span>,
+		},
+		{
+			input:  <span style="color:#00d;font-weight:bold">60</span>,
+			output: <span style="background-color:#fff0f0">&#34;FizzBuzz&#34;</span>,
+		},
+	}
+
+	<span style="color:#080;font-weight:bold">for</span> _, c <span style="color:#333">:=</span> <span style="color:#080;font-weight:bold">range</span> cases {
+		t.<span style="color:#06b;font-weight:bold">Run</span>(strconv.<span style="color:#06b;font-weight:bold">Itoa</span>(c.input), <span style="color:#080;font-weight:bold">func</span>(t <span style="color:#333">*</span>testing.T) {
+			t.<span style="color:#06b;font-weight:bold">Parallel</span>()
+
+			res <span style="color:#333">:=</span> <span style="color:#06b;font-weight:bold">FizzBuzz</span>(c.input)
+			<span style="color:#080;font-weight:bold">if</span> res <span style="color:#333">!=</span> c.output {
+				t.<span style="color:#06b;font-weight:bold">Errorf</span>(<span style="background-color:#fff0f0">&#34;expected %q but got %q&#34;</span>, c.output, res)
+			}
+		})
+	}
+}</code></pre></div>
+<p>Но очевидно, что подобный тест, это некоторое лукавство, ведь по факту мы не проверили правильность поведения нашего кода, мы просто сопоставили 4 пары входов и выходов. То есть этот тест лишь показывает, что наш код корректно обрабатывает 4 случая. Что будет с другими входными данными, мы предсказать не можем. Вот тут-то к нам на помощь и приходят тесты, основанные на свойствах. На свойствах нашего чёрного ящика. Давайте попробуем сформулировать эти свойства:</p>
+
+<ol>
+<li>Если на вход нашей коробке подать любое число, кратное 3, то ответ должен начинаться со слова <strong>Fizz</strong>;</li>
+<li>Если на вход подать число, кратное 5, то ответ должен заканчиваться на слово <strong>Buzz</strong>;</li>
+<li>Если на вход подать число не кратное ни 3, ни 5, то коробка должна вернуть это же число в виде строки;</li>
+</ol>
+
+<p>«Но ведь это же и есть условия задачи!» - воскликните вы и будете правы. По сути мы хотим проверить то, что наша коробочка удовлетворяет поставленным перед ней условиям. По сути, формализация этих требований в код и будет тестом, основанным на свойствах, правда для того, чтобы правильно этот тест запустить, надо будет перебрать все возможные входные данные (в нашем случае это int64, то есть каких-то 19 с половиной квинтиллионов) и для каждого из них проверить выполнение перечисленных свойств. С одной стороны это будет вполне исчерпывающее доказательство того, что чёрный ящик работает как надо, с другой - а не слишком ли высокая цена за доказательство? Конечно, компьютеры очень мощны, чтобы перемолотить это за каких-нибудь 20 минут, но что делать с чёрными ящиками от нескольких переменных?</p>
+
+<p>Выход был предложен создателями библиотеки для тестирования кода на Haskell: <a href="https://begriffs.com/posts/2017-01-14-design-use-quickcheck.html">QuickCheck</a>. Можно запускать не всё, но много. Случайным образом. То есть, если рандомизированно выбирать входные параметры и проверять свойства, да к тому же сделать это достаточно много раз, то тоже будет хорошо. Этот подход снискал своих поклонников да так, что эта библиотека была портирована практически на все живые языки программирования. Например, в том же go <a href="https://godoc.org/testing/quick">порт входит в стандартную библиотеку тестирования</a>. Однако, в отличии от всего остального языка этот порт уж слишком магический и неочевидный, поэтому воспользуемся более многословной библиотекой: <a href="https://github.com/leanovate/gopter">https://github.com/leanovate/gopter</a></p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#080;font-weight:bold">package</span> fizzbuzz
+
+<span style="color:#080;font-weight:bold">import</span> (
+	<span style="background-color:#fff0f0">&#34;math&#34;</span>
+	<span style="background-color:#fff0f0">&#34;strconv&#34;</span>
+	<span style="background-color:#fff0f0">&#34;strings&#34;</span>
+	<span style="background-color:#fff0f0">&#34;testing&#34;</span>
+
+	<span style="background-color:#fff0f0">&#34;github.com/leanovate/gopter&#34;</span>
+	<span style="background-color:#fff0f0">&#34;github.com/leanovate/gopter/gen&#34;</span>
+	<span style="background-color:#fff0f0">&#34;github.com/leanovate/gopter/prop&#34;</span>
+)
+
+<span style="color:#080;font-weight:bold">func</span> <span style="color:#06b;font-weight:bold">TestFizzBuzzProperties</span>(t <span style="color:#333">*</span>testing.T) {
+	properties <span style="color:#333">:=</span> gopter.<span style="color:#06b;font-weight:bold">NewProperties</span>(<span style="color:#080;font-weight:bold">nil</span>)
+
+	properties.<span style="color:#06b;font-weight:bold">Property</span>(<span style="background-color:#fff0f0">&#34;Start with Fizz for all multiples of 3&#34;</span>, prop.<span style="color:#06b;font-weight:bold">ForAll</span>(
+		<span style="color:#080;font-weight:bold">func</span>(i <span style="color:#339;font-weight:bold">int</span>) <span style="color:#339;font-weight:bold">bool</span> {
+			result <span style="color:#333">:=</span> <span style="color:#06b;font-weight:bold">FizzBuzz</span>(i <span style="color:#333">*</span> <span style="color:#00d;font-weight:bold">3</span>)
+			<span style="color:#080;font-weight:bold">return</span> strings.<span style="color:#06b;font-weight:bold">HasPrefix</span>(result, <span style="background-color:#fff0f0">&#34;Fizz&#34;</span>)
+		},
+		gen.<span style="color:#06b;font-weight:bold">IntRange</span>(<span style="color:#00d;font-weight:bold">1</span>, math.MaxInt32<span style="color:#333">/</span><span style="color:#00d;font-weight:bold">3</span>),
+	))
+
+	properties.<span style="color:#06b;font-weight:bold">Property</span>(<span style="background-color:#fff0f0">&#34;Ends with Buzz for all multiples of 5&#34;</span>, prop.<span style="color:#06b;font-weight:bold">ForAll</span>(
+		<span style="color:#080;font-weight:bold">func</span>(i <span style="color:#339;font-weight:bold">int</span>) <span style="color:#339;font-weight:bold">bool</span> {
+			result <span style="color:#333">:=</span> <span style="color:#06b;font-weight:bold">FizzBuzz</span>(i <span style="color:#333">*</span> <span style="color:#00d;font-weight:bold">5</span>)
+			<span style="color:#080;font-weight:bold">return</span> strings.<span style="color:#06b;font-weight:bold">HasSuffix</span>(result, <span style="background-color:#fff0f0">&#34;Buzz&#34;</span>)
+		},
+		gen.<span style="color:#06b;font-weight:bold">IntRange</span>(<span style="color:#00d;font-weight:bold">1</span>, math.MaxInt32<span style="color:#333">/</span><span style="color:#00d;font-weight:bold">5</span>),
+	))
+
+	properties.<span style="color:#06b;font-weight:bold">Property</span>(<span style="background-color:#fff0f0">&#34;Int as string for all non-divisible by 3 or 5&#34;</span>, prop.<span style="color:#06b;font-weight:bold">ForAll</span>(
+		<span style="color:#080;font-weight:bold">func</span>(number <span style="color:#339;font-weight:bold">int</span>) <span style="color:#339;font-weight:bold">bool</span> {
+			result <span style="color:#333">:=</span> <span style="color:#06b;font-weight:bold">FizzBuzz</span>(number)
+			parsed, err <span style="color:#333">:=</span> strconv.<span style="color:#06b;font-weight:bold">ParseInt</span>(result, <span style="color:#00d;font-weight:bold">10</span>, <span style="color:#00d;font-weight:bold">64</span>)
+			<span style="color:#080;font-weight:bold">return</span> err <span style="color:#333">==</span> <span style="color:#080;font-weight:bold">nil</span> <span style="color:#333">&amp;&amp;</span> parsed <span style="color:#333">==</span> <span style="color:#007020">int64</span>(number)
+		},
+		gen.<span style="color:#06b;font-weight:bold">IntRange</span>(<span style="color:#00d;font-weight:bold">1</span>, math.MaxInt32).<span style="color:#06b;font-weight:bold">SuchThat</span>(<span style="color:#080;font-weight:bold">func</span>(v <span style="color:#080;font-weight:bold">interface</span>{}) <span style="color:#339;font-weight:bold">bool</span> {
+			<span style="color:#080;font-weight:bold">return</span> v.(<span style="color:#339;font-weight:bold">int</span>)<span style="color:#333">%</span><span style="color:#00d;font-weight:bold">3</span> <span style="color:#333">!=</span> <span style="color:#00d;font-weight:bold">0</span> <span style="color:#333">&amp;&amp;</span> v.(<span style="color:#339;font-weight:bold">int</span>)<span style="color:#333">%</span><span style="color:#00d;font-weight:bold">5</span> <span style="color:#333">!=</span> <span style="color:#00d;font-weight:bold">0</span>
+		}),
+	))
+
+	properties.<span style="color:#06b;font-weight:bold">TestingRun</span>(t)
+}</code></pre></div>
+<p>Для каждого свойства будет запущено 100 случайных тестов и, если свойство не выполнится, тест будет провален.</p>
+
+<h2 id="генератор">Генератор</h2>
+
+<p>Но это, конечно, детский пример, давайте рассмотрим что-то посложнее, что-то, что будет принимать на вход не примитивные типы. Например, функция выделения минимального подпокрытия.</p>
+
+<blockquote>
+<p>На вход подаётся семейство множеств, из него надо выделить минимальное подсемейство такое, что объединение множеств оригинального семейства совпадало с объединением множеств результата.</p>
+</blockquote>
+
+<p>Эта задача относится к классу NP-полных задач и решается чаще всего методом линейного программирования, либо можно решить задачу приближённо, используя жадный алгоритм. Поэтому само решение я не буду приводить, потому как пост совсем не о том.</p>
+
+<p>Итак, у нас есть чёрный ящик, который на вход принимает семейство множеств и на выходе отдаёт семейство множеств. Давайте начнём со свойств, которые мы хотим проверить:</p>
+
+<ol>
+<li>Результат должен покрывать то же множество, что и исходное семейство;</li>
+<li>Мощность результата не должна превышать мощность входного семейства;</li>
+<li>Результат должен быть подсемейством входного семейства, то есть каждое множество результата должно содержаться во входном семействе;</li>
+</ol>
+
+<p>Можно придумать ещё свойства, но проблема не в этом. Проблема в том, что входным параметром является сложная структура. Как же нам выбрать случайным образом 100 покрытий? Для этого надо написать собственный генератор. По сути генератор это функция, которая по заданным параметрам генерирует некоторую случайную структуру. Среди параметров передаётся генератор случайных чисел, инициированный специальным образом, так что используя этот генератор мы можем получить случайную, но воспроизводимую структуру данных. Что ж, давайте напишем генератор:</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#080;font-weight:bold">package</span> coverage
+
+<span style="color:#080;font-weight:bold">import</span> (
+	<span style="background-color:#fff0f0">&#34;github.com/leanovate/gopter&#34;</span>
+)
+
+<span style="color:#080;font-weight:bold">func</span> <span style="color:#06b;font-weight:bold">CoverageGen</span>(mod <span style="color:#339;font-weight:bold">uint32</span>, count <span style="color:#339;font-weight:bold">uint32</span>) gopter.Gen {
+	<span style="color:#080;font-weight:bold">return</span> <span style="color:#080;font-weight:bold">func</span>(params <span style="color:#333">*</span>gopter.GenParameters) <span style="color:#333">*</span>gopter.GenResult {
+		coverage <span style="color:#333">:=</span> <span style="color:#007020">make</span>([][]<span style="color:#339;font-weight:bold">uint32</span>, count)
+
+		<span style="color:#080;font-weight:bold">for</span> i <span style="color:#333">:=</span> <span style="color:#080;font-weight:bold">range</span> coverage {
+			n <span style="color:#333">:=</span> <span style="color:#007020">int</span>(<span style="color:#007020">uint64</span>(mod<span style="color:#333">/</span><span style="color:#00d;font-weight:bold">3</span>) <span style="color:#333">+</span> params.<span style="color:#06b;font-weight:bold">NextUint64</span>()<span style="color:#333">%</span><span style="color:#007020">uint64</span>(mod<span style="color:#333">/</span><span style="color:#00d;font-weight:bold">3</span>))
+			set <span style="color:#333">:=</span> <span style="color:#007020">make</span>(<span style="color:#080;font-weight:bold">map</span>[<span style="color:#339;font-weight:bold">uint32</span>]<span style="color:#080;font-weight:bold">struct</span>{}, n)
+			coverage[i] = <span style="color:#007020">make</span>([]<span style="color:#339;font-weight:bold">uint32</span>, <span style="color:#00d;font-weight:bold">0</span>, n)
+			<span style="color:#080;font-weight:bold">for</span> <span style="color:#007020">len</span>(set) &lt; n {
+				x <span style="color:#333">:=</span> <span style="color:#007020">uint32</span>(params.<span style="color:#06b;font-weight:bold">NextUint64</span>() <span style="color:#333">%</span> <span style="color:#007020">uint64</span>(mod))
+				<span style="color:#080;font-weight:bold">if</span> _, ok <span style="color:#333">:=</span> set[x]; !ok {
+					coverage[i] = <span style="color:#007020">append</span>(coverage[i], x)
+					set[x] = <span style="color:#080;font-weight:bold">struct</span>{}{}
+				}
+			}
+		}
+
+		<span style="color:#080;font-weight:bold">return</span> gopter.<span style="color:#06b;font-weight:bold">NewGenResult</span>(coverage, CoverageShrinker)
+	}
+}
+
+<span style="color:#080;font-weight:bold">type</span> coverageShrink <span style="color:#080;font-weight:bold">struct</span> {
+	coverage [][]<span style="color:#339;font-weight:bold">uint32</span>
+}
+
+<span style="color:#080;font-weight:bold">func</span> <span style="color:#06b;font-weight:bold">CoverageShrinker</span>(coverage <span style="color:#080;font-weight:bold">interface</span>{}) gopter.Shrink {
+
+	shrink <span style="color:#333">:=</span> coverageShrink{coverage.([][]<span style="color:#339;font-weight:bold">uint32</span>)}
+
+	<span style="color:#080;font-weight:bold">return</span> shrink.Next
+}
+
+<span style="color:#080;font-weight:bold">func</span> (cs <span style="color:#333">*</span>coverageShrink) <span style="color:#06b;font-weight:bold">Next</span>() (<span style="color:#080;font-weight:bold">interface</span>{}, <span style="color:#339;font-weight:bold">bool</span>) {
+	cs.coverage = cs.coverage[:<span style="color:#007020">len</span>(cs.coverage)<span style="color:#333">/</span><span style="color:#00d;font-weight:bold">2</span>]
+	<span style="color:#080;font-weight:bold">if</span> <span style="color:#007020">len</span>(cs.coverage) <span style="color:#333">==</span> <span style="color:#00d;font-weight:bold">0</span> {
+
+		<span style="color:#080;font-weight:bold">return</span> <span style="color:#080;font-weight:bold">nil</span>, <span style="color:#080;font-weight:bold">false</span>
+	}
+
+	<span style="color:#080;font-weight:bold">return</span> cs.coverage, <span style="color:#080;font-weight:bold">true</span>
+}</code></pre></div>
+<p>Для удобства параметризуем наш генератор модулем кольца, ограничевающим универсальное множество, а также числом множеств генерируемого семейства.</p>
+
+<p>Всё бы ничего, но разбираться в том что пошло не так в случае покрытия, состоящего из сотен, а то и тысяч множеств, занятие не сильно воодушевляющее, так что на помощь нам приходит механизм сужения входных данных, так называемый shrinking. Если на каком-то сгенерированном наборе мы получим невыполнение свойства, то фреймворк попытается с помощью переданного shrinker&rsquo;а уменьшить входные данные до тех пор, пока ошибка повторяется. Для простоты я написал шринкер, который просто обрезает множества в конце оригинального списка. Итоговый тест выглядит следующим образом:</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#080;font-weight:bold">package</span> coverage
+
+<span style="color:#080;font-weight:bold">import</span> (
+	<span style="background-color:#fff0f0">&#34;bytes&#34;</span>
+	<span style="background-color:#fff0f0">&#34;encoding/binary&#34;</span>
+	<span style="background-color:#fff0f0">&#34;testing&#34;</span>
+
+	<span style="background-color:#fff0f0">&#34;github.com/leanovate/gopter&#34;</span>
+	<span style="background-color:#fff0f0">&#34;github.com/leanovate/gopter/prop&#34;</span>
+)
+
+<span style="color:#080;font-weight:bold">func</span> <span style="color:#06b;font-weight:bold">TestCoverageProperties</span>(t <span style="color:#333">*</span>testing.T) {
+	properties <span style="color:#333">:=</span> gopter.<span style="color:#06b;font-weight:bold">NewProperties</span>(<span style="color:#080;font-weight:bold">nil</span>)
+
+	properties.<span style="color:#06b;font-weight:bold">Property</span>(<span style="background-color:#fff0f0">&#34;Output is a coverage&#34;</span>, prop.<span style="color:#06b;font-weight:bold">ForAll</span>(
+		<span style="color:#080;font-weight:bold">func</span>(coverage [][]<span style="color:#339;font-weight:bold">uint32</span>) <span style="color:#339;font-weight:bold">bool</span> {
+			universe <span style="color:#333">:=</span> <span style="color:#06b;font-weight:bold">universeOfCoverage</span>(coverage)
+			result <span style="color:#333">:=</span> <span style="color:#06b;font-weight:bold">universeOfCoverage</span>(<span style="color:#06b;font-weight:bold">GetMinimalSubcoverage</span>(coverage))
+
+			<span style="color:#080;font-weight:bold">for</span> item <span style="color:#333">:=</span> <span style="color:#080;font-weight:bold">range</span> universe {
+				<span style="color:#080;font-weight:bold">if</span> _, ok <span style="color:#333">:=</span> result[item]; !ok {
+
+					<span style="color:#080;font-weight:bold">return</span> <span style="color:#080;font-weight:bold">false</span>
+				}
+			}
+
+			<span style="color:#080;font-weight:bold">return</span> <span style="color:#080;font-weight:bold">true</span>
+		},
+		<span style="color:#06b;font-weight:bold">CoverageGen</span>(<span style="color:#00d;font-weight:bold">20</span>, <span style="color:#00d;font-weight:bold">20</span>),
+	))
+
+	properties.<span style="color:#06b;font-weight:bold">Property</span>(<span style="background-color:#fff0f0">&#34;Length of output less or equal length of input&#34;</span>, prop.<span style="color:#06b;font-weight:bold">ForAll</span>(
+		<span style="color:#080;font-weight:bold">func</span>(coverage [][]<span style="color:#339;font-weight:bold">uint32</span>) <span style="color:#339;font-weight:bold">bool</span> {
+			result <span style="color:#333">:=</span> <span style="color:#06b;font-weight:bold">GetMinimalSubcoverage</span>(coverage)
+
+			<span style="color:#080;font-weight:bold">return</span> <span style="color:#007020">len</span>(coverage) <span style="color:#333">&gt;=</span> <span style="color:#007020">len</span>(result)
+		},
+		<span style="color:#06b;font-weight:bold">CoverageGen</span>(<span style="color:#00d;font-weight:bold">200</span>, <span style="color:#00d;font-weight:bold">200</span>),
+	))
+
+	properties.<span style="color:#06b;font-weight:bold">Property</span>(<span style="background-color:#fff0f0">&#34;Every output set must be in input&#34;</span>, prop.<span style="color:#06b;font-weight:bold">ForAll</span>(
+		<span style="color:#080;font-weight:bold">func</span>(coverage [][]<span style="color:#339;font-weight:bold">uint32</span>) <span style="color:#339;font-weight:bold">bool</span> {
+			coverageAsBytes <span style="color:#333">:=</span> <span style="color:#06b;font-weight:bold">coverageToBytes</span>(coverage)
+			result <span style="color:#333">:=</span> <span style="color:#06b;font-weight:bold">GetMinimalSubcoverage</span>(coverage)
+
+			<span style="color:#080;font-weight:bold">for</span> _, set <span style="color:#333">:=</span> <span style="color:#080;font-weight:bold">range</span> result {
+				<span style="color:#080;font-weight:bold">if</span> !<span style="color:#06b;font-weight:bold">isInCoverage</span>(set, coverageAsBytes) {
+					t.<span style="color:#06b;font-weight:bold">Log</span>(set)
+
+					<span style="color:#080;font-weight:bold">return</span> <span style="color:#080;font-weight:bold">false</span>
+				}
+			}
+
+			<span style="color:#080;font-weight:bold">return</span> <span style="color:#080;font-weight:bold">true</span>
+		},
+		<span style="color:#06b;font-weight:bold">CoverageGen</span>(<span style="color:#00d;font-weight:bold">200</span>, <span style="color:#00d;font-weight:bold">200</span>),
+	))
+
+	properties.<span style="color:#06b;font-weight:bold">TestingRun</span>(t)
+}
+
+<span style="color:#080;font-weight:bold">func</span> <span style="color:#06b;font-weight:bold">universeOfCoverage</span>(coverage [][]<span style="color:#339;font-weight:bold">uint32</span>) <span style="color:#080;font-weight:bold">map</span>[<span style="color:#339;font-weight:bold">uint32</span>]<span style="color:#080;font-weight:bold">struct</span>{} {
+	universe <span style="color:#333">:=</span> <span style="color:#080;font-weight:bold">map</span>[<span style="color:#339;font-weight:bold">uint32</span>]<span style="color:#080;font-weight:bold">struct</span>{}{}
+	<span style="color:#080;font-weight:bold">for</span> _, set <span style="color:#333">:=</span> <span style="color:#080;font-weight:bold">range</span> coverage {
+		<span style="color:#080;font-weight:bold">for</span> _, item <span style="color:#333">:=</span> <span style="color:#080;font-weight:bold">range</span> set {
+			universe[item] = <span style="color:#080;font-weight:bold">struct</span>{}{}
+		}
+	}
+
+	<span style="color:#080;font-weight:bold">return</span> universe
+}
+
+<span style="color:#080;font-weight:bold">func</span> <span style="color:#06b;font-weight:bold">coverageToBytes</span>(coverage [][]<span style="color:#339;font-weight:bold">uint32</span>) [][]<span style="color:#339;font-weight:bold">byte</span> {
+	res <span style="color:#333">:=</span> <span style="color:#007020">make</span>([][]<span style="color:#339;font-weight:bold">byte</span>, <span style="color:#007020">len</span>(coverage))
+	<span style="color:#080;font-weight:bold">for</span> i <span style="color:#333">:=</span> <span style="color:#080;font-weight:bold">range</span> res {
+		res[i] = <span style="color:#06b;font-weight:bold">setToBytes</span>(coverage[i])
+	}
+
+	<span style="color:#080;font-weight:bold">return</span> res
+}
+
+<span style="color:#080;font-weight:bold">func</span> <span style="color:#06b;font-weight:bold">isInCoverage</span>(set []<span style="color:#339;font-weight:bold">uint32</span>, coverageAsBytes [][]<span style="color:#339;font-weight:bold">byte</span>) <span style="color:#339;font-weight:bold">bool</span> {
+	setAsBytes <span style="color:#333">:=</span> <span style="color:#06b;font-weight:bold">setToBytes</span>(set)
+
+	<span style="color:#080;font-weight:bold">for</span> _, item <span style="color:#333">:=</span> <span style="color:#080;font-weight:bold">range</span> coverageAsBytes {
+		<span style="color:#080;font-weight:bold">if</span> bytes.<span style="color:#06b;font-weight:bold">Equal</span>(setAsBytes, item) {
+
+			<span style="color:#080;font-weight:bold">return</span> <span style="color:#080;font-weight:bold">true</span>
+		}
+	}
+
+	<span style="color:#080;font-weight:bold">return</span> <span style="color:#080;font-weight:bold">false</span>
+}
+
+<span style="color:#080;font-weight:bold">func</span> <span style="color:#06b;font-weight:bold">setToBytes</span>(set []<span style="color:#339;font-weight:bold">uint32</span>) []<span style="color:#339;font-weight:bold">byte</span> {
+	buf <span style="color:#333">:=</span> bytes.Buffer{}
+	binary.<span style="color:#06b;font-weight:bold">Write</span>(<span style="color:#333">&amp;</span>buf, binary.LittleEndian, set)
+
+	<span style="color:#080;font-weight:bold">return</span> buf.<span style="color:#06b;font-weight:bold">Bytes</span>()
+}
+
+<span style="color:#080;font-weight:bold">func</span> <span style="color:#06b;font-weight:bold">CoverageGen</span>(mod <span style="color:#339;font-weight:bold">uint32</span>, count <span style="color:#339;font-weight:bold">uint32</span>) gopter.Gen {
+	<span style="color:#080;font-weight:bold">return</span> <span style="color:#080;font-weight:bold">func</span>(params <span style="color:#333">*</span>gopter.GenParameters) <span style="color:#333">*</span>gopter.GenResult {
+		coverage <span style="color:#333">:=</span> <span style="color:#007020">make</span>([][]<span style="color:#339;font-weight:bold">uint32</span>, count)
+
+		<span style="color:#080;font-weight:bold">for</span> i <span style="color:#333">:=</span> <span style="color:#080;font-weight:bold">range</span> coverage {
+			n <span style="color:#333">:=</span> <span style="color:#007020">int</span>(<span style="color:#007020">uint64</span>(mod<span style="color:#333">/</span><span style="color:#00d;font-weight:bold">3</span>) <span style="color:#333">+</span> params.<span style="color:#06b;font-weight:bold">NextUint64</span>()<span style="color:#333">%</span><span style="color:#007020">uint64</span>(mod<span style="color:#333">/</span><span style="color:#00d;font-weight:bold">3</span>))
+			set <span style="color:#333">:=</span> <span style="color:#007020">make</span>(<span style="color:#080;font-weight:bold">map</span>[<span style="color:#339;font-weight:bold">uint32</span>]<span style="color:#080;font-weight:bold">struct</span>{}, n)
+			coverage[i] = <span style="color:#007020">make</span>([]<span style="color:#339;font-weight:bold">uint32</span>, <span style="color:#00d;font-weight:bold">0</span>, n)
+			<span style="color:#080;font-weight:bold">for</span> <span style="color:#007020">len</span>(set) &lt; n {
+				x <span style="color:#333">:=</span> <span style="color:#007020">uint32</span>(params.<span style="color:#06b;font-weight:bold">NextUint64</span>() <span style="color:#333">%</span> <span style="color:#007020">uint64</span>(mod))
+				<span style="color:#080;font-weight:bold">if</span> _, ok <span style="color:#333">:=</span> set[x]; !ok {
+					coverage[i] = <span style="color:#007020">append</span>(coverage[i], x)
+					set[x] = <span style="color:#080;font-weight:bold">struct</span>{}{}
+				}
+			}
+		}
+
+		<span style="color:#080;font-weight:bold">return</span> gopter.<span style="color:#06b;font-weight:bold">NewGenResult</span>(coverage, CoverageShrinker)
+	}
+}
+
+<span style="color:#080;font-weight:bold">type</span> coverageShrink <span style="color:#080;font-weight:bold">struct</span> {
+	coverage [][]<span style="color:#339;font-weight:bold">uint32</span>
+}
+
+<span style="color:#080;font-weight:bold">func</span> <span style="color:#06b;font-weight:bold">CoverageShrinker</span>(coverage <span style="color:#080;font-weight:bold">interface</span>{}) gopter.Shrink {
+
+	shrink <span style="color:#333">:=</span> coverageShrink{coverage.([][]<span style="color:#339;font-weight:bold">uint32</span>)}
+
+	<span style="color:#080;font-weight:bold">return</span> shrink.Next
+}
+
+<span style="color:#080;font-weight:bold">func</span> (cs <span style="color:#333">*</span>coverageShrink) <span style="color:#06b;font-weight:bold">Next</span>() (<span style="color:#080;font-weight:bold">interface</span>{}, <span style="color:#339;font-weight:bold">bool</span>) {
+	cs.coverage = cs.coverage[:<span style="color:#007020">len</span>(cs.coverage)<span style="color:#333">/</span><span style="color:#00d;font-weight:bold">2</span>]
+	<span style="color:#080;font-weight:bold">if</span> <span style="color:#007020">len</span>(cs.coverage) <span style="color:#333">==</span> <span style="color:#00d;font-weight:bold">0</span> {
+
+		<span style="color:#080;font-weight:bold">return</span> <span style="color:#080;font-weight:bold">nil</span>, <span style="color:#080;font-weight:bold">false</span>
+	}
+
+	<span style="color:#080;font-weight:bold">return</span> cs.coverage, <span style="color:#080;font-weight:bold">true</span>
+}</code></pre></div>
+<p>Вот собственно и вся магия.</p>
+
+<h2 id="что-почитать-посмотреть">Что почитать (посмотреть)</h2>
+
+<ul>
+<li>Очень крутой доклад, где на пальцах объясняется весь подход: <a href="https://www.youtube.com/watch?v=shngiiBfD80&amp;t=446s">https://www.youtube.com/watch?v=shngiiBfD80&amp;t=446s</a></li>
+<li>Отличная статья, откуда я спёр пример про минимальное подпокрытие: <a href="http://blog.jessitron.com/2013/04/property-based-testing-what-is-it.html">http://blog.jessitron.com/2013/04/property-based-testing-what-is-it.html</a></li>
+<li>Оригинальная статья про рандомизированные тесты на haskell QuickCheck: <a href="http://www.eecs.northwestern.edu/~robby/courses/395-495-2009-fall/quick.pdf">http://www.eecs.northwestern.edu/~robby/courses/395-495-2009-fall/quick.pdf</a></li>
+<li>Хорошее описание методологий тестирования от ScalaCheck: <a href="http://www.scalatest.org/user_guide/property_based_testing">http://www.scalatest.org/user_guide/property_based_testing</a></li>
+</ul>
+
+</div>
+
+  
+<footer class='entry-footer'>
+  <div class='container sep-before'><div class='categories'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <path d="M22,19a2,2,0,0,1-2,2H4a2,2,0,0,1-2-2V5A2,2,0,0,1,4,3H9l2,3h9a2,2,0,0,1,2,2Z"/>
+  
+</svg>
+<span class='screen-reader-text'>category: </span><a class='category' href='/categories/develop/'>Разработка</a></div>
+<div class='tags'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <path d="M20.59,13.41l-7.17,7.17a2,2,0,0,1-2.83,0L2,12V2H12l8.59,8.59A2,2,0,0,1,20.59,13.41Z"/>
+  <line x1="7" y1="7" x2="7" y2="7"/>
+  
+</svg>
+<span class='screen-reader-text'>Тэги: </span><a class='tag' href='/tags/testing/'>testing</a>, <a class='tag' href='/tags/go/'>go</a></div>
+
+  </div>
+</footer>
+
+
+</article>
+
+<nav class='entry-nav'>
+  <div class='container'><div class='prev-entry sep-before'>
+      <a href='/post/2018/04/clean-architect/'>
+        <span aria-hidden='true'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <line x1="20" y1="12" x2="4" y2="12"/>
+  <polyline points="10 18 4 12 10 6"/>
+  
+</svg>
+ Предыдущий</span>
+        <span class='screen-reader-text'>Предыдущая запись: </span>Чистая архитектура на Go</a>
+    </div><div class='next-entry sep-before'>
+      <a href='/post/2018/06/goto-standalone-blog/'>
+        <span class='screen-reader-text'>Следующая запись: </span>Отдельный блог<span aria-hidden='true'>Следующий <svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <line x1="4" y1="12" x2="20" y2="12"/>
+  <polyline points="14 6 20 12 14 18"/>
+  
+</svg>
+</span>
+      </a>
+    </div></div>
+</nav>
+
+
+
+
+      </main>
+
+      <footer id='footer' class='footer'>
+        <div class='container sep-before'><div class='copyright'>
+  <p>Материалы распространяются по <a rel="noreferrer" href="https://creativecommons.org/licenses/by/4.0/" target="_blank">лицензии CC BY</a> &copy; 2018-2021 vporoshok <br>Увидели ошибку? Буду рад <a rel="noreferrer" href="https://github.com/vporoshok/vporoshok.github.io" target="_blank">PR&rsquo;у</a></p>
+</div>
+
+        </div>
+      </footer>
+
+    </div>
+  </div><script>window.__assets_js_src="/assets/js/"</script>
+
+<script src='/assets/js/main.67d669ac.js'></script>
+
+</body>
+
+</html>
+

@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<html lang='ru'><head>
+  <meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='description' content='К молодой осине год который подряд дети лукоморья нам несут шоколад'>
+<meta name='theme-color' content='#ffcd00'>
+
+<meta property='og:title' content='Декораторы в Go • Где-то на дальнем сервере'>
+<meta property='og:description' content='К молодой осине год который подряд дети лукоморья нам несут шоколад'>
+<meta property='og:url' content='https://vporoshok.me/post/2019/01/decorators/'>
+<meta property='og:site_name' content='Где-то на дальнем сервере'>
+<meta property='og:type' content='article'><meta property='article:section' content='post'><meta property='article:tag' content='go'><meta property='article:tag' content='architect'><meta property='article:tag' content='tips and tricks'><meta property='article:published_time' content='2019-01-24T16:25:25Z'/><meta property='article:modified_time' content='2019-01-25T09:45:18&#43;04:00'/><meta name='twitter:card' content='summary'>
+
+<meta name="generator" content="Hugo 0.57.2" />
+
+  <title>Декораторы в Go • Где-то на дальнем сервере</title>
+  <link rel='canonical' href='https://vporoshok.me/post/2019/01/decorators/'>
+  
+  
+  <link rel='icon' href='/favicon.ico'>
+<link rel='stylesheet' href='/assets/css/main.6a060eb7.css'><link rel='stylesheet' href='/assets/custom.css'><style>
+:root{--color-accent:#ffcd00;}
+</style>
+
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+	ga('create', 'UA-41042060-2', 'auto');
+	
+	ga('send', 'pageview');
+}
+</script>
+<script async src='https://www.google-analytics.com/analytics.js'></script>
+
+  
+
+</head>
+<body class='page type-post has-sidebar'>
+
+  <div class='site'><div id='sidebar' class='sidebar'>
+  <a class='screen-reader-text' href='#main-menu'>Перейти к основному меню</a>
+
+  <div class='container'><section class='widget widget-about sep-after'>
+  <header>
+    
+    <div class='logo'>
+      <a href='/'>
+        <img src='/images/logo.jpg' alt="Вернуться на главную">
+      </a>
+    </div>
+    
+    <h2 class='title site-title '>
+    vporoshok.me
+    </h2>
+    <div class='desc'>
+    Где-то на дальнем сервере
+    </div>
+  </header>
+
+</section>
+<section class='widget widget-social_menu sep-after'><nav aria-label='Соцсети'>
+    <ul><li>
+        <a href='https://twitter.com/vporoshok' target='_blank' rel='noopener'>
+          <span class='screen-reader-text'>Открыть Twitter-акаунт в новой вкладке</span><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"/>
+  
+</svg>
+</a>
+      </li><li>
+        <a href='https://github.com/vporoshok' target='_blank' rel='noopener'>
+          <span class='screen-reader-text'>Открыть Github-акаунт в новой вкладке</span><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/>
+  
+</svg>
+</a>
+      </li><li>
+        <a href='mailto:vporoshok@gmail.com' target='_blank' rel='noopener'>
+          <span class='screen-reader-text'>Связаться через Email</span><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+  <polyline points="22,6 12,13 2,6"/>
+  
+</svg>
+</a>
+      </li><li>
+        <a href='https://t.me/vporoshok' target='_blank' rel='noopener'>
+          <span class='screen-reader-text'>Открыть Telegram-акаунт в новой вкладке</span><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <path d="m 22.05,1.577 c -0.393,-0.016 -0.784,0.08 -1.117,0.235 -0.484,0.186 -4.92,1.902 -9.41,3.64 C 9.263,6.325 7.005,7.198 5.267,7.867 3.53,8.537 2.222,9.035 2.153,9.059 c -0.46,0.16 -1.082,0.362 -1.61,0.984 -0.79581202,1.058365 0.21077405,1.964825 1.004,2.499 1.76,0.564 3.58,1.102 5.087,1.608 0.556,1.96 1.09,3.927 1.618,5.89 0.174,0.394 0.553,0.54 0.944,0.544 l -0.002,0.02 c 0,0 0.307,0.03 0.606,-0.042 0.3,-0.07 0.677,-0.244 1.02,-0.565 0.377,-0.354 1.4,-1.36 1.98,-1.928 l 4.37,3.226 0.035,0.02 c 0,0 0.484,0.34 1.192,0.388 0.354,0.024 0.82,-0.044 1.22,-0.337 0.403,-0.294 0.67,-0.767 0.795,-1.307 0.374,-1.63 2.853,-13.427 3.276,-15.38 L 23.676,4.725 C 23.972,3.625 23.863,2.617 23.18,2.02 22.838,1.723 22.444,1.593 22.05,1.576 Z"/>
+  
+</svg>
+</a>
+      </li></ul>
+  </nav>
+</section><section class='widget widget-sidebar_menu sep-after'><nav id='sidebar-menu' class='menu sidebar-menu' aria-label='Боковое меню'>
+    <div class='container'>
+      <ul><li class='item'>
+  <a href='/categories/algorithm/'>Алгоритмы</a></li><li class='item'>
+  <a href='/categories/develop/'>Разработка</a></li><li class='item'>
+  <a href='/categories/life-style/'>Образ жизни</a></li><li class='item'>
+  <a href='/categories/book/'>Книги</a></li><li class='item'>
+  <a href='/slides/'>Презентации</a></li><li class='item'>
+  <a href='/categories/project/'>Проекты</a></li></ul>
+    </div>
+  </nav>
+
+</section><section class='widget widget-taxonomy_cloud sep-after'>
+  <header>
+    <h4 class='title widget-title'>Тэги</h4>
+  </header>
+
+  <div class='container list-container'>
+  <ul class='list taxonomy-cloud no-shuffle'><li>
+        <a href='/tags/algorithm/' style='font-size:1em'>algorithm</a>
+      </li><li>
+        <a href='/tags/angular/' style='font-size:1em'>angular</a>
+      </li><li>
+        <a href='/tags/architect/' style='font-size:1.625em'>architect</a>
+      </li><li>
+        <a href='/tags/blog/' style='font-size:1em'>blog</a>
+      </li><li>
+        <a href='/tags/checklist/' style='font-size:1.375em'>checklist</a>
+      </li><li>
+        <a href='/tags/complexity/' style='font-size:1.5em'>complexity</a>
+      </li><li>
+        <a href='/tags/csrf/' style='font-size:1em'>CSRF</a>
+      </li><li>
+        <a href='/tags/data-structure/' style='font-size:1.375em'>data-structure</a>
+      </li><li>
+        <a href='/tags/distributed-system/' style='font-size:1em'>distributed system</a>
+      </li><li>
+        <a href='/tags/event/' style='font-size:1em'>event</a>
+      </li><li>
+        <a href='/tags/git/' style='font-size:1em'>git</a>
+      </li><li>
+        <a href='/tags/go/' style='font-size:2em'>go</a>
+      </li><li>
+        <a href='/tags/graph/' style='font-size:1.125em'>graph</a>
+      </li><li>
+        <a href='/tags/hackathon/' style='font-size:1em'>hackathon</a>
+      </li><li>
+        <a href='/tags/keynote/' style='font-size:1em'>keynote</a>
+      </li><li>
+        <a href='/tags/logging/' style='font-size:1em'>logging</a>
+      </li><li>
+        <a href='/tags/management/' style='font-size:1.125em'>management</a>
+      </li><li>
+        <a href='/tags/memory/' style='font-size:1.25em'>memory</a>
+      </li><li>
+        <a href='/tags/microservices/' style='font-size:1.125em'>microservices</a>
+      </li><li>
+        <a href='/tags/orgmode/' style='font-size:1em'>orgmode</a>
+      </li><li>
+        <a href='/tags/php/' style='font-size:1em'>PHP</a>
+      </li><li>
+        <a href='/tags/python/' style='font-size:1.125em'>python</a>
+      </li><li>
+        <a href='/tags/rules/' style='font-size:1.125em'>rules</a>
+      </li><li>
+        <a href='/tags/rxjs/' style='font-size:1em'>rxjs</a>
+      </li><li>
+        <a href='/tags/scheme/' style='font-size:1.125em'>scheme</a>
+      </li><li>
+        <a href='/tags/scrum/' style='font-size:1.125em'>scrum</a>
+      </li><li>
+        <a href='/tags/security/' style='font-size:1em'>security</a>
+      </li><li>
+        <a href='/tags/sicp/' style='font-size:1.125em'>sicp</a>
+      </li><li>
+        <a href='/tags/sorting/' style='font-size:1em'>sorting</a>
+      </li><li>
+        <a href='/tags/state-machine/' style='font-size:1em'>state-machine</a>
+      </li><li>
+        <a href='/tags/team-lead/' style='font-size:1em'>team-lead</a>
+      </li><li>
+        <a href='/tags/testing/' style='font-size:1.125em'>testing</a>
+      </li><li>
+        <a href='/tags/tips-and-tricks/' style='font-size:1.25em'>tips and tricks</a>
+      </li><li>
+        <a href='/tags/toc/' style='font-size:1em'>toc</a>
+      </li><li>
+        <a href='/tags/tutorial/' style='font-size:1.125em'>tutorial</a>
+      </li><li>
+        <a href='/tags/typescript/' style='font-size:1em'>typescript</a>
+      </li><li>
+        <a href='/tags/web/' style='font-size:1em'>web</a>
+      </li><li>
+        <a href='/tags/work/' style='font-size:1em'>work</a>
+      </li></ul>
+</div>
+
+
+</section>
+</div>
+
+  <div class='sidebar-overlay'></div>
+</div><div class='main'><nav id='main-menu' class='menu main-menu' aria-label='Основное меню'>
+  <div class='container'>
+    <a class='screen-reader-text' href='#content'>Перейти к содержимому</a>
+
+<button id='sidebar-toggler' class='sidebar-toggler' aria-controls='sidebar'>
+  <span class='screen-reader-text'>Скрыть / показать боковую панель</span>
+  <span class='open'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <line x1="3" y1="12" x2="21" y2="12" />
+  <line x1="3" y1="6" x2="21" y2="6" />
+  <line x1="3" y1="18" x2="21" y2="18" />
+  
+</svg>
+</span>
+  <span class='close'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <line x1="18" y1="6" x2="6" y2="18" />
+  <line x1="6" y1="6" x2="18" y2="18" />
+  
+</svg>
+</span>
+</button>
+    <ul><li class='item'>
+        <a href='/post/'>Блог</a>
+      </li><li class='item'>
+        <a href='/page/about/'>Обо мне</a>
+      </li></ul>
+  </div>
+</nav><div class='header-widgets'>
+        <div class='container'></div>
+      </div>
+
+      <header id='header' class='header site-header'>
+        <div class='container sep-after'>
+          <div class='header-info'><p class='site-title title'>Где-то на дальнем сервере</p><p class='desc site-desc'>Заметки о программировании и не только</p>
+          </div>
+        </div>
+      </header>
+
+      <main id='content'>
+
+
+<article lang='ru' class='entry'>
+  <header class='header entry-header'>
+  <div class='container sep-after'>
+    <div class='header-info'>
+      <h1 class='title'>Декораторы в Go</h1>
+      
+<p class='desc'>К молодой осине год который подряд дети лукоморья нам несут шоколад</p>
+
+
+    </div>
+    
+<div class='entry-meta'>
+  <span class='posted-on'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+  <line x1="16" y1="2" x2="16" y2="6"/>
+  <line x1="8" y1="2" x2="8" y2="6"/>
+  <line x1="3" y1="10" x2="21" y2="10"/>
+  
+</svg>
+<span class='screen-reader-text'>Опубликовано </span>
+  <time class='entry-date' datetime='2019-01-24T16:25:25Z'>2019-01-24</time>
+</span>
+
+  
+  
+<span class='reading-time'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <circle cx="12" cy="12" r="10"/>
+  <polyline points="12 6 12 12 15 15"/>
+  
+</svg>
+6 минут на чтение
+</span>
+
+
+  
+</div>
+
+
+  </div>
+</header>
+
+  
+  
+<details class='container entry-toc'>
+  <summary class='title'>
+    <span>Оглавление</span>
+  </summary>
+  <nav id="TableOfContents">
+<ul>
+<li>
+<ul>
+<li><a href="#перехватчики">Перехватчики</a></li>
+<li><a href="#общий-случай">Общий случай</a></li>
+<li><a href="#замыкания">Замыкания</a></li>
+<li><a href="#прямые-вызовы">Прямые вызовы</a></li>
+<li><a href="#насколько-абстрактным-должен-быть-набор-декораторов">Насколько абстрактным должен быть набор декораторов?</a></li>
+</ul></li>
+</ul>
+</nav>
+</details>
+
+
+  <div class='container entry-content'>
+  
+
+<p>Довольно большая часть моей работы заключается в написании библиотечного кода. Кода, который будет многократно использоваться как другими программистами, так и мной самим. Поэтому одним из важных критериев становится удобство интерфейсов. Некоторые применяемые мной практики рассмотрены в этой статье.</p>
+
+<h2 id="перехватчики">Перехватчики</h2>
+
+<p>Концепция middleware появилась, конечно, задолго до go. Будем называть их перехватчиками, что не по фен-шую, но лучше, чем «слой промежуточного программного обеспечения». Однако, именно в go эта концепция достигла своего апогея. Собственно про middleware написано и сказано уже довольно много. Чаще всего рассматриваются перехватчики в контексте http-сервера. В качестве примера можно рассмотреть перехватчик для логирования запросов:</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#080;font-weight:bold">func</span> <span style="color:#06b;font-weight:bold">Logging</span>(next http.Handler) http.Handler {
+    <span style="color:#080;font-weight:bold">return</span> http.<span style="color:#06b;font-weight:bold">HandlerFunc</span>(<span style="color:#080;font-weight:bold">func</span>(w http.ResponseWriter, r <span style="color:#333">*</span>http.Request) {
+        log.<span style="color:#06b;font-weight:bold">Printf</span>(<span style="background-color:#fff0f0">&#34;request start: %s&#34;</span>, r.URL)
+        <span style="color:#06b;font-weight:bold">hext</span>(w, r)
+        log.<span style="color:#06b;font-weight:bold">Printf</span>(<span style="background-color:#fff0f0">&#34;request end: %s&#34;</span>, r.URL)
+    })
+}</code></pre></div>
+<p>Или более сложный пример с инициализацией:</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#080;font-weight:bold">func</span> <span style="color:#06b;font-weight:bold">Logging</span>(logger <span style="color:#333">*</span>log.Logger) <span style="color:#080;font-weight:bold">func</span>(http.Handler) http.Handler {
+    <span style="color:#080;font-weight:bold">return</span> <span style="color:#080;font-weight:bold">func</span>(next http.Handler) http.Handler {
+        <span style="color:#080;font-weight:bold">return</span> http.<span style="color:#06b;font-weight:bold">HandlerFunc</span>(<span style="color:#080;font-weight:bold">func</span>(w http.ResponseWriter, r <span style="color:#333">*</span>http.Request) {
+            logger.<span style="color:#06b;font-weight:bold">Printf</span>(<span style="background-color:#fff0f0">&#34;request start: %s&#34;</span>, r.URL)
+            <span style="color:#06b;font-weight:bold">hext</span>(w, r)
+            logger.<span style="color:#06b;font-weight:bold">Printf</span>(<span style="background-color:#fff0f0">&#34;request end: %s&#34;</span>, r.URL)
+        })
+    }
+}</code></pre></div>
+<p>По сути это функция, оборачивающая обработчик запроса, то есть декоратор. В таких обёртках удобно делать рутинные задачи, не имеющие привязки исключительно к одному обработчику:</p>
+
+<ul>
+<li>перехват паник;</li>
+<li>телеметрия (логи / метрики / трейсинг);</li>
+<li>лимитирование (ограничение количества запросов или прерывание запроса по времени);</li>
+<li>проверка авторизации и прав доступа по кукам и заголовкам;</li>
+<li>извлечение информации из запроса;</li>
+</ul>
+
+<p>Последний пункт расширяемый. По факту в запросе имеется контекст, через который можно передавать информацию выше по стеку, таким образом можно не только извлечь информацию из запроса, но и по этой информации извлечь информацию из бд и положить в контекст готовый объект. Но тут есть свои нюансы и священные войны о том для чего можно использовать контекст, а для чего нет.</p>
+
+<p>Главным удобством таких функций является общая сигнатура:</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#080;font-weight:bold">type</span> Middleware <span style="color:#080;font-weight:bold">func</span>(http.Handler) http.Handler</code></pre></div>
+<p>что позволяет легко сделать их объединение (композицию):</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#080;font-weight:bold">func</span> <span style="color:#06b;font-weight:bold">Combine</span>(middlewares <span style="color:#333">...</span>Middleware) Middleware {
+    <span style="color:#080;font-weight:bold">return</span> <span style="color:#080;font-weight:bold">func</span> (next http.Handler) http.Handler {
+        <span style="color:#888">// let&#39;s keep the order as in mathematical functional composition
+</span><span style="color:#888"></span>        <span style="color:#080;font-weight:bold">for</span> i <span style="color:#333">:=</span> <span style="color:#007020">len</span>(middlewares) <span style="color:#333">-</span> <span style="color:#00d;font-weight:bold">1</span>; i <span style="color:#333">&gt;=</span> <span style="color:#00d;font-weight:bold">0</span>; i<span style="color:#333">--</span> {
+            next = middlewares[i](next)
+        }
+        <span style="color:#080;font-weight:bold">return</span> next
+    }
+}</code></pre></div>
+<p>Концепция таких промежуточных перехватчиков настолько прижилась, что практически каждый сторонний роутер в том или ином виде предоставляет удобные механизмы для их использования. Например, в chi можно объявлять перехватчики глобальные для данного уровня дерева путей с помощью метода <a href="https://godoc.org/github.com/go-chi/chi#Mux.Use">Use</a> или специфичные для конкретного пути &mdash; <a href="https://godoc.org/github.com/go-chi/chi#Mux.With">With</a>.</p>
+
+<p>Аналогичные механизмы есть и в grpc, только там они называются именно <a href="https://godoc.org/google.golang.org/grpc#UnaryInterceptor">перхватчиками (interceptors)</a>. Но можно ли расширить эту концепцию дальше, за пределы http и grpc сервисов?</p>
+
+<h2 id="общий-случай">Общий случай</h2>
+
+<p>По сути перехватчики являются декораторами функций. Решающим фактором в перехватчиках является общая сигнатура. Таким образом можно реализовать свой слой декораторов, не привязанный к транспортному уровню. Для начала определим собственную сигнатуру. На практике нам достаточно передавать вверх по стеку контекст запроса, а возвращать только ошибку:</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#080;font-weight:bold">type</span> Operation <span style="color:#080;font-weight:bold">func</span>(context.Context) <span style="color:#339;font-weight:bold">error</span>
+<span style="color:#080;font-weight:bold">type</span> Wrapper <span style="color:#080;font-weight:bold">func</span>(Operation) Operation</code></pre></div>
+<p>На таких функциях также легко реализовать функцию композицию по аналогии с вышеприведённой. Такие декораторы удобно использовать для</p>
+
+<ul>
+<li>телеметрии (логи / метрики / трейсинг);</li>
+<li>обработки ошибок (retry / backoff);</li>
+<li>ограничения (времени / частоты / конкурентности);</li>
+</ul>
+
+<h2 id="замыкания">Замыкания</h2>
+
+<p>Но чаще всего функции бизнес-логики принимают что-то помимо контекста, а также возвращают что-то помимо ошибки. Давайте рассмотрим в качестве примера следующую задачу: дана директория с фотографиями, необходимо посчитать среднюю освещённость по всем фотографиям. Саму бизнес-логику мы писать не будем, предположим, что у нас есть уже написанная функция, которая принимает на вход путь до файла, а возвращает среднюю освещённость фотографии.</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#080;font-weight:bold">func</span> <span style="color:#06b;font-weight:bold">ProcessFile</span>(ctx context.Context, path <span style="color:#339;font-weight:bold">string</span>) (<span style="color:#339;font-weight:bold">float64</span>, <span style="color:#339;font-weight:bold">error</span>) {
+    <span style="color:#888">// ...
+</span><span style="color:#888"></span>}</code></pre></div>
+<p>И пусть у нас есть список файлов, которые необходимо обработать, но обработку каждого файла хочется покрыть метриками, прерывать, если прошло больше 5 секунд без результата, а также повторить попытку при ошибке. Если у нас уже есть необходимые декораторы и функция <code>Combine</code>, то код может выглядеть примерно так:</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#080;font-weight:bold">var</span> exposition <span style="color:#339;font-weight:bold">float64</span>
+<span style="color:#080;font-weight:bold">for</span> _, path <span style="color:#333">:=</span> <span style="color:#080;font-weight:bold">range</span> paths {
+    err <span style="color:#333">:=</span> <span style="color:#06b;font-weight:bold">Combine</span>(
+        <span style="color:#888">// Повторяем 3 раза в случае ошибки
+</span><span style="color:#888"></span>        <span style="color:#06b;font-weight:bold">Retry</span>(<span style="color:#00d;font-weight:bold">3</span>),
+        <span style="color:#888">// Логируем время начала и конца обработки
+</span><span style="color:#888"></span>        <span style="color:#06b;font-weight:bold">Logger</span>(log.<span style="color:#06b;font-weight:bold">New</span>(os.Stderr, path, log.LstdFlags)),
+        <span style="color:#888">// Ограничиваем время выполнения
+</span><span style="color:#888"></span>        <span style="color:#06b;font-weight:bold">Timout</span>(<span style="color:#00d;font-weight:bold">5</span> <span style="color:#333">*</span> time.Second),
+    )(<span style="color:#080;font-weight:bold">func</span>(ctx context.Context) <span style="color:#339;font-weight:bold">error</span> {
+        fileExposition, err <span style="color:#333">:=</span> <span style="color:#06b;font-weight:bold">ProcessFile</span>(ctx, path)
+        <span style="color:#080;font-weight:bold">if</span> err <span style="color:#333">!=</span> <span style="color:#080;font-weight:bold">nil</span> {
+            <span style="color:#080;font-weight:bold">return</span> err
+        }
+        exposition <span style="color:#333">+=</span> fileExposition
+        <span style="color:#080;font-weight:bold">return</span> <span style="color:#080;font-weight:bold">nil</span>
+    })(context.<span style="color:#06b;font-weight:bold">Background</span>())
+    <span style="color:#080;font-weight:bold">if</span> err <span style="color:#333">!=</span> <span style="color:#080;font-weight:bold">nil</span> {
+        log.<span style="color:#06b;font-weight:bold">Fatal</span>(err)
+    }
+}
+log.<span style="color:#06b;font-weight:bold">Printf</span>(<span style="background-color:#fff0f0">&#34;average exposition is %.4f&#34;</span>, exposition <span style="color:#333">/</span> <span style="color:#007020">len</span>(paths))</code></pre></div>
+<p>При этом, для внутренних декораторов можно делать обмен данными через контекст. Например, декоратор <code>Retry</code> может класть в контекст номер попытки, который будет логироваться в декораторе <code>Logger</code>. С другой стороны композицию декораторов можно вообще определить за пределами цикла, в случае если <code>Logger</code> будет брать сообщение из контекста. Предположим, что мы вынесли код всех декораторов и вспомогательный функции в отдельный модуль под названием <code>wrap</code>, тогда код можно переписать следующим образом:</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go">processWrapper <span style="color:#333">:=</span> wrap.<span style="color:#06b;font-weight:bold">Combine</span>(
+    <span style="color:#888">// Повторяем 3 раза в случае ошибки
+</span><span style="color:#888"></span>    wrap.<span style="color:#06b;font-weight:bold">Retry</span>(<span style="color:#00d;font-weight:bold">3</span>),
+    <span style="color:#888">// Логируем время начала и конца обработки
+</span><span style="color:#888"></span>    wrap.<span style="color:#06b;font-weight:bold">Logger</span>(log.<span style="color:#06b;font-weight:bold">New</span>(os.Stderr, <span style="background-color:#fff0f0">&#34;&#34;</span>, log.LstdFlags)),
+    <span style="color:#888">// Ограничиваем время выполнения
+</span><span style="color:#888"></span>    wrap.<span style="color:#06b;font-weight:bold">Timout</span>(<span style="color:#00d;font-weight:bold">5</span> <span style="color:#333">*</span> time.Second),
+)
+
+<span style="color:#080;font-weight:bold">var</span> exposition <span style="color:#339;font-weight:bold">float64</span>
+<span style="color:#080;font-weight:bold">for</span> _, path <span style="color:#333">:=</span> <span style="color:#080;font-weight:bold">range</span> paths {
+    err <span style="color:#333">:=</span> <span style="color:#06b;font-weight:bold">processWrapper</span>(<span style="color:#080;font-weight:bold">func</span>(ctx context.Context) <span style="color:#339;font-weight:bold">error</span> {
+        fileExposition, err <span style="color:#333">:=</span> <span style="color:#06b;font-weight:bold">ProcessFile</span>(ctx, path)
+        <span style="color:#080;font-weight:bold">if</span> err <span style="color:#333">!=</span> <span style="color:#080;font-weight:bold">nil</span> {
+            <span style="color:#080;font-weight:bold">return</span> err
+        }
+        exposition <span style="color:#333">+=</span> fileExposition
+        <span style="color:#080;font-weight:bold">return</span> <span style="color:#080;font-weight:bold">nil</span>
+    })(wrap.<span style="color:#06b;font-weight:bold">ContextWithTarget</span>(context.<span style="color:#06b;font-weight:bold">Background</span>(), path))
+    <span style="color:#080;font-weight:bold">if</span> err <span style="color:#333">!=</span> <span style="color:#080;font-weight:bold">nil</span> {
+        log.<span style="color:#06b;font-weight:bold">Fatal</span>(err)
+    }
+}
+log.<span style="color:#06b;font-weight:bold">Printf</span>(<span style="background-color:#fff0f0">&#34;average exposition is %.4f&#34;</span>, exposition <span style="color:#333">/</span> <span style="color:#007020">len</span>(paths))</code></pre></div>
+<p>Таким образом, используя некоторый базовый набор декораторов, можно практически декларативно описывать окружение бизнес-логики.</p>
+
+<h2 id="прямые-вызовы">Прямые вызовы</h2>
+
+<p>Интересным оказывается порядок вызова декоратора:</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go">err <span style="color:#333">:=</span> <span style="color:#06b;font-weight:bold">Wrapper</span>(opts)(Operation)(ctx)
+err <span style="color:#333">:=</span> <span style="color:#06b;font-weight:bold">Wrapper</span>(opts)(<span style="color:#080;font-weight:bold">func</span>(ctx context.Context) <span style="color:#339;font-weight:bold">error</span> {
+    <span style="color:#888">// ...
+</span><span style="color:#888"></span>})(ctx)</code></pre></div>
+<p>Лично для меня, не смотря на математическое образование, читать такие обратные вызовы, то есть когда обработчик передаётся в декоратор, который возвращает декорированный обработчик, в который уже передаётся контекст, достаточно сложно. Поэтому я предпочитаю более прямой способ записи:</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go">err <span style="color:#333">:=</span> wrap.<span style="color:#06b;font-weight:bold">WithLogging</span>(ctx, logger, <span style="color:#080;font-weight:bold">func</span>(ctx context.Context) <span style="color:#339;font-weight:bold">error</span> {
+    <span style="color:#888">// ...
+</span><span style="color:#888"></span>})</code></pre></div>
+<p>для чего достаточно определить следующую вспомогательную функцию:</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#080;font-weight:bold">func</span> <span style="color:#06b;font-weight:bold">WithLogging</span>(ctx context.Context, logger <span style="color:#333">*</span>log.Logger, operation Operation) <span style="color:#339;font-weight:bold">error</span> {
+    <span style="color:#080;font-weight:bold">return</span> <span style="color:#06b;font-weight:bold">Logging</span>(logger)(operation)(ctx)
+}</code></pre></div>
+<p>Или по аналогии с <code>http.HandlerFunc</code> определить метод <code>Apply</code> на декораторе:</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#080;font-weight:bold">type</span> Operation <span style="color:#080;font-weight:bold">func</span>(context.Context) <span style="color:#339;font-weight:bold">error</span>
+<span style="color:#080;font-weight:bold">type</span> Wrapper <span style="color:#080;font-weight:bold">func</span>(Operation) Operation
+
+<span style="color:#080;font-weight:bold">func</span> (wrapper Wrapper) <span style="color:#06b;font-weight:bold">Apply</span>(ctx context.Context, operation Operation) <span style="color:#339;font-weight:bold">error</span> {
+    <span style="color:#080;font-weight:bold">return</span> <span style="color:#06b;font-weight:bold">wrapper</span>(operation)(ctx)
+}</code></pre></div>
+<p>После чего вызов будет выглядеть так:</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go">err <span style="color:#333">:=</span> wrap.<span style="color:#06b;font-weight:bold">Logging</span>(logger).<span style="color:#06b;font-weight:bold">Apply</span>(ctx, <span style="color:#080;font-weight:bold">func</span>(ctx context.Context) <span style="color:#339;font-weight:bold">error</span> {
+    <span style="color:#888">// ...
+</span><span style="color:#888"></span>})</code></pre></div>
+<p>Или пример с обработкой файлов:</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#080;font-weight:bold">var</span> exposition <span style="color:#339;font-weight:bold">float64</span>
+<span style="color:#080;font-weight:bold">for</span> _, path <span style="color:#333">:=</span> <span style="color:#080;font-weight:bold">range</span> paths {
+    ctx <span style="color:#333">:=</span> wrap.<span style="color:#06b;font-weight:bold">ContextWithTarget</span>(context.<span style="color:#06b;font-weight:bold">Background</span>(), path)
+    err <span style="color:#333">:=</span> processWrapper.<span style="color:#06b;font-weight:bold">Apply</span>(ctx, <span style="color:#080;font-weight:bold">func</span>(ctx context.Context) <span style="color:#339;font-weight:bold">error</span> {
+        fileExposition, err <span style="color:#333">:=</span> <span style="color:#06b;font-weight:bold">ProcessFile</span>(ctx, path)
+        <span style="color:#080;font-weight:bold">if</span> err <span style="color:#333">!=</span> <span style="color:#080;font-weight:bold">nil</span> {
+            <span style="color:#080;font-weight:bold">return</span> err
+        }
+        exposition <span style="color:#333">+=</span> fileExposition
+        <span style="color:#080;font-weight:bold">return</span> <span style="color:#080;font-weight:bold">nil</span>
+    })
+    <span style="color:#080;font-weight:bold">if</span> err <span style="color:#333">!=</span> <span style="color:#080;font-weight:bold">nil</span> {
+        log.<span style="color:#06b;font-weight:bold">Fatal</span>(err)
+    }
+}</code></pre></div>
+<p>Что на мой взгляд читает несколько легче.</p>
+
+<h2 id="насколько-абстрактным-должен-быть-набор-декораторов">Насколько абстрактным должен быть набор декораторов?</h2>
+
+<p>Набор базовых декораторов позволяет создать слой переиспользуемой утилитарной логики. Этот набор может быть специфичным для вашей инфраструктуры: использовать выбранные вами библиотеки для логирования, снятия метрик и трейсинга, использовать внутренние ошибки или оперировать с внутренним набором данных в контексте (идентификатор пользователя, уровни доступа, идентификатор сессии и т.д.). Возможно это будет общая библиотека для нескольких сервисов, но нет смысла делать его фундаментальным, абстрагированным от проекта.</p>
+
+<p>Лучше завязаться на выбранные вами технологии, зато потом использовать эти декораторы с минимальным дополнительным кодом. Например, если вы выбрали в качестве логера <a href="https://godoc.org/go.uber.org/zap">zap</a> и используете <a href="https://godoc.org/github.com/grpc-ecosystem/go-grpc-middleware/logging/zap/ctxzap">ctxzap</a> для хранения дополнительных параметров, то не стоит наворачивать дополнительный код с переводом <code>*zap.Logger</code> в стандартный или по передаче дополнительного контекста. Пересмотрите свой код, выявите повторяющиеся части и попробуйте вынести их в обёртки. Поговорите с другими участниками проекта о том как сделать интерфейс таких декораторов лучше.</p>
+
+</div>
+
+  
+<footer class='entry-footer'>
+  <div class='container sep-before'><div class='categories'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <path d="M22,19a2,2,0,0,1-2,2H4a2,2,0,0,1-2-2V5A2,2,0,0,1,4,3H9l2,3h9a2,2,0,0,1,2,2Z"/>
+  
+</svg>
+<span class='screen-reader-text'>category: </span><a class='category' href='/categories/develop/'>Разработка</a></div>
+<div class='tags'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <path d="M20.59,13.41l-7.17,7.17a2,2,0,0,1-2.83,0L2,12V2H12l8.59,8.59A2,2,0,0,1,20.59,13.41Z"/>
+  <line x1="7" y1="7" x2="7" y2="7"/>
+  
+</svg>
+<span class='screen-reader-text'>Тэги: </span><a class='tag' href='/tags/go/'>go</a>, <a class='tag' href='/tags/architect/'>architect</a>, <a class='tag' href='/tags/tips-and-tricks/'>tips and tricks</a></div>
+
+  </div>
+</footer>
+
+
+</article>
+
+<nav class='entry-nav'>
+  <div class='container'><div class='prev-entry sep-before'>
+      <a href='/post/2019/01/reflection/'>
+        <span aria-hidden='true'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <line x1="20" y1="12" x2="4" y2="12"/>
+  <polyline points="10 18 4 12 10 6"/>
+  
+</svg>
+ Предыдущий</span>
+        <span class='screen-reader-text'>Предыдущая запись: </span>Рефлексия в Go</a>
+    </div><div class='next-entry sep-before'>
+      <a href='/post/2019/03/one-on-one/'>
+        <span class='screen-reader-text'>Следующая запись: </span>O3: разговоры тет-а-тет<span aria-hidden='true'>Следующий <svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <line x1="4" y1="12" x2="20" y2="12"/>
+  <polyline points="14 6 20 12 14 18"/>
+  
+</svg>
+</span>
+      </a>
+    </div></div>
+</nav>
+
+
+
+
+      </main>
+
+      <footer id='footer' class='footer'>
+        <div class='container sep-before'><div class='copyright'>
+  <p>Материалы распространяются по <a rel="noreferrer" href="https://creativecommons.org/licenses/by/4.0/" target="_blank">лицензии CC BY</a> &copy; 2018-2021 vporoshok <br>Увидели ошибку? Буду рад <a rel="noreferrer" href="https://github.com/vporoshok/vporoshok.github.io" target="_blank">PR&rsquo;у</a></p>
+</div>
+
+        </div>
+      </footer>
+
+    </div>
+  </div><script>window.__assets_js_src="/assets/js/"</script>
+
+<script src='/assets/js/main.67d669ac.js'></script>
+
+</body>
+
+</html>
+

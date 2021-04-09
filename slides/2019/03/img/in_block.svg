@@ -1,0 +1,13 @@
+<svg viewBox="0 0 200 12" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <defs>
+        <marker id="risk" markerWidth="1" markerHeight="4" refX="0" refY="2" orient="auto" markerUnits="strokeWidth">
+            <line x1="0" y1="0" x2="0" y2="4" stroke="black" />
+        </marker>
+    </defs>
+
+    <polyline points="10,2 55,2 100,2 145,2 190,2" stroke="black"
+        marker-start="url(#risk)" marker-mid="url(#risk)" marker-end="url(#risk)"/>
+    <text x="60" y="10" font-size="8" text-anchor="middle">i</text>
+    <line x1="60" y1="2" x2="95" y2="2" stroke="yellow" stroke-width="2"/>
+    <text x="95" y="10" font-size="8" text-anchor="middle">j</text>
+</svg>

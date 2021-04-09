@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>python on Где-то на дальнем сервере</title>
+    <link>https://vporoshok.me/tags/python/</link>
+    <description>Recent content in python on Где-то на дальнем сервере</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>ru</language>
+    <lastBuildDate>Fri, 02 Nov 2018 15:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="https://vporoshok.me/tags/python/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Простая двоичная куча</title>
+      <link>https://vporoshok.me/post/2018/11/simple-heap/</link>
+      <pubDate>Fri, 02 Nov 2018 15:00:00 +0000</pubDate>
+      
+      <guid>https://vporoshok.me/post/2018/11/simple-heap/</guid>
+      <description>Часто возникает необходимость «сортировать» динамический набор данных. Самым ярким примером такой задачи является очередь с приоритетом. По сути задача сводится к последовательному выбору минимумов из множества, при этом допускающего добавление к множеству новых элементов. Конечно, эту задачу можно решить с помощью сортировки начального множества, а новые элементы можно включать с помощью бинарной вставки. Однако, есть структуры данных, позволяющие реализовать необходимые операции за меньшую стоимость. Такая структура называется куча (heap).</description>
+    </item>
+    
+    <item>
+      <title>Сортировка слиянием</title>
+      <link>https://vporoshok.me/post/2018/10/merge-sort/</link>
+      <pubDate>Sat, 27 Oct 2018 08:53:31 +0000</pubDate>
+      
+      <guid>https://vporoshok.me/post/2018/10/merge-sort/</guid>
+      <description>Сортировка слиянием один из тех редких алгоритмов, которые не устаревают, а напротив год от года развивается, получает новые публикации и исследования. Это действительно чудесный со многих сторон алгоритм, который находит применение в современном мире, а исследования, связанные с ним предлагают решения, применимые далеко за пределами сортировки. Это своего рода жемчужина среди всех алгоритмов сортировки.
+Базовый алгоритм Mergesort является двойственным к быстрой сортировке и относится к классу алгоритмов «Разделяй и властвуй».</description>
+    </item>
+    
+  </channel>
+</rss>

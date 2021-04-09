@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang='ru'><head>
+  <meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='description' content='Ни драк, ни танцев, ни пения'>
+<meta name='theme-color' content='#ffcd00'>
+
+<meta property='og:title' content='Как и для чего изучать алгоритмы • Где-то на дальнем сервере'>
+<meta property='og:description' content='Ни драк, ни танцев, ни пения'>
+<meta property='og:url' content='https://vporoshok.me/post/2018/11/introduction/'>
+<meta property='og:site_name' content='Где-то на дальнем сервере'>
+<meta property='og:type' content='article'><meta property='article:section' content='post'><meta property='article:published_time' content='2018-11-29T14:00:00Z'/><meta property='article:modified_time' content='2018-12-05T20:16:15&#43;04:00'/><meta name='twitter:card' content='summary'>
+
+<meta name="generator" content="Hugo 0.57.2" />
+
+  <title>Как и для чего изучать алгоритмы • Где-то на дальнем сервере</title>
+  <link rel='canonical' href='https://vporoshok.me/post/2018/11/introduction/'>
+  
+  
+  <link rel='icon' href='/favicon.ico'>
+<link rel='stylesheet' href='/assets/css/main.6a060eb7.css'><link rel='stylesheet' href='/assets/custom.css'><style>
+:root{--color-accent:#ffcd00;}
+</style>
+
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+	ga('create', 'UA-41042060-2', 'auto');
+	
+	ga('send', 'pageview');
+}
+</script>
+<script async src='https://www.google-analytics.com/analytics.js'></script>
+
+  
+
+</head>
+<body class='page type-post has-sidebar'>
+
+  <div class='site'><div id='sidebar' class='sidebar'>
+  <a class='screen-reader-text' href='#main-menu'>Перейти к основному меню</a>
+
+  <div class='container'><section class='widget widget-about sep-after'>
+  <header>
+    
+    <div class='logo'>
+      <a href='/'>
+        <img src='/images/logo.jpg' alt="Вернуться на главную">
+      </a>
+    </div>
+    
+    <h2 class='title site-title '>
+    vporoshok.me
+    </h2>
+    <div class='desc'>
+    Где-то на дальнем сервере
+    </div>
+  </header>
+
+</section>
+<section class='widget widget-social_menu sep-after'><nav aria-label='Соцсети'>
+    <ul><li>
+        <a href='https://twitter.com/vporoshok' target='_blank' rel='noopener'>
+          <span class='screen-reader-text'>Открыть Twitter-акаунт в новой вкладке</span><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"/>
+  
+</svg>
+</a>
+      </li><li>
+        <a href='https://github.com/vporoshok' target='_blank' rel='noopener'>
+          <span class='screen-reader-text'>Открыть Github-акаунт в новой вкладке</span><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/>
+  
+</svg>
+</a>
+      </li><li>
+        <a href='mailto:vporoshok@gmail.com' target='_blank' rel='noopener'>
+          <span class='screen-reader-text'>Связаться через Email</span><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+  <polyline points="22,6 12,13 2,6"/>
+  
+</svg>
+</a>
+      </li><li>
+        <a href='https://t.me/vporoshok' target='_blank' rel='noopener'>
+          <span class='screen-reader-text'>Открыть Telegram-акаунт в новой вкладке</span><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <path d="m 22.05,1.577 c -0.393,-0.016 -0.784,0.08 -1.117,0.235 -0.484,0.186 -4.92,1.902 -9.41,3.64 C 9.263,6.325 7.005,7.198 5.267,7.867 3.53,8.537 2.222,9.035 2.153,9.059 c -0.46,0.16 -1.082,0.362 -1.61,0.984 -0.79581202,1.058365 0.21077405,1.964825 1.004,2.499 1.76,0.564 3.58,1.102 5.087,1.608 0.556,1.96 1.09,3.927 1.618,5.89 0.174,0.394 0.553,0.54 0.944,0.544 l -0.002,0.02 c 0,0 0.307,0.03 0.606,-0.042 0.3,-0.07 0.677,-0.244 1.02,-0.565 0.377,-0.354 1.4,-1.36 1.98,-1.928 l 4.37,3.226 0.035,0.02 c 0,0 0.484,0.34 1.192,0.388 0.354,0.024 0.82,-0.044 1.22,-0.337 0.403,-0.294 0.67,-0.767 0.795,-1.307 0.374,-1.63 2.853,-13.427 3.276,-15.38 L 23.676,4.725 C 23.972,3.625 23.863,2.617 23.18,2.02 22.838,1.723 22.444,1.593 22.05,1.576 Z"/>
+  
+</svg>
+</a>
+      </li></ul>
+  </nav>
+</section><section class='widget widget-sidebar_menu sep-after'><nav id='sidebar-menu' class='menu sidebar-menu' aria-label='Боковое меню'>
+    <div class='container'>
+      <ul><li class='item'>
+  <a href='/categories/algorithm/'>Алгоритмы</a></li><li class='item'>
+  <a href='/categories/develop/'>Разработка</a></li><li class='item'>
+  <a href='/categories/life-style/'>Образ жизни</a></li><li class='item'>
+  <a href='/categories/book/'>Книги</a></li><li class='item'>
+  <a href='/slides/'>Презентации</a></li><li class='item'>
+  <a href='/categories/project/'>Проекты</a></li></ul>
+    </div>
+  </nav>
+
+</section><section class='widget widget-taxonomy_cloud sep-after'>
+  <header>
+    <h4 class='title widget-title'>Тэги</h4>
+  </header>
+
+  <div class='container list-container'>
+  <ul class='list taxonomy-cloud no-shuffle'><li>
+        <a href='/tags/algorithm/' style='font-size:1em'>algorithm</a>
+      </li><li>
+        <a href='/tags/angular/' style='font-size:1em'>angular</a>
+      </li><li>
+        <a href='/tags/architect/' style='font-size:1.625em'>architect</a>
+      </li><li>
+        <a href='/tags/blog/' style='font-size:1em'>blog</a>
+      </li><li>
+        <a href='/tags/checklist/' style='font-size:1.375em'>checklist</a>
+      </li><li>
+        <a href='/tags/complexity/' style='font-size:1.5em'>complexity</a>
+      </li><li>
+        <a href='/tags/csrf/' style='font-size:1em'>CSRF</a>
+      </li><li>
+        <a href='/tags/data-structure/' style='font-size:1.375em'>data-structure</a>
+      </li><li>
+        <a href='/tags/distributed-system/' style='font-size:1em'>distributed system</a>
+      </li><li>
+        <a href='/tags/event/' style='font-size:1em'>event</a>
+      </li><li>
+        <a href='/tags/git/' style='font-size:1em'>git</a>
+      </li><li>
+        <a href='/tags/go/' style='font-size:2em'>go</a>
+      </li><li>
+        <a href='/tags/graph/' style='font-size:1.125em'>graph</a>
+      </li><li>
+        <a href='/tags/hackathon/' style='font-size:1em'>hackathon</a>
+      </li><li>
+        <a href='/tags/keynote/' style='font-size:1em'>keynote</a>
+      </li><li>
+        <a href='/tags/logging/' style='font-size:1em'>logging</a>
+      </li><li>
+        <a href='/tags/management/' style='font-size:1.125em'>management</a>
+      </li><li>
+        <a href='/tags/memory/' style='font-size:1.25em'>memory</a>
+      </li><li>
+        <a href='/tags/microservices/' style='font-size:1.125em'>microservices</a>
+      </li><li>
+        <a href='/tags/orgmode/' style='font-size:1em'>orgmode</a>
+      </li><li>
+        <a href='/tags/php/' style='font-size:1em'>PHP</a>
+      </li><li>
+        <a href='/tags/python/' style='font-size:1.125em'>python</a>
+      </li><li>
+        <a href='/tags/rules/' style='font-size:1.125em'>rules</a>
+      </li><li>
+        <a href='/tags/rxjs/' style='font-size:1em'>rxjs</a>
+      </li><li>
+        <a href='/tags/scheme/' style='font-size:1.125em'>scheme</a>
+      </li><li>
+        <a href='/tags/scrum/' style='font-size:1.125em'>scrum</a>
+      </li><li>
+        <a href='/tags/security/' style='font-size:1em'>security</a>
+      </li><li>
+        <a href='/tags/sicp/' style='font-size:1.125em'>sicp</a>
+      </li><li>
+        <a href='/tags/sorting/' style='font-size:1em'>sorting</a>
+      </li><li>
+        <a href='/tags/state-machine/' style='font-size:1em'>state-machine</a>
+      </li><li>
+        <a href='/tags/team-lead/' style='font-size:1em'>team-lead</a>
+      </li><li>
+        <a href='/tags/testing/' style='font-size:1.125em'>testing</a>
+      </li><li>
+        <a href='/tags/tips-and-tricks/' style='font-size:1.25em'>tips and tricks</a>
+      </li><li>
+        <a href='/tags/toc/' style='font-size:1em'>toc</a>
+      </li><li>
+        <a href='/tags/tutorial/' style='font-size:1.125em'>tutorial</a>
+      </li><li>
+        <a href='/tags/typescript/' style='font-size:1em'>typescript</a>
+      </li><li>
+        <a href='/tags/web/' style='font-size:1em'>web</a>
+      </li><li>
+        <a href='/tags/work/' style='font-size:1em'>work</a>
+      </li></ul>
+</div>
+
+
+</section>
+</div>
+
+  <div class='sidebar-overlay'></div>
+</div><div class='main'><nav id='main-menu' class='menu main-menu' aria-label='Основное меню'>
+  <div class='container'>
+    <a class='screen-reader-text' href='#content'>Перейти к содержимому</a>
+
+<button id='sidebar-toggler' class='sidebar-toggler' aria-controls='sidebar'>
+  <span class='screen-reader-text'>Скрыть / показать боковую панель</span>
+  <span class='open'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <line x1="3" y1="12" x2="21" y2="12" />
+  <line x1="3" y1="6" x2="21" y2="6" />
+  <line x1="3" y1="18" x2="21" y2="18" />
+  
+</svg>
+</span>
+  <span class='close'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <line x1="18" y1="6" x2="6" y2="18" />
+  <line x1="6" y1="6" x2="18" y2="18" />
+  
+</svg>
+</span>
+</button>
+    <ul><li class='item'>
+        <a href='/post/'>Блог</a>
+      </li><li class='item'>
+        <a href='/page/about/'>Обо мне</a>
+      </li></ul>
+  </div>
+</nav><div class='header-widgets'>
+        <div class='container'></div>
+      </div>
+
+      <header id='header' class='header site-header'>
+        <div class='container sep-after'>
+          <div class='header-info'><p class='site-title title'>Где-то на дальнем сервере</p><p class='desc site-desc'>Заметки о программировании и не только</p>
+          </div>
+        </div>
+      </header>
+
+      <main id='content'>
+
+
+<article lang='ru' class='entry'>
+  <header class='header entry-header'>
+  <div class='container sep-after'>
+    <div class='header-info'>
+      <h1 class='title'>Как и для чего изучать алгоритмы</h1>
+      
+<p class='desc'>Ни драк, ни танцев, ни пения</p>
+
+
+    </div>
+    
+<div class='entry-meta'>
+  <span class='posted-on'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+  <line x1="16" y1="2" x2="16" y2="6"/>
+  <line x1="8" y1="2" x2="8" y2="6"/>
+  <line x1="3" y1="10" x2="21" y2="10"/>
+  
+</svg>
+<span class='screen-reader-text'>Опубликовано </span>
+  <time class='entry-date' datetime='2018-11-29T14:00:00Z'>2018-11-29</time>
+</span>
+
+  
+  
+<span class='reading-time'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <circle cx="12" cy="12" r="10"/>
+  <polyline points="12 6 12 12 15 15"/>
+  
+</svg>
+7 минут на чтение
+</span>
+
+
+  
+</div>
+
+
+  </div>
+</header>
+
+  
+  
+<details class='container entry-toc'>
+  <summary class='title'>
+    <span>Оглавление</span>
+  </summary>
+  <nav id="TableOfContents">
+<ul>
+<li>
+<ul>
+<li><a href="#почему-стоит-изучать-алгоритмы">Почему стоит изучать алгоритмы?</a></li>
+<li><a href="#что-можно-получить-от-прохождения-курса">Что можно получить от прохождения курса?</a></li>
+<li><a href="#на-чём-сосредоточиться-и-на-что-обращать-внимание">На чём сосредоточиться и на что обращать внимание?</a></li>
+<li><a href="#для-чего-нужна-практика-и-теоретические-задачи">Для чего нужна практика и теоретические задачи?</a></li>
+<li><a href="#куда-двигаться-дальше">Куда двигаться дальше?</a></li>
+</ul></li>
+</ul>
+</nav>
+</details>
+
+
+  <div class='container entry-content'>
+  
+
+<p>Иногда студенты, коллеги и знакомые задают мне вопросы о том</p>
+
+<ul>
+<li>почему нужно изучать алгоритмы?</li>
+<li>какой смысл в понимании оценок алгоритмов?</li>
+<li>для чего так много времени уделять алгоритмам, которые реализованы в стандартных библиотеках?</li>
+<li>пригождаются ли все эти знания в повседневной работе программиста?</li>
+<li>стоит ли разбираться javascript-разработчику с тем во что компилируется код на C и ассемблером вообще?</li>
+</ul>
+
+<p>Отрывочно я старался отвечать на эти вопросы и раньше, однако теперь у меня сложилось более или менее целостное представление обо всех этих и многих других вопросах, кое я и попытаюсь изложить в этой статье.</p>
+
+<h2 id="почему-стоит-изучать-алгоритмы">Почему стоит изучать алгоритмы?</h2>
+
+<p>Когда я только начинал преподавать алгоритмы, мне казалось, что это примерно как знание высшей алгебры: теория и только теория, потому что для решения задачи я всё равно достану <a href="https://www.sympy.org/en/index.html">sympy</a>. То есть знание алгоритмов никак не пригождалось в моей работе программистом. Но через некоторое время проекты, на которых я работал, становились сложнее и в определённый момент мне потребовалось реализовать один из тех алгоритмов, которые я рассказывал на лекциях. Затем ещё один и ещё. Тогда я подумал: «Вот оно! Теперь я могу честно говорить студентам, что в работе нужны разбираемые алгоритмы!» Но на самом деле это является правдой лишь отчасти. Конечно, мне помогло то, что я знал эти алгоритмы, но их пришлось сильно переделывать под конкретную прикладную задачу. Более того в некоторых из задач решение в лоб, без использования специальных алгоритмов и структур данных не оказалось бы катастрофически плохим. И вот теперь, спустя 4 года преподавания я понял, что надо рассказывать не алгоритмы, а задачи. Итак,</p>
+
+<h2 id="что-можно-получить-от-прохождения-курса">Что можно получить от прохождения курса?</h2>
+
+<p>В курсе разбираются классические алгоритмы и структуры данных, начиная от поиска и сортировок, алгоритмы на графах и распределённые алгоритмы. Но сами по себе алгоритмы являются лишь частными примерами. Основной целью курса является умение формализовать задачи в эффективном для выполнения виде. Для этого необходимо понимать &mdash; что является эффективным выполнением &mdash; для чего, в свою очередь, необходимо понимание внутреннего устройства компьютера и оценки сложности.</p>
+
+<p>При этом не стоит забывать, что компьютеры развиваются очень быстро, меняются архитектуры процессоров, типы памяти, протоколы. Подходы придуманные 20 лет назад оказываются неэффективны на современном железе и наоборот, то, что было неоптимально в 70-е годы прошлого века внезапно становится эффективным. Компьютеры являются ограничениями в решении задач. Для правильного решения задачи необходимо понимание этих ограничений. Необходимо ли программисту понимать как работает процессор, как устроены фреймы памяти, стек вызовов, линии кешей и прочее? Однозначного ответа нет. Я бы сказал, что мешать эти знания не будут, и потратить время и силы на ознакомление с этим хотя бы поверхностно будет выгодным вложением своего времени.</p>
+
+<p>Каждый алгоритм анализируется с разных сторон:</p>
+
+<ul>
+<li>сложность реализации;</li>
+<li>сложность по времени выполнения;</li>
+<li>сложность по количеству инструкций;</li>
+<li>сложность по памяти;</li>
+<li>сложность по количеству и размеру сетевых сообщений;</li>
+<li>локальность данных и кеш-независимость;</li>
+<li>учётная стоимость операций:</li>
+<li>параллелизуемость отдельных шагов;</li>
+<li>корректность и доказуемость решений или оценка возможных погрешностей.</li>
+</ul>
+
+<p>При этом целью такого анализа является не разбор конкретного алгоритма, а умение анализировать алгоритмы и решения в целом.</p>
+
+<p>В рамках курса разбираются как простые задачи, решения которых является отдельными самодостаточными алгоритмами, но также и сложные задачи, для решения которых применяются другие алгоритмы и структуры данных как составные части более сложных алгоритмов и структур. Такие задачи декомпозируются. При их решении выделяются закономерности и классы подзадач для применения изученных ранее алгоритмов. Решение и применение различных алгоритмов зависит от специфики задачи, например, выбор структуры организации дерева: хранение в массиве или использовать указатели, выбор структуры кучи: необходима ли операция слияния? будут ли вставки? и так далее. Это тоже ограничения для выбора решения задачи. Рассматривая сложные и высокоуровневые задачи помимо новых алгоритмов рассматриваются адаптации уже известных алгоритмов для ещё более эффективной работы программы.</p>
+
+<p>Если подвести итог, то курс по большей своей части направлен на анализ ограничений задач и выбору подходящего плана решения. Сами же рассматриваемые алгоритмы являются лишь иллюстрацией для этого анализа. Алгоритмы описаны во множестве литературы, статьях, а многие из них уже реализованы в стандартных библиотеках языков. Конечно, знание алгоритмов на зубок может пригодиться в жизни, как, например, может пригодиться знание фразы «Шалость удалась» на школьном чемпионате по игре «Что? Где? Когда?». И тут стоит перейти к следующему вопросу.</p>
+
+<h2 id="на-чём-сосредоточиться-и-на-что-обращать-внимание">На чём сосредоточиться и на что обращать внимание?</h2>
+
+<p>Вы когда-нибудь задумывались о том для чего в школе преподают литературу? Рекомендую ознакомиться с <a href="https://umc-chehov.edumsko.ru/uploads/1000/898/section/258372/docs/pomosch-uchitelyu/russkii_yazik_i_literatura/2015-2016/r_p_literatura_5-9_korovina_v_ya_1.pdf">рабочей программой курса литературы 5–9 классов</a> по крайней мере в части целей курса. Не смотря на бюрократический формализм сего произведения в нём прослеживаются интересные мысли, которые ускользнули лично от меня в школьные годы. Позже я дошёл до этого сам, сопоставляя рекомендации по изучению иностранных языков и уроков средней школы. Одна из важнейших целей изучения литературы — научиться правильно формулировать мысли. Есть отдельно русский язык, разбирающий особенности правил написания, есть культура речи, разбирающая подходы к построению предложений и фраз. Это похоже на изучение конкретного языка программирования и шаблонов проектирования. А литература показывает примеры хорошо выраженных мыслей, учит анализировать произведения, выделять значимые их части, рассматривает решения различных задач выражения смыслов.</p>
+
+<p>Алгоритмы это литература в области программирования. Произведения классиков: Дейкстра, Вирт, Кнут, Адельсон-Вельский и Ландис, Форд и Фалкерсон, Лэмпорт и многие другие. При этом также как и в литературе, в реальной жизни почти не требуется знание этих произведений наизусть. Также как литературное достояние, найти описание того или иного алгоритма не составляет труда. Но изучение устройства этих произведений, их анализ, позволяет решать более сложные задачи, используя их как приёмы, как кусочки решения.</p>
+
+<p>Поэтому основное внимание надо сосредоточить на следующих вещах:</p>
+
+<ul>
+<li>определение ограничений задачи;</li>
+<li>анализ решений;</li>
+<li>декомпозиция задачи и переиспользование решений;</li>
+</ul>
+
+<p>Эти навыки находят непосредственные применения в программировании, проектировании и оценке сложности задач.</p>
+
+<h2 id="для-чего-нужна-практика-и-теоретические-задачи">Для чего нужна практика и теоретические задачи?</h2>
+
+<p>Практика не является самоцелью курса. Лабораторные и домашние задачи не могут влиять на оценку понимания курса. Цель курса развить навыки решения задач, а не написания программ. Так для чего же делать практику? Многие нюансы алгоритмов и решений раскрываются только во время реализации. Например, рассуждая абстрактно легко пропустить, как элементарную, задачу о построении идеального дерева слияния, но попробовав реализовать его на практике моментально сталкиваешься с тем, что перед тем как выполнять слияния необходимо переставить кусочки в нужном порядке. Также некоторые особенности зависят непосредственно от языка реализации. При рассмотрении алгоритмов от таких тонкостей стараются абстрагироваться, потому что это не относится к концепции алгоритма непосредственно. Однако, решение этих особенностей позволяет лучше узнать язык реализации.</p>
+
+<p>Курс не привязан к какому-то конкретному языку программирования по двум причинам:</p>
+
+<ol>
+<li>язык программирования является лишь инструментом, необходимо уметь решать задачу вне рамок языка;</li>
+<li>выбор языка это всегда баланс между сложностью среды исполнения и объёмом вспомогательного кода: в первом случае из-за недостатка контроля могут исчезнуть некоторые оптимизации (а иногда и вовсе замедлить код), во втором случае сложность и объём вспомогательного кода заслоняют собой изящность рассматриваемого алгоритма.</li>
+</ol>
+
+<p>Таким образом для решения практических задач лучше всего использовать тот язык, который хорошо знаком, чтобы не отвлекаться на сложные концепции или рутинные задачи, сосредоточив всё внимание на абстрактном алгоритме. Хотя в рамках лекций я частенько ссылаюсь на те или иные особенности реализаций в различных языках. По сути целевой язык программы также является ограничением решения задачи.</p>
+
+<p>Необходимо ли всё решать самому или можно просить помощи у друзей или интернета? Считайте, что основная цель практического задания &mdash; лучше понять задачу и решение. Если вы застрянете в самом начале, пытаясь разобраться без сторонней помощи, это будет хуже, чем если вы пройдёте путь до конца с чужой помощью, но потом разберётесь в полученном решении. Также обращаясь к друзьям, программируя с ними рядом вы можете узнать многое и о том, как человек думает во время решения задачи, а это тоже полезный опыт. Так что спрашивайте, подсматривайте, читайте чужой код. Это куда полезнее, чем биться головой о стену, не продвигаясь ни на йоту.</p>
+
+<h2 id="куда-двигаться-дальше">Куда двигаться дальше?</h2>
+
+<p>Курс не рассматривает многих аспектов, которые необходимы для специалиста. По многим есть отдельные курсы, книги, видеолекции. Ниже приведён лишь малый список полезных в программировании навыков:</p>
+
+<ul>
+<li>тестирование (модульные, функциональные, интеграционные, property-based, фазинг и многие другие);</li>
+<li>архитектура приложений (как правильно выделять сущности и связи, как разделить уровни ответственности модулей, SOLID, DI, гексогональная и слоистая архитектуры);</li>
+<li>шаблоны проектирования (знаменитый труд банды четырёх, а также множество статей и книг с его критикой);</li>
+<li>функциональное и реактивное программирование (смена парадигмы позволяет посмотреть на задачи с другой стороны, а также легче понять параллельные вычисления);</li>
+<li>сетевое взаимодействие (модель ISO OSI, фреймы и кадры, шифрование, протоколы и соединения);</li>
+<li>архитектура современных компьютеров и модели исполнения кода;</li>
+<li>криптография;</li>
+<li>машинное обучение и статистическая обработка больших данных;</li>
+</ul>
+
+</div>
+
+  
+<footer class='entry-footer'>
+  <div class='container sep-before'><div class='categories'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <path d="M22,19a2,2,0,0,1-2,2H4a2,2,0,0,1-2-2V5A2,2,0,0,1,4,3H9l2,3h9a2,2,0,0,1,2,2Z"/>
+  
+</svg>
+<span class='screen-reader-text'>category: </span><a class='category' href='/categories/algorithm/'>Алгоритмы</a></div>
+
+  </div>
+</footer>
+
+
+</article>
+
+<nav class='entry-nav'>
+  <div class='container'><div class='prev-entry sep-before'>
+      <a href='/post/2018/11/meldable-heaps/'>
+        <span aria-hidden='true'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <line x1="20" y1="12" x2="4" y2="12"/>
+  <polyline points="10 18 4 12 10 6"/>
+  
+</svg>
+ Предыдущий</span>
+        <span class='screen-reader-text'>Предыдущая запись: </span>Кучи с эффективным слиянием</a>
+    </div><div class='next-entry sep-before'>
+      <a href='/post/2018/12/search-tree/'>
+        <span class='screen-reader-text'>Следующая запись: </span>Деревья поиска. АВЛ-деревья<span aria-hidden='true'>Следующий <svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <line x1="4" y1="12" x2="20" y2="12"/>
+  <polyline points="14 6 20 12 14 18"/>
+  
+</svg>
+</span>
+      </a>
+    </div></div>
+</nav>
+
+
+
+
+      </main>
+
+      <footer id='footer' class='footer'>
+        <div class='container sep-before'><div class='copyright'>
+  <p>Материалы распространяются по <a rel="noreferrer" href="https://creativecommons.org/licenses/by/4.0/" target="_blank">лицензии CC BY</a> &copy; 2018-2021 vporoshok <br>Увидели ошибку? Буду рад <a rel="noreferrer" href="https://github.com/vporoshok/vporoshok.github.io" target="_blank">PR&rsquo;у</a></p>
+</div>
+
+        </div>
+      </footer>
+
+    </div>
+  </div><script>window.__assets_js_src="/assets/js/"</script>
+
+<script src='/assets/js/main.67d669ac.js'></script>
+
+</body>
+
+</html>
+

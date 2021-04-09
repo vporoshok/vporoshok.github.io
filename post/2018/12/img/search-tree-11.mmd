@@ -1,0 +1,20 @@
+graph TD
+    a((4))
+    a --- e((3))
+    a --- c((2))
+    e --- b((2))
+    e --- i((2))
+    c --- f((1))
+    c --- g((1))
+    b --- d((1))
+    b --- l((0))
+    i --- j((0))
+    i --- k((1))
+
+    classDef stack fill:Yellow
+    classDef error fill:LightCoral
+    classDef swap  fill:SpringGreen
+
+    class a stack
+    class b error
+    class e swap

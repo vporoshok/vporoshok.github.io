@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>hackathon on Где-то на дальнем сервере</title>
+    <link>https://vporoshok.me/tags/hackathon/</link>
+    <description>Recent content in hackathon on Где-то на дальнем сервере</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>ru</language>
+    <lastBuildDate>Thu, 03 Jan 2019 08:08:58 +0000</lastBuildDate>
+    
+	<atom:link href="https://vporoshok.me/tags/hackathon/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Хакатон. Как не перестать улыбаться за 24 часа</title>
+      <link>https://vporoshok.me/post/2019/01/hackathon/</link>
+      <pubDate>Thu, 03 Jan 2019 08:08:58 +0000</pubDate>
+      
+      <guid>https://vporoshok.me/post/2019/01/hackathon/</guid>
+      <description>Что же такое хакатон? Термин «хакатон» является словослиянием двух слов: хак (hack) и марафон (marathon).
+Впервые это слово появляется в 1999 году независимо друг от друга на двух событиях: встреча разработчиков OpenBSD и конференция JavaOne. В первом случае 10 человек в течении дня разрабатывали криптографические программы, которые бы обходили ограничения США на экспорт криптографических систем, а во втором случае всем желающим было предложено в течении конференции разработать программу на Java для Palm V с использованием ИК-порта.</description>
+    </item>
+    
+  </channel>
+</rss>

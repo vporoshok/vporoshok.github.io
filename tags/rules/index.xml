@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>rules on Где-то на дальнем сервере</title>
+    <link>https://vporoshok.me/tags/rules/</link>
+    <description>Recent content in rules on Где-то на дальнем сервере</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>ru</language>
+    <lastBuildDate>Sat, 18 Aug 2018 16:51:41 +0000</lastBuildDate>
+    
+	<atom:link href="https://vporoshok.me/tags/rules/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Разочарование в ревью кода</title>
+      <link>https://vporoshok.me/post/2018/08/code-review/</link>
+      <pubDate>Sat, 18 Aug 2018 16:51:41 +0000</pubDate>
+      
+      <guid>https://vporoshok.me/post/2018/08/code-review/</guid>
+      <description>⚠️Внимание!В этой статье я лишь поднимаю проблемы и вопросы, не давая ответы, потому что не знаю их на сегодняшний день. При этом всё, что описано в статье, лишь мой опыт и не претендует на истину в последней инстанции. На протяжении последних нескольких лет я довольно активно пропагандировал ревью кода. Когда я только пришёл в компанию, в том отделе, куда меня взяли, не применялся даже git, а о ревью кода и вовсе не слышали.</description>
+    </item>
+    
+    <item>
+      <title>Чек-лист разработчика</title>
+      <link>https://vporoshok.me/post/2018/04/developer-check-list/</link>
+      <pubDate>Sun, 08 Apr 2018 07:49:35 +0000</pubDate>
+      
+      <guid>https://vporoshok.me/post/2018/04/developer-check-list/</guid>
+      <description>Всегда В первую очередь надо не забывать о правилах хорошего тона. Оскорбления не разрешаются никому и никогда. Мат тоже желательно исключить из лексикона. Мы должны работать вместе, а не против друг друга, поэтому иногда надо идти на компромиссы. Ясно и чётко излагай свои мысли, аргументируй и доказывай, и тебя услышат.
+TL;DR Git
+ сообщение должно точно описано где, что и почему было сделано; обновление завендоренных зависимостей, изменения, не относящиеся напрямую к задаче и правки по ревью всегда оформляются отдельным коммитом;  Отчёты</description>
+    </item>
+    
+  </channel>
+</rss>

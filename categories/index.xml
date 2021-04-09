@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Categories on Где-то на дальнем сервере</title>
+    <link>https://vporoshok.me/categories/</link>
+    <description>Recent content in Categories on Где-то на дальнем сервере</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>ru</language>
+    <lastBuildDate>Fri, 09 Apr 2021 12:34:13 +0000</lastBuildDate>
+    
+	<atom:link href="https://vporoshok.me/categories/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Разработка</title>
+      <link>https://vporoshok.me/categories/develop/</link>
+      <pubDate>Fri, 09 Apr 2021 12:34:13 +0000</pubDate>
+      
+      <guid>https://vporoshok.me/categories/develop/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Алгоритмы</title>
+      <link>https://vporoshok.me/categories/algorithm/</link>
+      <pubDate>Tue, 07 Jan 2020 13:37:25 +0000</pubDate>
+      
+      <guid>https://vporoshok.me/categories/algorithm/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Образ жизни</title>
+      <link>https://vporoshok.me/categories/life-style/</link>
+      <pubDate>Sun, 13 Oct 2019 10:21:26 +0000</pubDate>
+      
+      <guid>https://vporoshok.me/categories/life-style/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Книги</title>
+      <link>https://vporoshok.me/categories/book/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://vporoshok.me/categories/book/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Проекты</title>
+      <link>https://vporoshok.me/categories/project/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://vporoshok.me/categories/project/</guid>
+      <description> Введение в Go  </description>
+    </item>
+    
+  </channel>
+</rss>

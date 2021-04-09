@@ -1,0 +1,669 @@
+<!DOCTYPE html>
+<html lang='ru'><head>
+  <meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='description' content='CSRF атаки и способы защиты'>
+<meta name='theme-color' content='#ffcd00'>
+
+<meta property='og:title' content='Ещё раз о безопасности или где хранить токен • Где-то на дальнем сервере'>
+<meta property='og:description' content='CSRF атаки и способы защиты'>
+<meta property='og:url' content='https://vporoshok.me/post/2017/05/token-placement/'>
+<meta property='og:site_name' content='Где-то на дальнем сервере'>
+<meta property='og:type' content='article'><meta property='og:image' content='https://vporoshok.me/post/2017/05/img/pink_door.jpg'><meta property='article:section' content='post'><meta property='article:tag' content='CSRF'><meta property='article:tag' content='PHP'><meta property='article:tag' content='security'><meta property='article:tag' content='web'><meta property='article:published_time' content='2017-05-28T17:33:45Z'/><meta property='article:modified_time' content='2018-11-10T12:14:22&#43;04:00'/><meta name='twitter:card' content='summary_large_image'><meta property='twitter:image' content='https://vporoshok.me/post/2017/05/img/pink_door.jpg'><meta property='twitter:image:alt' content='&ldquo;Pink sweet jail&rdquo; by @pinksweet'>
+
+<meta name="generator" content="Hugo 0.57.2" />
+
+  <title>Ещё раз о безопасности или где хранить токен • Где-то на дальнем сервере</title>
+  <link rel='canonical' href='https://vporoshok.me/post/2017/05/token-placement/'>
+  
+  
+  <link rel='icon' href='/favicon.ico'>
+<link rel='stylesheet' href='/assets/css/main.6a060eb7.css'><link rel='stylesheet' href='/assets/custom.css'><style>
+:root{--color-accent:#ffcd00;}
+</style>
+
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+	ga('create', 'UA-41042060-2', 'auto');
+	
+	ga('send', 'pageview');
+}
+</script>
+<script async src='https://www.google-analytics.com/analytics.js'></script>
+
+  
+
+</head>
+<body class='page type-post has-cover has-sidebar'>
+
+  <div class='site'><div id='sidebar' class='sidebar'>
+  <a class='screen-reader-text' href='#main-menu'>Перейти к основному меню</a>
+
+  <div class='container'><section class='widget widget-about sep-after'>
+  <header>
+    
+    <div class='logo'>
+      <a href='/'>
+        <img src='/images/logo.jpg' alt="Вернуться на главную">
+      </a>
+    </div>
+    
+    <h2 class='title site-title '>
+    vporoshok.me
+    </h2>
+    <div class='desc'>
+    Где-то на дальнем сервере
+    </div>
+  </header>
+
+</section>
+<section class='widget widget-social_menu sep-after'><nav aria-label='Соцсети'>
+    <ul><li>
+        <a href='https://twitter.com/vporoshok' target='_blank' rel='noopener'>
+          <span class='screen-reader-text'>Открыть Twitter-акаунт в новой вкладке</span><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"/>
+  
+</svg>
+</a>
+      </li><li>
+        <a href='https://github.com/vporoshok' target='_blank' rel='noopener'>
+          <span class='screen-reader-text'>Открыть Github-акаунт в новой вкладке</span><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/>
+  
+</svg>
+</a>
+      </li><li>
+        <a href='mailto:vporoshok@gmail.com' target='_blank' rel='noopener'>
+          <span class='screen-reader-text'>Связаться через Email</span><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+  <polyline points="22,6 12,13 2,6"/>
+  
+</svg>
+</a>
+      </li><li>
+        <a href='https://t.me/vporoshok' target='_blank' rel='noopener'>
+          <span class='screen-reader-text'>Открыть Telegram-акаунт в новой вкладке</span><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <path d="m 22.05,1.577 c -0.393,-0.016 -0.784,0.08 -1.117,0.235 -0.484,0.186 -4.92,1.902 -9.41,3.64 C 9.263,6.325 7.005,7.198 5.267,7.867 3.53,8.537 2.222,9.035 2.153,9.059 c -0.46,0.16 -1.082,0.362 -1.61,0.984 -0.79581202,1.058365 0.21077405,1.964825 1.004,2.499 1.76,0.564 3.58,1.102 5.087,1.608 0.556,1.96 1.09,3.927 1.618,5.89 0.174,0.394 0.553,0.54 0.944,0.544 l -0.002,0.02 c 0,0 0.307,0.03 0.606,-0.042 0.3,-0.07 0.677,-0.244 1.02,-0.565 0.377,-0.354 1.4,-1.36 1.98,-1.928 l 4.37,3.226 0.035,0.02 c 0,0 0.484,0.34 1.192,0.388 0.354,0.024 0.82,-0.044 1.22,-0.337 0.403,-0.294 0.67,-0.767 0.795,-1.307 0.374,-1.63 2.853,-13.427 3.276,-15.38 L 23.676,4.725 C 23.972,3.625 23.863,2.617 23.18,2.02 22.838,1.723 22.444,1.593 22.05,1.576 Z"/>
+  
+</svg>
+</a>
+      </li></ul>
+  </nav>
+</section><section class='widget widget-sidebar_menu sep-after'><nav id='sidebar-menu' class='menu sidebar-menu' aria-label='Боковое меню'>
+    <div class='container'>
+      <ul><li class='item'>
+  <a href='/categories/algorithm/'>Алгоритмы</a></li><li class='item'>
+  <a href='/categories/develop/'>Разработка</a></li><li class='item'>
+  <a href='/categories/life-style/'>Образ жизни</a></li><li class='item'>
+  <a href='/categories/book/'>Книги</a></li><li class='item'>
+  <a href='/slides/'>Презентации</a></li><li class='item'>
+  <a href='/categories/project/'>Проекты</a></li></ul>
+    </div>
+  </nav>
+
+</section><section class='widget widget-taxonomy_cloud sep-after'>
+  <header>
+    <h4 class='title widget-title'>Тэги</h4>
+  </header>
+
+  <div class='container list-container'>
+  <ul class='list taxonomy-cloud no-shuffle'><li>
+        <a href='/tags/algorithm/' style='font-size:1em'>algorithm</a>
+      </li><li>
+        <a href='/tags/angular/' style='font-size:1em'>angular</a>
+      </li><li>
+        <a href='/tags/architect/' style='font-size:1.625em'>architect</a>
+      </li><li>
+        <a href='/tags/blog/' style='font-size:1em'>blog</a>
+      </li><li>
+        <a href='/tags/checklist/' style='font-size:1.375em'>checklist</a>
+      </li><li>
+        <a href='/tags/complexity/' style='font-size:1.5em'>complexity</a>
+      </li><li>
+        <a href='/tags/csrf/' style='font-size:1em'>CSRF</a>
+      </li><li>
+        <a href='/tags/data-structure/' style='font-size:1.375em'>data-structure</a>
+      </li><li>
+        <a href='/tags/distributed-system/' style='font-size:1em'>distributed system</a>
+      </li><li>
+        <a href='/tags/event/' style='font-size:1em'>event</a>
+      </li><li>
+        <a href='/tags/git/' style='font-size:1em'>git</a>
+      </li><li>
+        <a href='/tags/go/' style='font-size:2em'>go</a>
+      </li><li>
+        <a href='/tags/graph/' style='font-size:1.125em'>graph</a>
+      </li><li>
+        <a href='/tags/hackathon/' style='font-size:1em'>hackathon</a>
+      </li><li>
+        <a href='/tags/keynote/' style='font-size:1em'>keynote</a>
+      </li><li>
+        <a href='/tags/logging/' style='font-size:1em'>logging</a>
+      </li><li>
+        <a href='/tags/management/' style='font-size:1.125em'>management</a>
+      </li><li>
+        <a href='/tags/memory/' style='font-size:1.25em'>memory</a>
+      </li><li>
+        <a href='/tags/microservices/' style='font-size:1.125em'>microservices</a>
+      </li><li>
+        <a href='/tags/orgmode/' style='font-size:1em'>orgmode</a>
+      </li><li>
+        <a href='/tags/php/' style='font-size:1em'>PHP</a>
+      </li><li>
+        <a href='/tags/python/' style='font-size:1.125em'>python</a>
+      </li><li>
+        <a href='/tags/rules/' style='font-size:1.125em'>rules</a>
+      </li><li>
+        <a href='/tags/rxjs/' style='font-size:1em'>rxjs</a>
+      </li><li>
+        <a href='/tags/scheme/' style='font-size:1.125em'>scheme</a>
+      </li><li>
+        <a href='/tags/scrum/' style='font-size:1.125em'>scrum</a>
+      </li><li>
+        <a href='/tags/security/' style='font-size:1em'>security</a>
+      </li><li>
+        <a href='/tags/sicp/' style='font-size:1.125em'>sicp</a>
+      </li><li>
+        <a href='/tags/sorting/' style='font-size:1em'>sorting</a>
+      </li><li>
+        <a href='/tags/state-machine/' style='font-size:1em'>state-machine</a>
+      </li><li>
+        <a href='/tags/team-lead/' style='font-size:1em'>team-lead</a>
+      </li><li>
+        <a href='/tags/testing/' style='font-size:1.125em'>testing</a>
+      </li><li>
+        <a href='/tags/tips-and-tricks/' style='font-size:1.25em'>tips and tricks</a>
+      </li><li>
+        <a href='/tags/toc/' style='font-size:1em'>toc</a>
+      </li><li>
+        <a href='/tags/tutorial/' style='font-size:1.125em'>tutorial</a>
+      </li><li>
+        <a href='/tags/typescript/' style='font-size:1em'>typescript</a>
+      </li><li>
+        <a href='/tags/web/' style='font-size:1em'>web</a>
+      </li><li>
+        <a href='/tags/work/' style='font-size:1em'>work</a>
+      </li></ul>
+</div>
+
+
+</section>
+</div>
+
+  <div class='sidebar-overlay'></div>
+</div><div class='main'><nav id='main-menu' class='menu main-menu' aria-label='Основное меню'>
+  <div class='container'>
+    <a class='screen-reader-text' href='#content'>Перейти к содержимому</a>
+
+<button id='sidebar-toggler' class='sidebar-toggler' aria-controls='sidebar'>
+  <span class='screen-reader-text'>Скрыть / показать боковую панель</span>
+  <span class='open'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <line x1="3" y1="12" x2="21" y2="12" />
+  <line x1="3" y1="6" x2="21" y2="6" />
+  <line x1="3" y1="18" x2="21" y2="18" />
+  
+</svg>
+</span>
+  <span class='close'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <line x1="18" y1="6" x2="6" y2="18" />
+  <line x1="6" y1="6" x2="18" y2="18" />
+  
+</svg>
+</span>
+</button>
+    <ul><li class='item'>
+        <a href='/post/'>Блог</a>
+      </li><li class='item'>
+        <a href='/page/about/'>Обо мне</a>
+      </li></ul>
+  </div>
+</nav><div class='header-widgets'>
+        <div class='container'></div>
+      </div>
+
+      <header id='header' class='header site-header'>
+        <div class='container sep-after'>
+          <div class='header-info'><p class='site-title title'>Где-то на дальнем сервере</p><p class='desc site-desc'>Заметки о программировании и не только</p>
+          </div>
+        </div>
+      </header>
+
+      <main id='content'>
+
+
+<article lang='ru' class='entry'>
+  <header class='header entry-header'>
+  <div class='container sep-after'>
+    <div class='header-info'>
+      <h1 class='title'>Ещё раз о безопасности или где хранить токен</h1>
+      
+<p class='desc'>CSRF атаки и способы защиты</p>
+
+
+    </div>
+    
+<div class='entry-meta'>
+  <span class='posted-on'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+  <line x1="16" y1="2" x2="16" y2="6"/>
+  <line x1="8" y1="2" x2="8" y2="6"/>
+  <line x1="3" y1="10" x2="21" y2="10"/>
+  
+</svg>
+<span class='screen-reader-text'>Опубликовано </span>
+  <time class='entry-date' datetime='2017-05-28T17:33:45Z'>2017-05-28</time>
+</span>
+
+  
+  
+<span class='reading-time'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <circle cx="12" cy="12" r="10"/>
+  <polyline points="12 6 12 12 15 15"/>
+  
+</svg>
+7 минут на чтение
+</span>
+
+
+  
+</div>
+
+
+  </div>
+</header>
+
+  <div class='entry-cover'>
+  <figure class='container cover-normal'>
+    <img src='/post/2017/05/img/pink_door.jpg' alt='&ldquo;Pink sweet jail&rdquo; by @pinksweet'/>
+    
+      
+      <figcaption class='container'>
+        <span>&ldquo;Pink sweet jail&rdquo; by <a href="https://busy.org/@pinksweet">@pinksweet</a></span>
+      </figcaption>
+      
+    
+  </figure>
+</div>
+  
+<details class='container entry-toc'>
+  <summary class='title'>
+    <span>Оглавление</span>
+  </summary>
+  <nav id="TableOfContents">
+<ul>
+<li>
+<ul>
+<li><a href="#начало">Начало</a></li>
+<li><a href="#зловред">Зловред</a></li>
+<li><a href="#csrf-токен">CSRF-токен</a></li>
+<li><a href="#cors-заголовки">CORS заголовки</a></li>
+<li><a href="#проверка-данных-вместо-заголовков">Проверка данных вместо заголовков</a></li>
+<li><a href="#опасность-не-уходит">Опасность не уходит</a></li>
+<li><a href="#выводы">Выводы</a></li>
+<li><a href="#полезные-ссылки">Полезные ссылки</a></li>
+</ul></li>
+</ul>
+</nav>
+</details>
+
+
+  <div class='container entry-content'>
+  
+
+<p>В очередной раз встал вопрос о том где и как хранить токен авторизации. Первое что приходит в голову это cookie. Итак, давайте сделаем простенький сайт со странице авторизации и использованием cookie для определения пользователя, а затем попробуем его поломать. Использовать мы будем <a href="https://www.owasp.org/index.php/Cross-Site_Request_Forgery_%28CSRF%29">CSRF</a> атаку. Об этих атаках написано уже немало статей, небольшой список будет в конце. В данном посте хочется добавить практики в эти объяснения на пальцах.
+Для удобства используем репозиторий с тегами эволюции проекта <a href="https://github.com/vporoshok/csrf-test">https://github.com/vporoshok/csrf-test</a>. По ходу описания будут встречаться ссылки вида <a href="https://github.com/vporoshok/csrf-test/tree/init">#init</a>, содержащие в себе имя тега и ссылку на его слепок. Вы можете склонировать себе репозиторий и переключаться между тегами:</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ git clone git@github.com:vporoshok/csrf-test.git
+$ git checkout init</code></pre></div>
+<h2 id="начало">Начало</h2>
+
+<p>Начнём с простейшего сайта на php состоящего из двух страниц <a href="https://github.com/vporoshok/csrf-test/tree/init">#init</a>:</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-php" data-lang="php"><span style="color:#579">&lt;?php</span>
+    session_start();
+    <span style="color:#080;font-weight:bold">if</span> (<span style="color:#963">$_SERVER</span>[<span style="background-color:#fff0f0">&#39;REQUEST_METHOD&#39;</span>] <span style="color:#333">===</span> <span style="background-color:#fff0f0">&#39;POST&#39;</span>) {
+        <span style="color:#963">$_SESSION</span>[<span style="background-color:#fff0f0">&#39;email&#39;</span>] <span style="color:#333">=</span> <span style="color:#963">$_POST</span>[<span style="background-color:#fff0f0">&#39;email&#39;</span>];
+        header(<span style="background-color:#fff0f0">&#39;Location: /form.php&#39;</span>);
+        <span style="color:#080;font-weight:bold">exit</span>();
+    }
+<span style="color:#579">?&gt;</span>
+&lt;<span style="color:#070">form</span> <span style="color:#00c">method</span><span style="color:#333">=</span><span style="background-color:#fff0f0">&#34;post&#34;</span>&gt;
+    &lt;<span style="color:#070">input</span> <span style="color:#00c">name</span><span style="color:#333">=</span><span style="background-color:#fff0f0">&#34;email&#34;</span>&gt;
+    &lt;<span style="color:#070">button</span>&gt;Login&lt;/<span style="color:#070">button</span>&gt;
+&lt;/<span style="color:#070">form</span>&gt;
+</code></pre></div>
+<p>За исключением отсутствия проверки пароля это вполне обычная ситуация для сайтов, когда мы просто записываем введённый email в сессию пользователя. Сессия же связывается с браузером с помощью cookie.</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-php" data-lang="php"><span style="color:#579">&lt;?php</span>
+    session_start();
+    <span style="color:#963">$sender</span> <span style="color:#333">=</span> <span style="color:#963">$_SESSION</span>[<span style="background-color:#fff0f0">&#39;email&#39;</span>];
+    <span style="color:#080;font-weight:bold">if</span> (strlen(<span style="color:#963">$sender</span>) <span style="color:#333">===</span> <span style="color:#00d;font-weight:bold">0</span>) {
+        http_response_code(<span style="color:#00d;font-weight:bold">401</span>);
+        <span style="color:#080;font-weight:bold">echo</span>(<span style="background-color:#fff0f0">&#39;Unauthorized&#39;</span>);
+        <span style="color:#080;font-weight:bold">exit</span>();
+    }
+    <span style="color:#080;font-weight:bold">if</span> (<span style="color:#963">$_SERVER</span>[<span style="background-color:#fff0f0">&#39;REQUEST_METHOD&#39;</span>] <span style="color:#333">===</span> <span style="background-color:#fff0f0">&#39;POST&#39;</span>) {
+        <span style="color:#963">$message</span> <span style="color:#333">=</span> <span style="color:#963">$_POST</span>[<span style="background-color:#fff0f0">&#39;message&#39;</span>];
+        <span style="color:#963">$receiver</span> <span style="color:#333">=</span> <span style="color:#963">$_POST</span>[<span style="background-color:#fff0f0">&#39;receiver&#39;</span>];
+        <span style="color:#080;font-weight:bold">echo</span>(<span style="background-color:#fff0f0">&#34;Send </span><span style="background-color:#eee">$message</span><span style="background-color:#fff0f0"> to </span><span style="background-color:#eee">$receiver</span><span style="background-color:#fff0f0">&#34;</span>);
+    }
+<span style="color:#579">?&gt;</span>
+&lt;<span style="color:#070">p</span>&gt;Hello, <span style="color:#579">&lt;?php</span> <span style="color:#080;font-weight:bold">echo</span>(<span style="color:#963">$sender</span>) <span style="color:#579">?&gt;</span>!&lt;/<span style="color:#070">p</span>&gt;
+&lt;<span style="color:#070">form</span> <span style="color:#00c">method</span><span style="color:#333">=</span><span style="background-color:#fff0f0">&#34;post&#34;</span>&gt;
+    &lt;<span style="color:#070">input</span> <span style="color:#00c">name</span><span style="color:#333">=</span><span style="background-color:#fff0f0">&#34;message&#34;</span> <span style="color:#00c">placeholder</span><span style="color:#333">=</span><span style="background-color:#fff0f0">&#34;message&#34;</span>&gt;&lt;<span style="color:#070">br</span>&gt;
+    &lt;<span style="color:#070">input</span> <span style="color:#00c">name</span><span style="color:#333">=</span><span style="background-color:#fff0f0">&#34;receiver&#34;</span> <span style="color:#00c">placeholder</span><span style="color:#333">=</span><span style="background-color:#fff0f0">&#34;receiver&#34;</span>&gt;&lt;<span style="color:#070">br</span>&gt;
+    &lt;<span style="color:#070">button</span>&gt;Send&lt;/<span style="color:#070">button</span>&gt;
+&lt;/<span style="color:#070">form</span>&gt;
+</code></pre></div>
+<p>Здесь мы проверяем залогинен ли пользователь (то есть есть ли в связанной с ним сессии email), и, если есть, то предоставляем ему формочку для отправки сообщения другому пользователю.
+Теперь, что бы запустить проект используем docker-compose со следующим конфигом:</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml">version:<span style="color:#bbb"> </span><span style="background-color:#fff0f0">&#39;2&#39;</span><span style="color:#bbb">
+</span><span style="color:#bbb">
+</span><span style="color:#bbb"></span>services:<span style="color:#bbb">
+</span><span style="color:#bbb">  </span>my:<span style="color:#bbb">
+</span><span style="color:#bbb">     </span>image:<span style="color:#bbb"> </span>php:<span style="color:#60e;font-weight:bold">7.0</span>-apache<span style="color:#bbb">
+</span><span style="color:#bbb">     </span>volumes:<span style="color:#bbb">
+</span><span style="color:#bbb">       </span>-<span style="color:#bbb"> </span>./my:/var/www/html<span style="color:#bbb">
+</span><span style="color:#bbb">     </span>ports:<span style="color:#bbb">
+</span><span style="color:#bbb">       </span>-<span style="color:#bbb"> </span><span style="background-color:#fff0f0">&#34;4000:80&#34;</span></code></pre></div>
+<p>Конечно, первые два файла кладутся в папку my, которая и подключается к контейнеру. Стартуем приложение через</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ docker-compose up</code></pre></div>
+<p>открываем в браузере <a href="http://localhost:4000/form.php">http://localhost:4000/form.php</a> получаем ошибку, заходим на <a href="http://localhost:4000/login.php">login</a>, вводим почту, всё. Теперь наш браузер авторизован на сайте и мы можем пользоваться формой.</p>
+
+<h2 id="зловред">Зловред</h2>
+
+<p>Добавим в наш проект зловредный сайт, который разместим в папке bad и на другом домене: localhost:4001 <a href="https://github.com/vporoshok/csrf-test/tree/bad">#bad</a>. Для CSRF атаки нам не потребуется серверная часть, создадим простую html-страничку:</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-html" data-lang="html">&lt;<span style="color:#070">form</span> <span style="color:#00c">id</span><span style="color:#333">=</span><span style="background-color:#fff0f0">&#34;form&#34;</span> <span style="color:#00c">method</span><span style="color:#333">=</span><span style="background-color:#fff0f0">&#34;post&#34;</span> <span style="color:#00c">action</span><span style="color:#333">=</span><span style="background-color:#fff0f0">&#34;http://localhost:4000/form.php&#34;</span>&gt;
+    &lt;<span style="color:#070">input</span> <span style="color:#00c">name</span><span style="color:#333">=</span><span style="background-color:#fff0f0">&#34;message&#34;</span> <span style="color:#00c">value</span><span style="color:#333">=</span><span style="background-color:#fff0f0">&#34;some spam&#34;</span>/&gt;
+    &lt;<span style="color:#070">input</span> <span style="color:#00c">name</span><span style="color:#333">=</span><span style="background-color:#fff0f0">&#34;receiver&#34;</span> <span style="color:#00c">value</span><span style="color:#333">=</span><span style="background-color:#fff0f0">&#34;bob@mail.com&#34;</span>/&gt;
+&lt;/<span style="color:#070">form</span>&gt;
+&lt;<span style="color:#070">script</span>&gt;
+    <span style="color:#080;font-weight:bold">var</span> form <span style="color:#333">=</span> <span style="color:#007020">document</span>.getElementById(<span style="background-color:#fff0f0">&#39;form&#39;</span>);
+    form.submit();
+&lt;/<span style="color:#070">script</span>&gt;</code></pre></div>
+<p>Вот такой примитивной страничкой мы можем рассылать спам от имени несчастного пользователя. Добавим в docker-compose описание зловредного сайта:</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml"><span style="color:#bbb">  </span>bad:<span style="color:#bbb">
+</span><span style="color:#bbb">     </span>image:<span style="color:#bbb"> </span>nginx<span style="color:#bbb">
+</span><span style="color:#bbb">     </span>volumes:<span style="color:#bbb">
+</span><span style="color:#bbb">       </span>-<span style="color:#bbb"> </span>./bad:/usr/share/nginx/html<span style="color:#bbb">
+</span><span style="color:#bbb">     </span>ports:<span style="color:#bbb">
+</span><span style="color:#bbb">       </span>-<span style="color:#bbb"> </span><span style="background-color:#fff0f0">&#34;4001:80&#34;</span></code></pre></div>
+<p>И снова выполним <code>docker-compose up</code>. Теперь, если вы залогинены на сайте <a href="http://localhost:4000/">http://localhost:4000/</a> и зайдёте на сайт <a href="http://localhost:4001/">http://localhost:4001/</a>, то от вашего имени будет выполнена отправка спама ни в чём неповинному Бобу. Конечно, такую html-страницу лучше всего поместить в скрытый iframe, чтобы вы ничего не заподозрили.</p>
+
+<h2 id="csrf-токен">CSRF-токен</h2>
+
+<p>Так как же защититься от такой атаки? Может быть не хранить авторизационный токен в cookie? Нет, мы не ищем лёгких путей. Используем CSRF-токены <a href="https://github.com/vporoshok/csrf-test/tree/token">#token</a>! Есть несколько вариантов работы с ними, мы будем использовать следующий:</p>
+
+<ul>
+<li>При запросе к странице с формой будем генерировать новый токен, состоящий из времени запроса, email из сессии и подписи с помощью секрета, который известен только серверу. Получившийся токен мы кладём в скрытое поле формы.</li>
+
+<li><p>При получении данных формы мы валидируем токен и, если он не подходит по формату, привязан к другому пользователю или неверно подписан, то выдаём ошибку. Если прошло больше 10 минут с момента формирования токена, просим отправить повторно, сохранив данные формы.</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-php" data-lang="php"><span style="color:#579">&lt;?php</span>
+<span style="color:#080;font-weight:bold">const</span> <span style="color:#036;font-weight:bold">SECRET</span> <span style="color:#333">=</span> <span style="background-color:#fff0f0">&#34;SOME SECRET&#34;</span>;
+session_start();
+<span style="color:#963">$sender</span> <span style="color:#333">=</span> <span style="color:#963">$_SESSION</span>[<span style="background-color:#fff0f0">&#39;email&#39;</span>];
+<span style="color:#080;font-weight:bold">if</span> (strlen(<span style="color:#963">$sender</span>) <span style="color:#333">===</span> <span style="color:#00d;font-weight:bold">0</span>) {
+    http_response_code(<span style="color:#00d;font-weight:bold">401</span>);
+    <span style="color:#080;font-weight:bold">echo</span>(<span style="background-color:#fff0f0">&#39;Unauthorized&#39;</span>);
+    <span style="color:#080;font-weight:bold">exit</span>();
+}
+<span style="color:#080;font-weight:bold">if</span> (<span style="color:#963">$_SERVER</span>[<span style="background-color:#fff0f0">&#39;REQUEST_METHOD&#39;</span>] <span style="color:#333">===</span> <span style="background-color:#fff0f0">&#39;POST&#39;</span>) {
+    <span style="color:#963">$token</span> <span style="color:#333">=</span> <span style="color:#963">$_POST</span>[<span style="background-color:#fff0f0">&#39;csrf_token&#39;</span>];
+    <span style="color:#963">$tokenSplit</span> <span style="color:#333">=</span> explode(<span style="background-color:#fff0f0">&#39;:&#39;</span>, <span style="color:#963">$token</span>);
+    <span style="color:#080;font-weight:bold">if</span> (count(<span style="color:#963">$tokenSplit</span>) <span style="color:#333">!==</span> <span style="color:#00d;font-weight:bold">3</span> <span style="color:#333">||</span> <span style="color:#963">$tokenSplit</span>[<span style="color:#00d;font-weight:bold">1</span>] <span style="color:#333">!==</span> <span style="color:#963">$sender</span>) {
+        http_response_code(<span style="color:#00d;font-weight:bold">400</span>);
+        <span style="color:#080;font-weight:bold">echo</span>(<span style="background-color:#fff0f0">&#39;Bad CSRF token&#39;</span>);
+        <span style="color:#080;font-weight:bold">exit</span>();
+    }
+    <span style="color:#963">$token</span> <span style="color:#333">=</span> sprintf(<span style="background-color:#fff0f0">&#39;%s:%s:&#39;</span>, <span style="color:#963">$tokenSplit</span>[<span style="color:#00d;font-weight:bold">0</span>], <span style="color:#963">$tokenSplit</span>[<span style="color:#00d;font-weight:bold">1</span>]);
+    <span style="color:#963">$hash</span> <span style="color:#333">=</span> sha1(<span style="color:#963">$token</span> <span style="color:#333">.</span> SECRET);
+    <span style="color:#080;font-weight:bold">if</span> (<span style="color:#963">$hash</span> <span style="color:#333">!==</span> <span style="color:#963">$tokenSplit</span>[<span style="color:#00d;font-weight:bold">2</span>]) {
+        http_response_code(<span style="color:#00d;font-weight:bold">400</span>);
+        <span style="color:#080;font-weight:bold">echo</span>(<span style="background-color:#fff0f0">&#39;Bad CSRF token&#39;</span>);
+        <span style="color:#080;font-weight:bold">exit</span>();
+    }
+    <span style="color:#080;font-weight:bold">if</span> (time() <span style="color:#333">-</span> intval(<span style="color:#963">$tokenSplit</span>[<span style="color:#00d;font-weight:bold">0</span>]) <span style="color:#333">&gt;</span> <span style="color:#00d;font-weight:bold">600</span>) {
+        <span style="color:#080;font-weight:bold">echo</span>(<span style="background-color:#fff0f0">&#39;CSRF token expired. Please try again&#39;</span>);
+    } <span style="color:#080;font-weight:bold">else</span> {
+        <span style="color:#963">$message</span> <span style="color:#333">=</span> <span style="color:#963">$_POST</span>[<span style="background-color:#fff0f0">&#39;message&#39;</span>];
+        <span style="color:#963">$receiver</span> <span style="color:#333">=</span> <span style="color:#963">$_POST</span>[<span style="background-color:#fff0f0">&#39;receiver&#39;</span>];
+        <span style="color:#080;font-weight:bold">echo</span>(<span style="background-color:#fff0f0">&#34;Send </span><span style="background-color:#eee">$message</span><span style="background-color:#fff0f0"> to </span><span style="background-color:#eee">$receiver</span><span style="background-color:#fff0f0">&#34;</span>);
+        <span style="color:#963">$message</span> <span style="color:#333">=</span> <span style="background-color:#fff0f0">&#39;&#39;</span>;
+        <span style="color:#963">$receiver</span> <span style="color:#333">=</span> <span style="background-color:#fff0f0">&#39;&#39;</span>;
+    }
+}
+<span style="color:#963">$token</span> <span style="color:#333">=</span> sprintf(<span style="background-color:#fff0f0">&#39;%d:%s:&#39;</span>, time(), <span style="color:#963">$sender</span>);
+<span style="color:#963">$token</span> <span style="color:#333">.=</span> sha1(<span style="color:#963">$token</span> <span style="color:#333">.</span> SECRET);
+<span style="color:#579">?&gt;</span>
+&lt;<span style="color:#070">p</span>&gt;Hello, <span style="color:#579">&lt;?php</span> <span style="color:#080;font-weight:bold">echo</span>(<span style="color:#963">$sender</span>) <span style="color:#579">?&gt;</span>!&lt;/<span style="color:#070">p</span>&gt;
+&lt;<span style="color:#070">form</span> <span style="color:#00c">method</span><span style="color:#333">=</span><span style="background-color:#fff0f0">&#34;post&#34;</span>&gt;
+&lt;<span style="color:#070">input</span> <span style="color:#00c">type</span><span style="color:#333">=</span><span style="background-color:#fff0f0">&#34;hidden&#34;</span> <span style="color:#00c">name</span><span style="color:#333">=</span><span style="background-color:#fff0f0">&#34;csrf_token&#34;</span> <span style="color:#00c">value</span><span style="color:#333">=</span><span style="background-color:#fff0f0">&#34;</span><span style="color:#579">&lt;?php</span> <span style="color:#080;font-weight:bold">echo</span>(<span style="color:#963">$token</span>) <span style="color:#579">?&gt;</span><span style="background-color:#fff0f0">&#34;</span>&gt;
+&lt;<span style="color:#070">input</span> <span style="color:#00c">name</span><span style="color:#333">=</span><span style="background-color:#fff0f0">&#34;message&#34;</span> <span style="color:#00c">placeholder</span><span style="color:#333">=</span><span style="background-color:#fff0f0">&#34;message&#34;</span> <span style="color:#00c">value</span><span style="color:#333">=</span><span style="background-color:#fff0f0">&#34;</span><span style="color:#579">&lt;?php</span> <span style="color:#080;font-weight:bold">echo</span>(<span style="color:#963">$message</span>) <span style="color:#579">?&gt;</span><span style="background-color:#fff0f0">&#34;</span>&gt;&lt;<span style="color:#070">br</span>&gt;
+&lt;<span style="color:#070">input</span> <span style="color:#00c">name</span><span style="color:#333">=</span><span style="background-color:#fff0f0">&#34;receiver&#34;</span> <span style="color:#00c">placeholder</span><span style="color:#333">=</span><span style="background-color:#fff0f0">&#34;receiver&#34;</span> <span style="color:#00c">value</span><span style="color:#333">=</span><span style="background-color:#fff0f0">&#34;</span><span style="color:#579">&lt;?php</span> <span style="color:#080;font-weight:bold">echo</span>(<span style="color:#963">$receiver</span>) <span style="color:#579">?&gt;</span><span style="background-color:#fff0f0">&#34;</span>&gt;&lt;<span style="color:#070">br</span>&gt;
+&lt;<span style="color:#070">button</span>&gt;Send&lt;/<span style="color:#070">button</span>&gt;
+&lt;/<span style="color:#070">form</span>&gt;
+</code></pre></div></li>
+</ul>
+
+<h2 id="cors-заголовки">CORS заголовки</h2>
+
+<p>Что же теперь делать злоумышленнику? Попытаться как-то украсть CSRF-токен. Например, следующим образом <a href="https://github.com/vporoshok/csrf-test/tree/stealToken">#stealToken</a>:</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-html" data-lang="html">&lt;<span style="color:#070">form</span> <span style="color:#00c">id</span><span style="color:#333">=</span><span style="background-color:#fff0f0">&#34;form&#34;</span> <span style="color:#00c">method</span><span style="color:#333">=</span><span style="background-color:#fff0f0">&#34;post&#34;</span> <span style="color:#00c">action</span><span style="color:#333">=</span><span style="background-color:#fff0f0">&#34;http://localhost:4000/form.php&#34;</span>&gt;
+    &lt;<span style="color:#070">input</span> <span style="color:#00c">name</span><span style="color:#333">=</span><span style="background-color:#fff0f0">&#34;message&#34;</span> <span style="color:#00c">value</span><span style="color:#333">=</span><span style="background-color:#fff0f0">&#34;some spam&#34;</span>/&gt;
+    &lt;<span style="color:#070">input</span> <span style="color:#00c">name</span><span style="color:#333">=</span><span style="background-color:#fff0f0">&#34;receiver&#34;</span> <span style="color:#00c">value</span><span style="color:#333">=</span><span style="background-color:#fff0f0">&#34;bob@mail.com&#34;</span>/&gt;
+&lt;/<span style="color:#070">form</span>&gt;
+&lt;<span style="color:#070">script</span>&gt;
+    <span style="color:#080;font-weight:bold">var</span> req <span style="color:#333">=</span> <span style="color:#080;font-weight:bold">new</span> XMLHttpRequest();
+    req.open(<span style="background-color:#fff0f0">&#39;GET&#39;</span>, <span style="background-color:#fff0f0">&#39;http://localhost:4000/form.php&#39;</span>);
+    req.addEventListener(<span style="background-color:#fff0f0">&#39;readystatechange&#39;</span>, e =&gt; {
+        <span style="color:#080;font-weight:bold">if</span> (req.readyState <span style="color:#333">!==</span> req.DONE) {
+            <span style="color:#080;font-weight:bold">return</span>;
+        }
+        <span style="color:#080;font-weight:bold">var</span> div <span style="color:#333">=</span> <span style="color:#007020">document</span>.createElement(<span style="background-color:#fff0f0">&#39;div&#39;</span>);
+        div.innerHTML <span style="color:#333">=</span> req.responseText;
+        <span style="color:#080;font-weight:bold">var</span> input <span style="color:#333">=</span> div.querySelector(<span style="background-color:#fff0f0">&#39;input[name=&#34;csrf_token&#34;]&#39;</span>);
+        <span style="color:#080;font-weight:bold">if</span> (input <span style="color:#333">==</span> <span style="color:#080;font-weight:bold">null</span>) {
+            <span style="color:#080;font-weight:bold">return</span>;
+        }
+        <span style="color:#080;font-weight:bold">var</span> form <span style="color:#333">=</span> <span style="color:#007020">document</span>.getElementById(<span style="background-color:#fff0f0">&#39;form&#39;</span>);
+        form.appendChild(input);
+        form.submit();
+    });
+    req.send();
+&lt;/<span style="color:#070">script</span>&gt;</code></pre></div>
+<p>Но такой запрос не выполнится, потому что браузер сделав запрос проверит в нём наличие заголовков <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS">Access-Control</a>. И если сайту злоумышленника доступ не разрешён, то ответ не вернётся в javascript. Более того, если мы посмотрим на логи нашего сервера, то увидим следующее:</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-log" data-lang="log">my_1   | 172.19.0.1 - - [28/May...+0000] &#34;GET /form.php HTTP/1.1&#34; 401 426 &#34;http://localhost:4001/&#34; &#34;Mozilla/.../603.1.30&#34;</code></pre></div>
+<p>Запрос поступил, но вернул 401 ошибку. Погодите, но ведь в браузере есть связанная с сессией cookie! Для того чтобы браузер передал ещё и cookie, необходимо добавить следующую строчку в скрипт:</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-js" data-lang="js">req.open(<span style="background-color:#fff0f0">&#39;GET&#39;</span>, <span style="background-color:#fff0f0">&#39;http://localhost:4000/form.php&#39;</span>);
+req.withCredentials <span style="color:#333">=</span> <span style="color:#080;font-weight:bold">true</span>;
+req.addEventListener(<span style="background-color:#fff0f0">&#39;readystatechange&#39;</span>, e =&gt; {...
+</code></pre></div>
+<p>Но к таким запросам предъявляется ещё больше требований по заголовкам. Итак, наш сайт кажется вполне защищённым от CSRF-атак. Но подождите, скажете вы, ведь если у злоумышленника не получилось даже запросить страницу с сайта по cookie, а у нас, например, очень умный фронтенд, а сервер предоставляет JSON REST API, так может нам эти свистопляски с CSRF токенами не нужны?</p>
+
+<h2 id="проверка-данных-вместо-заголовков">Проверка данных вместо заголовков</h2>
+
+<p>Действительно, ведь мы защищаемся от атаки обычной формой, которая по стандарту не может передавать json. Что ж давайте попробуем: уберём проверку по CSRF-токену, а данные будем принимать исключительно в виде <a href="https://github.com/vporoshok/csrf-test/tree/json">#json</a>.</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-php" data-lang="php"><span style="color:#888">&lt;!-- login.php --&gt;</span>
+<span style="color:#579">&lt;?php</span>
+    session_start();
+    <span style="color:#080;font-weight:bold">if</span> (<span style="color:#963">$_SERVER</span>[<span style="background-color:#fff0f0">&#39;REQUEST_METHOD&#39;</span>] <span style="color:#333">===</span> <span style="background-color:#fff0f0">&#39;POST&#39;</span>) {
+        <span style="color:#963">$dataRaw</span> <span style="color:#333">=</span> file_get_contents(<span style="background-color:#fff0f0">&#39;php://input&#39;</span>);
+        <span style="color:#963">$data</span> <span style="color:#333">=</span> json_decode(<span style="color:#963">$dataRaw</span>, <span style="color:#080;font-weight:bold">true</span>);
+        var_dump(<span style="color:#963">$data</span>);
+        <span style="color:#963">$_SESSION</span>[<span style="background-color:#fff0f0">&#39;email&#39;</span>] <span style="color:#333">=</span> <span style="color:#963">$data</span>[<span style="background-color:#fff0f0">&#39;email&#39;</span>];
+        header(<span style="background-color:#fff0f0">&#39;Location: /form.php&#39;</span>);
+        <span style="color:#080;font-weight:bold">exit</span>();
+    }
+<span style="color:#579">?&gt;</span>
+&lt;<span style="color:#070">form</span> <span style="color:#00c">name</span><span style="color:#333">=</span><span style="background-color:#fff0f0">&#34;login&#34;</span>&gt;
+    &lt;<span style="color:#070">input</span> <span style="color:#00c">name</span><span style="color:#333">=</span><span style="background-color:#fff0f0">&#34;email&#34;</span>&gt;
+    &lt;<span style="color:#070">button</span>&gt;Login&lt;/<span style="color:#070">button</span>&gt;
+&lt;/<span style="color:#070">form</span>&gt;
+&lt;<span style="color:#070">script</span>&gt;
+    <span style="color:#080;font-weight:bold">var</span> form <span style="color:#333">=</span> <span style="color:#007020">document</span>.forms.namedItem(<span style="background-color:#fff0f0">&#39;login&#39;</span>);
+    form.addEventListener(<span style="background-color:#fff0f0">&#39;submit&#39;</span>, e =&gt; {
+        e.preventDefault();
+        <span style="color:#080;font-weight:bold">var</span> email <span style="color:#333">=</span> form.querySelector(<span style="background-color:#fff0f0">&#39;input[name=&#34;email&#34;]&#39;</span>);
+        <span style="color:#080;font-weight:bold">var</span> data <span style="color:#333">=</span> {
+            email<span style="color:#333">:</span> email.value
+        };
+        <span style="color:#080;font-weight:bold">var</span> req <span style="color:#333">=</span> <span style="color:#080;font-weight:bold">new</span> XMLHttpRequest();
+        req.open(<span style="background-color:#fff0f0">&#39;POST&#39;</span>, <span style="background-color:#fff0f0">&#39;/login.php&#39;</span>);
+        req.setRequestHeader(<span style="background-color:#fff0f0">&#39;Content-Type&#39;</span>, <span style="background-color:#fff0f0">&#39;application/json&#39;</span>);
+        req.addEventListener(<span style="background-color:#fff0f0">&#39;readystatechange&#39;</span>, e =&gt; {
+            <span style="color:#080;font-weight:bold">if</span> (req.readyState <span style="color:#333">!==</span> req.DONE) {
+                <span style="color:#080;font-weight:bold">return</span>;
+            }
+            <span style="color:#080;font-weight:bold">if</span> (req.status <span style="color:#333">===</span> <span style="color:#00d;font-weight:bold">200</span>) {
+                <span style="color:#007020">window</span>.location <span style="color:#333">=</span> <span style="background-color:#fff0f0">&#39;/form.php&#39;</span>;
+            }
+        });
+        req.send(JSON.stringify(data));
+    });
+&lt;/<span style="color:#070">script</span>&gt;
+</code></pre></div><div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-php" data-lang="php"><span style="color:#888">&lt;!-- form.php --&gt;</span>
+<span style="color:#579">&lt;?php</span>
+    session_start();
+    <span style="color:#963">$sender</span> <span style="color:#333">=</span> <span style="color:#963">$_SESSION</span>[<span style="background-color:#fff0f0">&#39;email&#39;</span>];
+    <span style="color:#080;font-weight:bold">if</span> (strlen(<span style="color:#963">$sender</span>) <span style="color:#333">===</span> <span style="color:#00d;font-weight:bold">0</span>) {
+        http_response_code(<span style="color:#00d;font-weight:bold">401</span>);
+        <span style="color:#080;font-weight:bold">echo</span>(<span style="background-color:#fff0f0">&#39;Unauthorized&#39;</span>);
+        <span style="color:#080;font-weight:bold">exit</span>();
+    }
+    <span style="color:#080;font-weight:bold">if</span> (<span style="color:#963">$_SERVER</span>[<span style="background-color:#fff0f0">&#39;REQUEST_METHOD&#39;</span>] <span style="color:#333">===</span> <span style="background-color:#fff0f0">&#39;POST&#39;</span>) {
+        <span style="color:#963">$dataRaw</span> <span style="color:#333">=</span> file_get_contents(<span style="background-color:#fff0f0">&#39;php://input&#39;</span>);
+        <span style="color:#963">$data</span> <span style="color:#333">=</span> json_decode(<span style="color:#963">$dataRaw</span>, <span style="color:#080;font-weight:bold">true</span>);
+        <span style="color:#963">$message</span> <span style="color:#333">=</span> <span style="color:#963">$data</span>[<span style="background-color:#fff0f0">&#39;message&#39;</span>];
+        <span style="color:#963">$receiver</span> <span style="color:#333">=</span> <span style="color:#963">$data</span>[<span style="background-color:#fff0f0">&#39;receiver&#39;</span>];
+        <span style="color:#080;font-weight:bold">echo</span>(<span style="background-color:#fff0f0">&#34;Send </span><span style="background-color:#eee">$message</span><span style="background-color:#fff0f0"> to </span><span style="background-color:#eee">$receiver</span><span style="background-color:#fff0f0">&#34;</span>);
+    }
+<span style="color:#579">?&gt;</span>
+&lt;<span style="color:#070">p</span> <span style="color:#00c">id</span><span style="color:#333">=</span><span style="background-color:#fff0f0">&#34;state&#34;</span>&gt;&lt;/<span style="color:#070">p</span>&gt;
+&lt;<span style="color:#070">form</span> <span style="color:#00c">name</span><span style="color:#333">=</span><span style="background-color:#fff0f0">&#34;send&#34;</span>&gt;
+    &lt;<span style="color:#070">input</span> <span style="color:#00c">name</span><span style="color:#333">=</span><span style="background-color:#fff0f0">&#34;message&#34;</span> <span style="color:#00c">placeholder</span><span style="color:#333">=</span><span style="background-color:#fff0f0">&#34;message&#34;</span>&gt;&lt;<span style="color:#070">br</span>&gt;
+    &lt;<span style="color:#070">input</span> <span style="color:#00c">name</span><span style="color:#333">=</span><span style="background-color:#fff0f0">&#34;receiver&#34;</span> <span style="color:#00c">placeholder</span><span style="color:#333">=</span><span style="background-color:#fff0f0">&#34;receiver&#34;</span>&gt;&lt;<span style="color:#070">br</span>&gt;
+    &lt;<span style="color:#070">button</span>&gt;Send&lt;/<span style="color:#070">button</span>&gt;
+&lt;/<span style="color:#070">form</span>&gt;
+&lt;<span style="color:#070">script</span>&gt;
+    <span style="color:#080;font-weight:bold">var</span> form <span style="color:#333">=</span> <span style="color:#007020">document</span>.forms.namedItem(<span style="background-color:#fff0f0">&#39;send&#39;</span>);
+    <span style="color:#080;font-weight:bold">var</span> state <span style="color:#333">=</span> <span style="color:#007020">document</span>.getElementById(<span style="background-color:#fff0f0">&#39;state&#39;</span>);
+    form.addEventListener(<span style="background-color:#fff0f0">&#39;submit&#39;</span>, e =&gt; {
+        e.preventDefault();
+        <span style="color:#080;font-weight:bold">var</span> message <span style="color:#333">=</span> form.querySelector(<span style="background-color:#fff0f0">&#39;input[name=&#34;message&#34;]&#39;</span>);
+        <span style="color:#080;font-weight:bold">var</span> receiver <span style="color:#333">=</span> form.querySelector(<span style="background-color:#fff0f0">&#39;input[name=&#34;receiver&#34;]&#39;</span>);
+        <span style="color:#080;font-weight:bold">var</span> data <span style="color:#333">=</span> {
+            message<span style="color:#333">:</span> message.value,
+            receiver<span style="color:#333">:</span> receiver.value
+        };
+        <span style="color:#080;font-weight:bold">var</span> req <span style="color:#333">=</span> <span style="color:#080;font-weight:bold">new</span> XMLHttpRequest();
+        req.open(<span style="background-color:#fff0f0">&#39;POST&#39;</span>, <span style="background-color:#fff0f0">&#39;/form.php&#39;</span>);
+        req.setRequestHeader(<span style="background-color:#fff0f0">&#39;Content-Type&#39;</span>, <span style="background-color:#fff0f0">&#39;application/json&#39;</span>);
+        req.addEventListener(<span style="background-color:#fff0f0">&#39;readystatechange&#39;</span>, e =&gt; {
+            <span style="color:#080;font-weight:bold">if</span> (req.readyState <span style="color:#333">!==</span> req.DONE) {
+                <span style="color:#080;font-weight:bold">return</span>;
+            }
+            <span style="color:#080;font-weight:bold">if</span> (req.status <span style="color:#333">===</span> <span style="color:#00d;font-weight:bold">200</span>) {
+                state.innerHTML <span style="color:#333">=</span> <span style="background-color:#fff0f0">`Send </span><span style="background-color:#eee">${</span>message.value<span style="background-color:#eee">}</span><span style="background-color:#fff0f0"> to </span><span style="background-color:#eee">${</span>receiver.value<span style="background-color:#eee">}</span><span style="background-color:#fff0f0">`</span>;
+                message.value <span style="color:#333">=</span> <span style="background-color:#fff0f0">&#39;&#39;</span>;
+                receiver.value <span style="color:#333">=</span> <span style="background-color:#fff0f0">&#39;&#39;</span>;
+            }
+        });
+        req.send(JSON.stringify(data));
+    });
+&lt;/<span style="color:#070">script</span>&gt;
+</code></pre></div>
+<h2 id="опасность-не-уходит">Опасность не уходит</h2>
+
+<p>Усложнили клиент, хотя если всё это обильно полить каким-нибудь фреймворком, то получится вполне хорошо. Однако! Есть тут стандарт <a href="https://www.w3.org/TR/html-json-forms/">https://www.w3.org/TR/html-json-forms/</a>, по которому надежда на то, что json исключительно прерогатива xhr может не оправдаться. Он, конечно, отменён, но кто может ручаться, что завтра его не вернут? Более того, если не проверять Content-Type, то можно нарваться на такую ситуацию: <a href="http://pentestmonkey.net/blog/csrf-xml-post-request">http://pentestmonkey.net/blog/csrf-xml-post-request</a>. Модифицируем нашего зловреда <a href="https://github.com/vporoshok/csrf-test/tree/textPlain">#textPlain</a>:</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-html" data-lang="html">&lt;<span style="color:#070">form</span> <span style="color:#00c">id</span><span style="color:#333">=</span><span style="background-color:#fff0f0">&#34;form&#34;</span> <span style="color:#00c">method</span><span style="color:#333">=</span><span style="background-color:#fff0f0">&#34;post&#34;</span> <span style="color:#00c">action</span><span style="color:#333">=</span><span style="background-color:#fff0f0">&#34;http://localhost:4000/form.php&#34;</span> <span style="color:#00c">enctype</span><span style="color:#333">=</span><span style="background-color:#fff0f0">&#34;text/plain&#34;</span>&gt;
+    &lt;<span style="color:#070">input</span> <span style="color:#00c">name</span><span style="color:#333">=</span><span style="background-color:#fff0f0">&#39;{&#34;equals&#34;:&#34;&#39;</span> <span style="color:#00c">value</span><span style="color:#333">=</span><span style="background-color:#fff0f0">&#39;&#34;, &#34;message&#34;: &#34;SPAM&#34;, &#34;receiver&#34;: &#34;bob@mail.com&#34;}&#39;</span>&gt;
+&lt;/<span style="color:#070">form</span>&gt;
+&lt;<span style="color:#070">script</span>&gt;
+    <span style="color:#080;font-weight:bold">var</span> form <span style="color:#333">=</span> <span style="color:#007020">document</span>.getElementById(<span style="background-color:#fff0f0">&#39;form&#39;</span>);
+    form.submit();
+&lt;/<span style="color:#070">script</span>&gt;</code></pre></div>
+<p>Такие дела. Есть способы от такого защититься такие, как, например, всегда проверять Content-Type, требовать наличия заголовка X-Requested-With или X-CSRF-Token. Так или иначе все эти способы сводятся к тому, чтобы убедиться, что запрос сделан именно через xhr, а не обычной формой.
+Давайте теперь посмотрим с другой стороны. К нашему api вполне вероятно будет обращаться не только наш фронтенд, но, например, скрипты или вы сами через консоль. И вот здесь таскание cookie выглядит уже совсем малопривлекательным. Есть, конечно, такие инструменты как <a href="https://httpie.org/">https://httpie.org/</a> с сессиями, но почему бы не передавать авторизационный токен явно в заголовке Authorization?</p>
+
+<h2 id="выводы">Выводы</h2>
+
+<ul>
+<li>если у вас тонкий клиент, тогда использование cookie и защита её с помощью csrf токена просто необходима;</li>
+<li>если у вас толстый клиент, а серверная часть предоставляет исключительно JSON REST API, не стоит усложнять себе жизнь вознёй с cookie. Отдавайте авторизационный токен явно в ответе сервера, на клиенте храните его в localStorage или sessionStorage, и при каждом запросе устанавливайте заголовок Authorization с этим токеном.</li>
+</ul>
+
+<h2 id="полезные-ссылки">Полезные ссылки</h2>
+
+<ul>
+<li>Отличная статья, не теряющая своей актуальности. Рассматривает три типа уязвимостей: MITM, CSRF и XSS. Продвигает OAuth (en) <a href="http://sitr.us/2011/08/26/cookies-are-bad-for-you.html">http://sitr.us/2011/08/26/cookies-are-bad-for-you.html</a></li>
+<li>В статье рассматриваются некоторые способы защиты от CSRF атак (ru) <a href="https://habrahabr.ru/post/318748/">https://habrahabr.ru/post/318748/</a></li>
+<li>Ещё один разбор применения токенов (ru) <a href="https://learn.javascript.ru/csrf">https://learn.javascript.ru/csrf</a></li>
+</ul>
+
+</div>
+
+  
+<footer class='entry-footer'>
+  <div class='container sep-before'><div class='categories'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <path d="M22,19a2,2,0,0,1-2,2H4a2,2,0,0,1-2-2V5A2,2,0,0,1,4,3H9l2,3h9a2,2,0,0,1,2,2Z"/>
+  
+</svg>
+<span class='screen-reader-text'>category: </span><a class='category' href='/categories/develop/'>Разработка</a></div>
+<div class='tags'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <path d="M20.59,13.41l-7.17,7.17a2,2,0,0,1-2.83,0L2,12V2H12l8.59,8.59A2,2,0,0,1,20.59,13.41Z"/>
+  <line x1="7" y1="7" x2="7" y2="7"/>
+  
+</svg>
+<span class='screen-reader-text'>Тэги: </span><a class='tag' href='/tags/csrf/'>CSRF</a>, <a class='tag' href='/tags/php/'>PHP</a>, <a class='tag' href='/tags/security/'>security</a>, <a class='tag' href='/tags/web/'>web</a></div>
+
+  </div>
+</footer>
+
+
+</article>
+
+<nav class='entry-nav'>
+  <div class='container'><div class='next-entry sep-before'>
+      <a href='/post/2017/06/orgraph-resolve/'>
+        <span class='screen-reader-text'>Следующая запись: </span>Разрешение орграфа<span aria-hidden='true'>Следующий <svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <line x1="4" y1="12" x2="20" y2="12"/>
+  <polyline points="14 6 20 12 14 18"/>
+  
+</svg>
+</span>
+      </a>
+    </div></div>
+</nav>
+
+
+
+
+      </main>
+
+      <footer id='footer' class='footer'>
+        <div class='container sep-before'><div class='copyright'>
+  <p>Материалы распространяются по <a rel="noreferrer" href="https://creativecommons.org/licenses/by/4.0/" target="_blank">лицензии CC BY</a> &copy; 2018-2021 vporoshok <br>Увидели ошибку? Буду рад <a rel="noreferrer" href="https://github.com/vporoshok/vporoshok.github.io" target="_blank">PR&rsquo;у</a></p>
+</div>
+
+        </div>
+      </footer>
+
+    </div>
+  </div><script>window.__assets_js_src="/assets/js/"</script>
+
+<script src='/assets/js/main.67d669ac.js'></script>
+
+</body>
+
+</html>
+

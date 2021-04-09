@@ -1,0 +1,767 @@
+<!DOCTYPE html>
+<html lang='ru'><head>
+  <meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='description' content='По работе уже не первый раз сталкиваюсь с задачей разрешения графа, например, получить полный список зависимостей пакета или получить список групп пользователя, где группы могут включать друг друга. (Вообще граф зависимостей куда сложнее текущей темы, потому как дуги имеют маски версий, так что отложим этот вопрос на будущее.)
+Итак, давайте сформулируем и ограничим задачу. У нас есть (в общем случае) ориентированный граф. Каждая вершина имеет уникальное имя и связанные с ней данные.'>
+<meta name='theme-color' content='#ffcd00'>
+
+<meta property='og:title' content='Разрешение орграфа • Где-то на дальнем сервере'>
+<meta property='og:description' content='По работе уже не первый раз сталкиваюсь с задачей разрешения графа, например, получить полный список зависимостей пакета или получить список групп пользователя, где группы могут включать друг друга. (Вообще граф зависимостей куда сложнее текущей темы, потому как дуги имеют маски версий, так что отложим этот вопрос на будущее.)
+Итак, давайте сформулируем и ограничим задачу. У нас есть (в общем случае) ориентированный граф. Каждая вершина имеет уникальное имя и связанные с ней данные.'>
+<meta property='og:url' content='https://vporoshok.me/post/2017/06/orgraph-resolve/'>
+<meta property='og:site_name' content='Где-то на дальнем сервере'>
+<meta property='og:type' content='article'><meta property='og:image' content='https://vporoshok.me/post/2017/06/img/net.jpg'><meta property='article:section' content='post'><meta property='article:tag' content='algorithm'><meta property='article:tag' content='graph'><meta property='article:tag' content='go'><meta property='article:published_time' content='2017-06-04T17:00:30Z'/><meta property='article:modified_time' content='2020-07-04T13:36:24&#43;04:00'/><meta name='twitter:card' content='summary_large_image'><meta property='twitter:image' content='https://vporoshok.me/post/2017/06/img/net.jpg'><meta property='twitter:image:alt' content='Photo by Andrés Canchón on Unsplash'>
+
+<meta name="generator" content="Hugo 0.57.2" />
+
+  <title>Разрешение орграфа • Где-то на дальнем сервере</title>
+  <link rel='canonical' href='https://vporoshok.me/post/2017/06/orgraph-resolve/'>
+  
+  
+  <link rel='icon' href='/favicon.ico'>
+<link rel='stylesheet' href='/assets/css/main.6a060eb7.css'><link rel='stylesheet' href='/assets/custom.css'><style>
+:root{--color-accent:#ffcd00;}
+</style>
+
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+	ga('create', 'UA-41042060-2', 'auto');
+	
+	ga('send', 'pageview');
+}
+</script>
+<script async src='https://www.google-analytics.com/analytics.js'></script>
+
+  
+
+</head>
+<body class='page type-post has-cover has-sidebar'>
+
+  <div class='site'><div id='sidebar' class='sidebar'>
+  <a class='screen-reader-text' href='#main-menu'>Перейти к основному меню</a>
+
+  <div class='container'><section class='widget widget-about sep-after'>
+  <header>
+    
+    <div class='logo'>
+      <a href='/'>
+        <img src='/images/logo.jpg' alt="Вернуться на главную">
+      </a>
+    </div>
+    
+    <h2 class='title site-title '>
+    vporoshok.me
+    </h2>
+    <div class='desc'>
+    Где-то на дальнем сервере
+    </div>
+  </header>
+
+</section>
+<section class='widget widget-social_menu sep-after'><nav aria-label='Соцсети'>
+    <ul><li>
+        <a href='https://twitter.com/vporoshok' target='_blank' rel='noopener'>
+          <span class='screen-reader-text'>Открыть Twitter-акаунт в новой вкладке</span><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"/>
+  
+</svg>
+</a>
+      </li><li>
+        <a href='https://github.com/vporoshok' target='_blank' rel='noopener'>
+          <span class='screen-reader-text'>Открыть Github-акаунт в новой вкладке</span><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/>
+  
+</svg>
+</a>
+      </li><li>
+        <a href='mailto:vporoshok@gmail.com' target='_blank' rel='noopener'>
+          <span class='screen-reader-text'>Связаться через Email</span><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+  <polyline points="22,6 12,13 2,6"/>
+  
+</svg>
+</a>
+      </li><li>
+        <a href='https://t.me/vporoshok' target='_blank' rel='noopener'>
+          <span class='screen-reader-text'>Открыть Telegram-акаунт в новой вкладке</span><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <path d="m 22.05,1.577 c -0.393,-0.016 -0.784,0.08 -1.117,0.235 -0.484,0.186 -4.92,1.902 -9.41,3.64 C 9.263,6.325 7.005,7.198 5.267,7.867 3.53,8.537 2.222,9.035 2.153,9.059 c -0.46,0.16 -1.082,0.362 -1.61,0.984 -0.79581202,1.058365 0.21077405,1.964825 1.004,2.499 1.76,0.564 3.58,1.102 5.087,1.608 0.556,1.96 1.09,3.927 1.618,5.89 0.174,0.394 0.553,0.54 0.944,0.544 l -0.002,0.02 c 0,0 0.307,0.03 0.606,-0.042 0.3,-0.07 0.677,-0.244 1.02,-0.565 0.377,-0.354 1.4,-1.36 1.98,-1.928 l 4.37,3.226 0.035,0.02 c 0,0 0.484,0.34 1.192,0.388 0.354,0.024 0.82,-0.044 1.22,-0.337 0.403,-0.294 0.67,-0.767 0.795,-1.307 0.374,-1.63 2.853,-13.427 3.276,-15.38 L 23.676,4.725 C 23.972,3.625 23.863,2.617 23.18,2.02 22.838,1.723 22.444,1.593 22.05,1.576 Z"/>
+  
+</svg>
+</a>
+      </li></ul>
+  </nav>
+</section><section class='widget widget-sidebar_menu sep-after'><nav id='sidebar-menu' class='menu sidebar-menu' aria-label='Боковое меню'>
+    <div class='container'>
+      <ul><li class='item'>
+  <a href='/categories/algorithm/'>Алгоритмы</a></li><li class='item'>
+  <a href='/categories/develop/'>Разработка</a></li><li class='item'>
+  <a href='/categories/life-style/'>Образ жизни</a></li><li class='item'>
+  <a href='/categories/book/'>Книги</a></li><li class='item'>
+  <a href='/slides/'>Презентации</a></li><li class='item'>
+  <a href='/categories/project/'>Проекты</a></li></ul>
+    </div>
+  </nav>
+
+</section><section class='widget widget-taxonomy_cloud sep-after'>
+  <header>
+    <h4 class='title widget-title'>Тэги</h4>
+  </header>
+
+  <div class='container list-container'>
+  <ul class='list taxonomy-cloud no-shuffle'><li>
+        <a href='/tags/algorithm/' style='font-size:1em'>algorithm</a>
+      </li><li>
+        <a href='/tags/angular/' style='font-size:1em'>angular</a>
+      </li><li>
+        <a href='/tags/architect/' style='font-size:1.625em'>architect</a>
+      </li><li>
+        <a href='/tags/blog/' style='font-size:1em'>blog</a>
+      </li><li>
+        <a href='/tags/checklist/' style='font-size:1.375em'>checklist</a>
+      </li><li>
+        <a href='/tags/complexity/' style='font-size:1.5em'>complexity</a>
+      </li><li>
+        <a href='/tags/csrf/' style='font-size:1em'>CSRF</a>
+      </li><li>
+        <a href='/tags/data-structure/' style='font-size:1.375em'>data-structure</a>
+      </li><li>
+        <a href='/tags/distributed-system/' style='font-size:1em'>distributed system</a>
+      </li><li>
+        <a href='/tags/event/' style='font-size:1em'>event</a>
+      </li><li>
+        <a href='/tags/git/' style='font-size:1em'>git</a>
+      </li><li>
+        <a href='/tags/go/' style='font-size:2em'>go</a>
+      </li><li>
+        <a href='/tags/graph/' style='font-size:1.125em'>graph</a>
+      </li><li>
+        <a href='/tags/hackathon/' style='font-size:1em'>hackathon</a>
+      </li><li>
+        <a href='/tags/keynote/' style='font-size:1em'>keynote</a>
+      </li><li>
+        <a href='/tags/logging/' style='font-size:1em'>logging</a>
+      </li><li>
+        <a href='/tags/management/' style='font-size:1.125em'>management</a>
+      </li><li>
+        <a href='/tags/memory/' style='font-size:1.25em'>memory</a>
+      </li><li>
+        <a href='/tags/microservices/' style='font-size:1.125em'>microservices</a>
+      </li><li>
+        <a href='/tags/orgmode/' style='font-size:1em'>orgmode</a>
+      </li><li>
+        <a href='/tags/php/' style='font-size:1em'>PHP</a>
+      </li><li>
+        <a href='/tags/python/' style='font-size:1.125em'>python</a>
+      </li><li>
+        <a href='/tags/rules/' style='font-size:1.125em'>rules</a>
+      </li><li>
+        <a href='/tags/rxjs/' style='font-size:1em'>rxjs</a>
+      </li><li>
+        <a href='/tags/scheme/' style='font-size:1.125em'>scheme</a>
+      </li><li>
+        <a href='/tags/scrum/' style='font-size:1.125em'>scrum</a>
+      </li><li>
+        <a href='/tags/security/' style='font-size:1em'>security</a>
+      </li><li>
+        <a href='/tags/sicp/' style='font-size:1.125em'>sicp</a>
+      </li><li>
+        <a href='/tags/sorting/' style='font-size:1em'>sorting</a>
+      </li><li>
+        <a href='/tags/state-machine/' style='font-size:1em'>state-machine</a>
+      </li><li>
+        <a href='/tags/team-lead/' style='font-size:1em'>team-lead</a>
+      </li><li>
+        <a href='/tags/testing/' style='font-size:1.125em'>testing</a>
+      </li><li>
+        <a href='/tags/tips-and-tricks/' style='font-size:1.25em'>tips and tricks</a>
+      </li><li>
+        <a href='/tags/toc/' style='font-size:1em'>toc</a>
+      </li><li>
+        <a href='/tags/tutorial/' style='font-size:1.125em'>tutorial</a>
+      </li><li>
+        <a href='/tags/typescript/' style='font-size:1em'>typescript</a>
+      </li><li>
+        <a href='/tags/web/' style='font-size:1em'>web</a>
+      </li><li>
+        <a href='/tags/work/' style='font-size:1em'>work</a>
+      </li></ul>
+</div>
+
+
+</section>
+</div>
+
+  <div class='sidebar-overlay'></div>
+</div><div class='main'><nav id='main-menu' class='menu main-menu' aria-label='Основное меню'>
+  <div class='container'>
+    <a class='screen-reader-text' href='#content'>Перейти к содержимому</a>
+
+<button id='sidebar-toggler' class='sidebar-toggler' aria-controls='sidebar'>
+  <span class='screen-reader-text'>Скрыть / показать боковую панель</span>
+  <span class='open'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <line x1="3" y1="12" x2="21" y2="12" />
+  <line x1="3" y1="6" x2="21" y2="6" />
+  <line x1="3" y1="18" x2="21" y2="18" />
+  
+</svg>
+</span>
+  <span class='close'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <line x1="18" y1="6" x2="6" y2="18" />
+  <line x1="6" y1="6" x2="18" y2="18" />
+  
+</svg>
+</span>
+</button>
+    <ul><li class='item'>
+        <a href='/post/'>Блог</a>
+      </li><li class='item'>
+        <a href='/page/about/'>Обо мне</a>
+      </li></ul>
+  </div>
+</nav><div class='header-widgets'>
+        <div class='container'></div>
+      </div>
+
+      <header id='header' class='header site-header'>
+        <div class='container sep-after'>
+          <div class='header-info'><p class='site-title title'>Где-то на дальнем сервере</p><p class='desc site-desc'>Заметки о программировании и не только</p>
+          </div>
+        </div>
+      </header>
+
+      <main id='content'>
+
+
+<article lang='ru' class='entry'>
+  <header class='header entry-header'>
+  <div class='container sep-after'>
+    <div class='header-info'>
+      <h1 class='title'>Разрешение орграфа</h1>
+      
+
+    </div>
+    
+<div class='entry-meta'>
+  <span class='posted-on'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+  <line x1="16" y1="2" x2="16" y2="6"/>
+  <line x1="8" y1="2" x2="8" y2="6"/>
+  <line x1="3" y1="10" x2="21" y2="10"/>
+  
+</svg>
+<span class='screen-reader-text'>Опубликовано </span>
+  <time class='entry-date' datetime='2017-06-04T17:00:30Z'>2017-06-04</time>
+</span>
+
+  
+  
+<span class='reading-time'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <circle cx="12" cy="12" r="10"/>
+  <polyline points="12 6 12 12 15 15"/>
+  
+</svg>
+8 минут на чтение
+</span>
+
+
+  
+</div>
+
+
+  </div>
+</header>
+
+  <div class='entry-cover'>
+  <figure class='container cover-normal'>
+    <img src='/post/2017/06/img/net.jpg' alt='Photo by Andrés Canchón on Unsplash'/>
+    
+      
+      <figcaption class='container'>
+        <span>Photo by Andrés Canchón on Unsplash</span>
+      </figcaption>
+      
+    
+  </figure>
+</div>
+  
+<details class='container entry-toc'>
+  <summary class='title'>
+    <span>Оглавление</span>
+  </summary>
+  
+</details>
+
+
+  <div class='container entry-content'>
+  <p>По работе уже не первый раз сталкиваюсь с задачей разрешения графа, например, получить полный список зависимостей пакета или получить список групп пользователя, где группы могут включать друг друга. (Вообще граф зависимостей куда сложнее текущей темы, потому как дуги имеют маски версий, так что отложим этот вопрос на будущее.)</p>
+
+<p>Итак, давайте сформулируем и ограничим задачу. У нас есть (в общем случае) ориентированный граф. Каждая вершина имеет уникальное имя и связанные с ней данные. Также отметим, что этот граф очень редко меняется в сравнении с запросом на разрешение зависимостей. На вход нам даются несколько имён вершин, мы должны вернуть список вершин, которые достижимы из заданных, или из которых можно достигнуть заданные (разрешить исходящий подграф или входящий).</p>
+
+<p>Для решения задачи есть 2 алгоритма: поиск в глубину и поиск в ширину. Воспользуемся поиском в ширину. Для простоты описания рассмотрим разрешение исходящего графа. Суть алгоритма сводится к следующему:</p>
+
+<ol>
+<li>заведём очередь вершин графа;</li>
+<li>добавим в очередь заданные на старте вершины;</li>
+<li>пока очередь не пуста извлекаем вершину из очереди;</li>
+<li>для всех вершин достижимых из вершины, взятой из очереди: если вершина ещё не просмотрена, то отмечаем её как просмотренную и добавляем в очередь;</li>
+<li>вершину взятую из очереди помещаем в результат;</li>
+</ol>
+
+<p>Всё достаточно просто, за исключением двух вопросов:</p>
+
+<ol>
+<li>как хранить очередь, ведь если у нас окажется полный граф, то в очереди окажутся все вершины графа?</li>
+<li>что значит пометим вершину как просмотренную и как потом узнать метку этой вершины?</li>
+</ol>
+
+<p>На первый вопрос ответ содержится в шаге 5. Все вершины из очереди попадают в результат. Так если они всё равно попадут в результат, то почему бы результат и не использовать как очередь, просто завести указатель на начало очереди, а когда этот указатель догонит конец результата, это будет означать, что очередь пуста.</p>
+
+<p>На второй вопрос ответ не столь прост. В постановке задачи мы упомянули, что каждая вершина имеет имя. И именно по именам происходит доступ к вершинам извне. То есть мы должны хранить вершины в хеш-таблице по их именам (или использовать деревья поиска, хотя в большинстве случаев время доступа важнее перерасхода памяти). И для хранения меток тоже хочется использовать хеш-таблицу. Но тут возникает другая проблема: одно дело хеш-таблица, которая построена один раз, а потом мы из неё читаем, совсем другое дело это строить огромную хеш-таблицу на каждый запрос. И дело даже не в расходе памяти, а в скорости её выделения/очистки. Давайте вернёмся к ограничениям: граф очень редко меняется в сравнении с запросом на разрешение зависимостей. Давайте на момент построения графа давать его вершинам числовые индексы. Тогда для хранения меток мы можем использовать булевый список длинной в количество вершин, ну, или пойти дальше и использовать битовые маски чтобы сократить количество используемой памяти ещё в 8 раз.</p>
+
+<p>Вроде теперь непонятных мест не осталось, приступим к реализации:
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#080;font-weight:bold">package</span> graph
+
+<span style="color:#080;font-weight:bold">import</span> (
+	<span style="background-color:#fff0f0">&#34;fmt&#34;</span>
+)
+
+<span style="color:#080;font-weight:bold">type</span> direction <span style="color:#339;font-weight:bold">int8</span>
+
+<span style="color:#080;font-weight:bold">const</span> (
+	<span style="color:#888">// In is a incoming direction
+</span><span style="color:#888"></span>	In direction = <span style="color:#080;font-weight:bold">iota</span>
+	<span style="color:#888">// Out is a outgoing direction
+</span><span style="color:#888"></span>	Out
+)
+
+<span style="color:#080;font-weight:bold">type</span> vertex <span style="color:#080;font-weight:bold">struct</span> {
+	id   <span style="color:#339;font-weight:bold">int</span>
+	name <span style="color:#080;font-weight:bold">interface</span>{}
+	data <span style="color:#080;font-weight:bold">interface</span>{}
+	link [<span style="color:#00d;font-weight:bold">2</span>][]<span style="color:#333">*</span>vertex
+}
+
+<span style="color:#080;font-weight:bold">func</span> (v <span style="color:#333">*</span>vertex) <span style="color:#06b;font-weight:bold">String</span>() <span style="color:#339;font-weight:bold">string</span> {
+	<span style="color:#080;font-weight:bold">return</span> fmt.<span style="color:#06b;font-weight:bold">Sprintf</span>(<span style="background-color:#fff0f0">&#34;%d:%s&#34;</span>, v.id, v.name)
+}
+
+<span style="color:#080;font-weight:bold">func</span> (v <span style="color:#333">*</span>vertex) <span style="color:#06b;font-weight:bold">addLink</span>(dir direction, u <span style="color:#333">*</span>vertex) <span style="color:#339;font-weight:bold">bool</span> {
+	<span style="color:#080;font-weight:bold">if</span> <span style="color:#007020">len</span>(v.link[dir]) <span style="color:#333">==</span> <span style="color:#00d;font-weight:bold">0</span> {
+		v.link[dir] = <span style="color:#007020">append</span>(v.link[dir], u)
+
+		<span style="color:#080;font-weight:bold">return</span> <span style="color:#080;font-weight:bold">true</span>
+	}
+
+	<span style="color:#080;font-weight:bold">var</span> l, r, c <span style="color:#339;font-weight:bold">int</span>
+
+	l = <span style="color:#00d;font-weight:bold">0</span>
+	r = <span style="color:#007020">len</span>(v.link[dir]) <span style="color:#333">-</span> <span style="color:#00d;font-weight:bold">1</span>
+	<span style="color:#080;font-weight:bold">for</span> l &lt; r {
+		c = l <span style="color:#333">+</span> (r<span style="color:#333">-</span>l)<span style="color:#333">/</span><span style="color:#00d;font-weight:bold">2</span>
+		<span style="color:#080;font-weight:bold">if</span> v.link[dir][c].id <span style="color:#333">==</span> u.id {
+
+			<span style="color:#080;font-weight:bold">return</span> <span style="color:#080;font-weight:bold">false</span>
+		}
+		<span style="color:#080;font-weight:bold">if</span> v.link[dir][c].id &lt; u.id {
+			l = c <span style="color:#333">+</span> <span style="color:#00d;font-weight:bold">1</span>
+		} <span style="color:#080;font-weight:bold">else</span> {
+			r = c
+		}
+	}
+	<span style="color:#080;font-weight:bold">if</span> v.link[dir][r].id <span style="color:#333">==</span> u.id {
+
+		<span style="color:#080;font-weight:bold">return</span> <span style="color:#080;font-weight:bold">false</span>
+	}
+	<span style="color:#080;font-weight:bold">if</span> v.link[dir][r].id &lt; u.id {
+		v.link[dir] = <span style="color:#007020">append</span>(v.link[dir], u)
+	} <span style="color:#080;font-weight:bold">else</span> {
+		v.link[dir] = <span style="color:#007020">append</span>(v.link[dir], <span style="color:#080;font-weight:bold">nil</span>)
+		<span style="color:#007020">copy</span>(v.link[dir][r<span style="color:#333">+</span><span style="color:#00d;font-weight:bold">1</span>:], v.link[dir][r:])
+		v.link[dir][r] = u
+	}
+
+	<span style="color:#080;font-weight:bold">return</span> <span style="color:#080;font-weight:bold">true</span>
+}</code></pre></div></p>
+
+<p>Структура <code>vertex</code> описывает вершину со связями до других вершин. Для хранения связей используется двойной список <code>link</code>. Также при добавлении связи мы должны проверить что связь не была представлена ранее, для этого используем бинарный поиск по установленным ранее связям. Метод <code>String</code> использовался для отладки, впрочем мешать не будет.</p>
+
+<p>Также опишем битовый массив меток:
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#080;font-weight:bold">package</span> graph
+
+<span style="color:#080;font-weight:bold">type</span> labels []<span style="color:#339;font-weight:bold">uint8</span>
+
+<span style="color:#080;font-weight:bold">func</span> <span style="color:#06b;font-weight:bold">newLabels</span>(n <span style="color:#339;font-weight:bold">int</span>) labels {
+	l <span style="color:#333">:=</span> <span style="color:#007020">make</span>(labels, n<span style="color:#333">/</span><span style="color:#00d;font-weight:bold">8</span><span style="color:#333">+</span><span style="color:#00d;font-weight:bold">1</span>)
+	<span style="color:#080;font-weight:bold">for</span> i <span style="color:#333">:=</span> <span style="color:#080;font-weight:bold">range</span> l {
+		l[i] <span style="color:#333">&amp;=</span> <span style="color:#00d;font-weight:bold">0</span>
+	}
+
+	<span style="color:#080;font-weight:bold">return</span> l
+}
+
+<span style="color:#080;font-weight:bold">func</span> (l labels) <span style="color:#06b;font-weight:bold">check</span>(n <span style="color:#339;font-weight:bold">int</span>) <span style="color:#339;font-weight:bold">bool</span> {
+	<span style="color:#080;font-weight:bold">return</span> l[n<span style="color:#333">/</span><span style="color:#00d;font-weight:bold">8</span>]<span style="color:#333">&amp;</span>(<span style="color:#007020">uint8</span>(<span style="color:#00d;font-weight:bold">1</span>)<span style="color:#333">&lt;&lt;</span><span style="color:#007020">uint</span>(n<span style="color:#333">%</span><span style="color:#00d;font-weight:bold">8</span>)) &gt; <span style="color:#00d;font-weight:bold">0</span>
+}
+
+<span style="color:#080;font-weight:bold">func</span> (l labels) <span style="color:#06b;font-weight:bold">set</span>(n <span style="color:#339;font-weight:bold">int</span>) {
+	l[n<span style="color:#333">/</span><span style="color:#00d;font-weight:bold">8</span>] <span style="color:#333">|=</span> <span style="color:#007020">uint8</span>(<span style="color:#00d;font-weight:bold">1</span>) <span style="color:#333">&lt;&lt;</span> <span style="color:#007020">uint</span>(n<span style="color:#333">%</span><span style="color:#00d;font-weight:bold">8</span>)
+}</code></pre></div></p>
+
+<p>Ну, и собственно сам граф:
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#080;font-weight:bold">package</span> graph
+
+<span style="color:#080;font-weight:bold">import</span> (
+	<span style="background-color:#fff0f0">&#34;sync&#34;</span>
+
+	<span style="background-color:#fff0f0">&#34;github.com/pkg/errors&#34;</span>
+)
+
+<span style="color:#888">// Graph is a main object of this package
+</span><span style="color:#888"></span><span style="color:#080;font-weight:bold">type</span> Graph <span style="color:#080;font-weight:bold">struct</span> {
+	sync.RWMutex
+	vertices <span style="color:#080;font-weight:bold">map</span>[<span style="color:#080;font-weight:bold">interface</span>{}]<span style="color:#333">*</span>vertex
+
+	labPool sync.Pool
+	verPool sync.Pool
+}
+
+<span style="color:#888">// New Graph constructor
+</span><span style="color:#888"></span><span style="color:#080;font-weight:bold">func</span> <span style="color:#06b;font-weight:bold">New</span>(V <span style="color:#080;font-weight:bold">map</span>[<span style="color:#080;font-weight:bold">interface</span>{}]<span style="color:#080;font-weight:bold">interface</span>{}, E [][<span style="color:#00d;font-weight:bold">2</span>]<span style="color:#080;font-weight:bold">interface</span>{}) <span style="color:#333">*</span>Graph {
+	g <span style="color:#333">:=</span> <span style="color:#333">&amp;</span>Graph{
+		vertices: <span style="color:#007020">make</span>(<span style="color:#080;font-weight:bold">map</span>[<span style="color:#080;font-weight:bold">interface</span>{}]<span style="color:#333">*</span>vertex, <span style="color:#007020">len</span>(V)),
+	}
+	g.labPool = sync.Pool{
+		New: <span style="color:#080;font-weight:bold">func</span>() <span style="color:#080;font-weight:bold">interface</span>{} {
+			<span style="color:#080;font-weight:bold">return</span> <span style="color:#06b;font-weight:bold">newLabels</span>(<span style="color:#007020">len</span>(g.vertices))
+		},
+	}
+	g.verPool = sync.Pool{
+		New: <span style="color:#080;font-weight:bold">func</span>() <span style="color:#080;font-weight:bold">interface</span>{} {
+			<span style="color:#080;font-weight:bold">return</span> <span style="color:#007020">make</span>([]<span style="color:#333">*</span>vertex, <span style="color:#007020">len</span>(g.vertices))[:<span style="color:#00d;font-weight:bold">0</span>]
+		},
+	}
+	i <span style="color:#333">:=</span> <span style="color:#00d;font-weight:bold">0</span>
+	<span style="color:#080;font-weight:bold">for</span> name, data <span style="color:#333">:=</span> <span style="color:#080;font-weight:bold">range</span> V {
+		g.vertices[name] = <span style="color:#333">&amp;</span>vertex{
+			id:   i,
+			name: name,
+			data: data,
+		}
+		i<span style="color:#333">++</span>
+	}
+	<span style="color:#080;font-weight:bold">for</span> _, e <span style="color:#333">:=</span> <span style="color:#080;font-weight:bold">range</span> E {
+		<span style="color:#080;font-weight:bold">if</span> u, ok <span style="color:#333">:=</span> g.vertices[e[<span style="color:#00d;font-weight:bold">0</span>]]; ok {
+			<span style="color:#080;font-weight:bold">if</span> v, ok <span style="color:#333">:=</span> g.vertices[e[<span style="color:#00d;font-weight:bold">1</span>]]; ok {
+				g.<span style="color:#06b;font-weight:bold">addLink</span>(u, v)
+			}
+		}
+	}
+
+	<span style="color:#080;font-weight:bold">return</span> g
+}
+
+<span style="color:#888">// AddVertex to graph
+</span><span style="color:#888"></span><span style="color:#080;font-weight:bold">func</span> (g <span style="color:#333">*</span>Graph) <span style="color:#06b;font-weight:bold">AddVertex</span>(name, data <span style="color:#080;font-weight:bold">interface</span>{}) <span style="color:#339;font-weight:bold">bool</span> {
+	g.<span style="color:#06b;font-weight:bold">Lock</span>()
+
+	<span style="color:#080;font-weight:bold">defer</span> g.<span style="color:#06b;font-weight:bold">Unlock</span>()
+
+	<span style="color:#080;font-weight:bold">if</span> _, ok <span style="color:#333">:=</span> g.vertices[name]; ok {
+
+		<span style="color:#080;font-weight:bold">return</span> <span style="color:#080;font-weight:bold">false</span>
+	}
+	g.vertices[name] = <span style="color:#333">&amp;</span>vertex{
+		id:   <span style="color:#007020">len</span>(g.vertices),
+		name: name,
+		data: data,
+	}
+
+	<span style="color:#080;font-weight:bold">return</span> <span style="color:#080;font-weight:bold">true</span>
+}
+
+<span style="color:#888">// AddLink from src to dst
+</span><span style="color:#888">//
+</span><span style="color:#888">// Return error if one of vertex not found. Return true if link created
+</span><span style="color:#888">// and false if link already exists. Concurrent safe.
+</span><span style="color:#888"></span><span style="color:#080;font-weight:bold">func</span> (g <span style="color:#333">*</span>Graph) <span style="color:#06b;font-weight:bold">AddLink</span>(src, dst <span style="color:#080;font-weight:bold">interface</span>{}) (<span style="color:#339;font-weight:bold">bool</span>, <span style="color:#339;font-weight:bold">error</span>) {
+	g.<span style="color:#06b;font-weight:bold">Lock</span>()
+
+	<span style="color:#080;font-weight:bold">defer</span> g.<span style="color:#06b;font-weight:bold">Unlock</span>()
+
+	<span style="color:#080;font-weight:bold">if</span> u, ok <span style="color:#333">:=</span> g.vertices[src]; ok {
+		<span style="color:#080;font-weight:bold">if</span> v, ok <span style="color:#333">:=</span> g.vertices[dst]; ok {
+
+			<span style="color:#080;font-weight:bold">return</span> g.<span style="color:#06b;font-weight:bold">addLink</span>(u, v), <span style="color:#080;font-weight:bold">nil</span>
+		}
+
+		<span style="color:#080;font-weight:bold">return</span> <span style="color:#080;font-weight:bold">false</span>, errors.<span style="color:#06b;font-weight:bold">Errorf</span>(<span style="background-color:#fff0f0">&#34;vertex %q not found&#34;</span>, src)
+	}
+
+	<span style="color:#080;font-weight:bold">return</span> <span style="color:#080;font-weight:bold">false</span>, errors.<span style="color:#06b;font-weight:bold">Errorf</span>(<span style="background-color:#fff0f0">&#34;vertex %q not found&#34;</span>, src)
+
+}
+
+<span style="color:#080;font-weight:bold">func</span> (g <span style="color:#333">*</span>Graph) <span style="color:#06b;font-weight:bold">addLink</span>(u, v <span style="color:#333">*</span>vertex) <span style="color:#339;font-weight:bold">bool</span> {
+	<span style="color:#080;font-weight:bold">if</span> <span style="color:#007020">len</span>(u.link[Out]) &lt; <span style="color:#007020">len</span>(v.link[In]) {
+		<span style="color:#080;font-weight:bold">if</span> u.<span style="color:#06b;font-weight:bold">addLink</span>(Out, v) {
+
+			<span style="color:#080;font-weight:bold">return</span> v.<span style="color:#06b;font-weight:bold">addLink</span>(In, u)
+		}
+
+		<span style="color:#080;font-weight:bold">return</span> <span style="color:#080;font-weight:bold">false</span>
+	}
+	<span style="color:#080;font-weight:bold">if</span> v.<span style="color:#06b;font-weight:bold">addLink</span>(In, u) {
+
+		<span style="color:#080;font-weight:bold">return</span> u.<span style="color:#06b;font-weight:bold">addLink</span>(Out, v)
+	}
+
+	<span style="color:#080;font-weight:bold">return</span> <span style="color:#080;font-weight:bold">false</span>
+}
+
+<span style="color:#888">// Resolve all achievable vertices from given srcs in given direction
+</span><span style="color:#888"></span><span style="color:#080;font-weight:bold">func</span> (g <span style="color:#333">*</span>Graph) <span style="color:#06b;font-weight:bold">Resolve</span>(dir direction, srcs <span style="color:#333">...</span><span style="color:#080;font-weight:bold">interface</span>{}) []<span style="color:#080;font-weight:bold">interface</span>{} {
+	lab <span style="color:#333">:=</span> g.labPool.<span style="color:#06b;font-weight:bold">Get</span>().(labels)
+	res <span style="color:#333">:=</span> g.verPool.<span style="color:#06b;font-weight:bold">Get</span>().([]<span style="color:#333">*</span>vertex)
+
+	<span style="color:#080;font-weight:bold">for</span> _, src <span style="color:#333">:=</span> <span style="color:#080;font-weight:bold">range</span> srcs {
+		<span style="color:#080;font-weight:bold">if</span> v, ok <span style="color:#333">:=</span> g.vertices[src]; ok {
+			lab.<span style="color:#06b;font-weight:bold">set</span>(v.id)
+			res = <span style="color:#007020">append</span>(res, v)
+		}
+	}
+
+	<span style="color:#080;font-weight:bold">for</span> i <span style="color:#333">:=</span> <span style="color:#00d;font-weight:bold">0</span>; i &lt; <span style="color:#007020">len</span>(res) <span style="color:#333">&amp;&amp;</span> <span style="color:#007020">len</span>(res) &lt; <span style="color:#007020">len</span>(g.vertices); i<span style="color:#333">++</span> {
+		<span style="color:#080;font-weight:bold">for</span> _, v <span style="color:#333">:=</span> <span style="color:#080;font-weight:bold">range</span> res[i].link[dir] {
+			<span style="color:#080;font-weight:bold">if</span> !lab.<span style="color:#06b;font-weight:bold">check</span>(v.id) {
+				lab.<span style="color:#06b;font-weight:bold">set</span>(v.id)
+				res = <span style="color:#007020">append</span>(res, v)
+			}
+		}
+	}
+	g.labPool.<span style="color:#06b;font-weight:bold">Put</span>(lab)
+
+	dd <span style="color:#333">:=</span> <span style="color:#007020">make</span>([]<span style="color:#080;font-weight:bold">interface</span>{}, <span style="color:#007020">len</span>(res))
+	<span style="color:#080;font-weight:bold">for</span> i, v <span style="color:#333">:=</span> <span style="color:#080;font-weight:bold">range</span> res {
+		dd[i] = v.data
+	}
+	g.verPool.<span style="color:#06b;font-weight:bold">Put</span>(res)
+
+	<span style="color:#080;font-weight:bold">return</span> dd
+}</code></pre></div></p>
+
+<p>Для оптимизации работы с памятью используем 2 <code>sync.Pool</code>&lsquo;а для результирующего списка/очереди и массива меток. И ещё одна оптимизация: если в результирущем списке содержатся все вершины графа, тогда можно заканчивать обход (строка 123). На сильно связанных графах это условие позволит сильно сэкономить операции.</p>
+
+<p>Напоследок напишем тесты и бенчмарки:
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#080;font-weight:bold">package</span> graph
+
+<span style="color:#080;font-weight:bold">import</span> (
+	<span style="background-color:#fff0f0">&#34;fmt&#34;</span>
+	<span style="background-color:#fff0f0">&#34;math/rand&#34;</span>
+	<span style="background-color:#fff0f0">&#34;testing&#34;</span>
+	<span style="background-color:#fff0f0">&#34;time&#34;</span>
+
+	<span style="background-color:#fff0f0">&#34;github.com/stretchr/testify/require&#34;</span>
+)
+
+<span style="color:#080;font-weight:bold">func</span> <span style="color:#06b;font-weight:bold">TestGraph</span>(t <span style="color:#333">*</span>testing.T) {
+	<span style="color:#080;font-weight:bold">const</span> n = <span style="color:#00d;font-weight:bold">5</span>
+
+	V <span style="color:#333">:=</span> <span style="color:#007020">make</span>(<span style="color:#080;font-weight:bold">map</span>[<span style="color:#080;font-weight:bold">interface</span>{}]<span style="color:#080;font-weight:bold">interface</span>{}, n)
+	<span style="color:#080;font-weight:bold">for</span> i <span style="color:#333">:=</span> <span style="color:#00d;font-weight:bold">0</span>; i &lt; n; i<span style="color:#333">++</span> {
+		V[i] = i
+	}
+	E <span style="color:#333">:=</span> [][<span style="color:#00d;font-weight:bold">2</span>]<span style="color:#080;font-weight:bold">interface</span>{}{
+		{<span style="color:#00d;font-weight:bold">0</span>, <span style="color:#00d;font-weight:bold">1</span>}, {<span style="color:#00d;font-weight:bold">0</span>, <span style="color:#00d;font-weight:bold">2</span>},
+		{<span style="color:#00d;font-weight:bold">1</span>, <span style="color:#00d;font-weight:bold">2</span>}, {<span style="color:#00d;font-weight:bold">1</span>, <span style="color:#00d;font-weight:bold">3</span>},
+		{<span style="color:#00d;font-weight:bold">2</span>, <span style="color:#00d;font-weight:bold">3</span>}, {<span style="color:#00d;font-weight:bold">2</span>, <span style="color:#00d;font-weight:bold">0</span>},
+		{<span style="color:#00d;font-weight:bold">3</span>, <span style="color:#00d;font-weight:bold">2</span>}, {<span style="color:#00d;font-weight:bold">3</span>, <span style="color:#00d;font-weight:bold">0</span>},
+		{<span style="color:#00d;font-weight:bold">4</span>, <span style="color:#00d;font-weight:bold">0</span>}, {<span style="color:#00d;font-weight:bold">4</span>, <span style="color:#00d;font-weight:bold">1</span>},
+	}
+	g <span style="color:#333">:=</span> <span style="color:#06b;font-weight:bold">New</span>(V, E)
+
+	t.<span style="color:#06b;font-weight:bold">Run</span>(<span style="background-color:#fff0f0">&#34;New&#34;</span>, <span style="color:#080;font-weight:bold">func</span>(t <span style="color:#333">*</span>testing.T) {
+		ok, err <span style="color:#333">:=</span> g.<span style="color:#06b;font-weight:bold">AddLink</span>(<span style="color:#00d;font-weight:bold">0</span>, <span style="color:#00d;font-weight:bold">1</span>)
+		require.<span style="color:#06b;font-weight:bold">NoError</span>(t, err)
+		require.<span style="color:#06b;font-weight:bold">False</span>(t, ok)
+		ok, err = g.<span style="color:#06b;font-weight:bold">AddLink</span>(<span style="color:#00d;font-weight:bold">0</span>, <span style="color:#00d;font-weight:bold">10</span>)
+		require.<span style="color:#06b;font-weight:bold">Error</span>(t, err)
+		require.<span style="color:#06b;font-weight:bold">False</span>(t, ok)
+		ok, err = g.<span style="color:#06b;font-weight:bold">AddLink</span>(<span style="color:#00d;font-weight:bold">3</span>, <span style="color:#00d;font-weight:bold">0</span>)
+		require.<span style="color:#06b;font-weight:bold">NoError</span>(t, err)
+		require.<span style="color:#06b;font-weight:bold">False</span>(t, ok)
+	})
+
+	t.<span style="color:#06b;font-weight:bold">Run</span>(<span style="background-color:#fff0f0">&#34;AddVertex&#34;</span>, <span style="color:#080;font-weight:bold">func</span>(t <span style="color:#333">*</span>testing.T) {
+		require.<span style="color:#06b;font-weight:bold">False</span>(t, g.<span style="color:#06b;font-weight:bold">AddVertex</span>(<span style="color:#00d;font-weight:bold">0</span>, <span style="color:#00d;font-weight:bold">0</span>))
+		require.<span style="color:#06b;font-weight:bold">True</span>(t, g.<span style="color:#06b;font-weight:bold">AddVertex</span>(<span style="color:#00d;font-weight:bold">10</span>, <span style="color:#00d;font-weight:bold">10</span>))
+	})
+
+	t.<span style="color:#06b;font-weight:bold">Run</span>(<span style="background-color:#fff0f0">&#34;AddLink&#34;</span>, <span style="color:#080;font-weight:bold">func</span>(t <span style="color:#333">*</span>testing.T) {
+		ok, err <span style="color:#333">:=</span> g.<span style="color:#06b;font-weight:bold">AddLink</span>(<span style="color:#00d;font-weight:bold">0</span>, <span style="color:#00d;font-weight:bold">3</span>)
+		require.<span style="color:#06b;font-weight:bold">NoError</span>(t, err)
+		require.<span style="color:#06b;font-weight:bold">True</span>(t, ok)
+		ok, err = g.<span style="color:#06b;font-weight:bold">AddLink</span>(<span style="color:#00d;font-weight:bold">0</span>, <span style="color:#00d;font-weight:bold">10</span>)
+		require.<span style="color:#06b;font-weight:bold">NoError</span>(t, err)
+		require.<span style="color:#06b;font-weight:bold">True</span>(t, ok)
+		ok, err = g.<span style="color:#06b;font-weight:bold">AddLink</span>(<span style="color:#00d;font-weight:bold">0</span>, <span style="color:#00d;font-weight:bold">10</span>)
+		require.<span style="color:#06b;font-weight:bold">NoError</span>(t, err)
+		require.<span style="color:#06b;font-weight:bold">False</span>(t, ok)
+	})
+
+	t.<span style="color:#06b;font-weight:bold">Run</span>(<span style="background-color:#fff0f0">&#34;Resolve&#34;</span>, <span style="color:#080;font-weight:bold">func</span>(t <span style="color:#333">*</span>testing.T) {
+		res <span style="color:#333">:=</span> g.<span style="color:#06b;font-weight:bold">Resolve</span>(Out, <span style="color:#00d;font-weight:bold">0</span>)
+		require.<span style="color:#06b;font-weight:bold">Len</span>(t, res, <span style="color:#00d;font-weight:bold">5</span>)
+		require.<span style="color:#06b;font-weight:bold">Contains</span>(t, res, <span style="color:#00d;font-weight:bold">0</span>)
+		require.<span style="color:#06b;font-weight:bold">Contains</span>(t, res, <span style="color:#00d;font-weight:bold">1</span>)
+		require.<span style="color:#06b;font-weight:bold">Contains</span>(t, res, <span style="color:#00d;font-weight:bold">2</span>)
+		require.<span style="color:#06b;font-weight:bold">Contains</span>(t, res, <span style="color:#00d;font-weight:bold">3</span>)
+		require.<span style="color:#06b;font-weight:bold">Contains</span>(t, res, <span style="color:#00d;font-weight:bold">10</span>)
+	})
+}
+
+<span style="color:#080;font-weight:bold">func</span> <span style="color:#06b;font-weight:bold">BenchmarkResolve</span>(b <span style="color:#333">*</span>testing.B) {
+	n <span style="color:#333">:=</span> <span style="color:#00d;font-weight:bold">500000</span>
+	step <span style="color:#333">:=</span> <span style="color:#00d;font-weight:bold">100000</span>
+
+	V <span style="color:#333">:=</span> <span style="color:#007020">make</span>(<span style="color:#080;font-weight:bold">map</span>[<span style="color:#080;font-weight:bold">interface</span>{}]<span style="color:#080;font-weight:bold">interface</span>{}, n)
+	<span style="color:#080;font-weight:bold">for</span> i <span style="color:#333">:=</span> <span style="color:#00d;font-weight:bold">0</span>; i &lt; n; i<span style="color:#333">++</span> {
+		V[i] = i
+	}
+	g <span style="color:#333">:=</span> <span style="color:#06b;font-weight:bold">New</span>(V, <span style="color:#080;font-weight:bold">nil</span>)
+
+	<span style="color:#080;font-weight:bold">for</span> i <span style="color:#333">:=</span> <span style="color:#00d;font-weight:bold">0</span>; i &lt; n<span style="color:#333">*</span>(n<span style="color:#333">-</span><span style="color:#00d;font-weight:bold">1</span>); i <span style="color:#333">+=</span> step {
+		timer <span style="color:#333">:=</span> time.<span style="color:#06b;font-weight:bold">NewTimer</span>(<span style="color:#00d;font-weight:bold">10</span> <span style="color:#333">*</span> time.Second)
+		<span style="color:#080;font-weight:bold">for</span> j <span style="color:#333">:=</span> <span style="color:#00d;font-weight:bold">0</span>; j &lt; step; {
+			<span style="color:#080;font-weight:bold">select</span> {
+			<span style="color:#080;font-weight:bold">case</span> <span style="color:#333">&lt;-</span>timer.C:
+				b.<span style="color:#06b;font-weight:bold">Log</span>(<span style="background-color:#fff0f0">&#34;too long&#34;</span>)
+
+				<span style="color:#080;font-weight:bold">return</span>
+
+			<span style="color:#080;font-weight:bold">default</span>:
+			}
+			src <span style="color:#333">:=</span> rand.<span style="color:#06b;font-weight:bold">Intn</span>(n)
+			dst <span style="color:#333">:=</span> rand.<span style="color:#06b;font-weight:bold">Intn</span>(n)
+			<span style="color:#080;font-weight:bold">if</span> ok, _ <span style="color:#333">:=</span> g.<span style="color:#06b;font-weight:bold">AddLink</span>(src, dst); ok {
+				j<span style="color:#333">++</span>
+			}
+		}
+		b.<span style="color:#06b;font-weight:bold">Run</span>(fmt.<span style="color:#06b;font-weight:bold">Sprintf</span>(<span style="background-color:#fff0f0">&#34;%d&#34;</span>, i), <span style="color:#080;font-weight:bold">func</span>(b <span style="color:#333">*</span>testing.B) {
+			b.<span style="color:#06b;font-weight:bold">ReportAllocs</span>()
+
+			<span style="color:#080;font-weight:bold">for</span> j <span style="color:#333">:=</span> <span style="color:#00d;font-weight:bold">0</span>; j &lt; b.N; j<span style="color:#333">++</span> {
+				g.<span style="color:#06b;font-weight:bold">Resolve</span>(Out, <span style="color:#00d;font-weight:bold">0</span>)
+			}
+		})
+	}
+}</code></pre></div></p>
+
+<p>Для бенчмарка будем строить случайный граф. Очевидно, что сложность алгоритма \(O(m)\), то есть прямо пропорциональна числу связей, так что зафиксируем число вершин на 500&rsquo;000 и будем увеличивать число связей по 100&rsquo;000 за шаг. Получим следующий график:
+<figure>
+    <img src="/post/2017/06/img/resolve_time.png"/> <figcaption>
+            <h4>Время обработки запроса от количества связей</h4>
+        </figcaption>
+</figure>
+</p>
+
+<p>На графике видно место где сработала введёная нами оптимизация (строка 123). В районе 6&rsquo;000&rsquo;000 связей граф становится полностью достижим и время ответа резко сокращается.</p>
+
+<p>Количество памяти зависит по большей части от размеров результирующего списка:
+<figure>
+    <img src="/post/2017/06/img/resolve_memory.png"/> <figcaption>
+            <h4>Расход памяти от количества связей</h4>
+        </figcaption>
+</figure>
+</p>
+
+<p>Также в районе 6&rsquo;000&rsquo;000 достигает своего максимума и стабилизируется на примерно 8MB.</p>
+
+<p>Вообще для сильносвязных графов надо искать другие решения, возможно предварительно высчитывать компоненты связности и хранение списков недостижимых вершин.</p>
+
+<p>Весь код доступен в репозитории <a href="https://github.com/vporoshok/graph-go">https://github.com/vporoshok/graph-go</a></p>
+
+</div>
+
+  
+<footer class='entry-footer'>
+  <div class='container sep-before'><div class='categories'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <path d="M22,19a2,2,0,0,1-2,2H4a2,2,0,0,1-2-2V5A2,2,0,0,1,4,3H9l2,3h9a2,2,0,0,1,2,2Z"/>
+  
+</svg>
+<span class='screen-reader-text'>category: </span><a class='category' href='/categories/develop/'>Разработка</a></div>
+<div class='tags'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <path d="M20.59,13.41l-7.17,7.17a2,2,0,0,1-2.83,0L2,12V2H12l8.59,8.59A2,2,0,0,1,20.59,13.41Z"/>
+  <line x1="7" y1="7" x2="7" y2="7"/>
+  
+</svg>
+<span class='screen-reader-text'>Тэги: </span><a class='tag' href='/tags/algorithm/'>algorithm</a>, <a class='tag' href='/tags/graph/'>graph</a>, <a class='tag' href='/tags/go/'>go</a></div>
+
+  </div>
+</footer>
+
+
+</article>
+
+<nav class='entry-nav'>
+  <div class='container'><div class='prev-entry sep-before'>
+      <a href='/post/2017/05/token-placement/'>
+        <span aria-hidden='true'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <line x1="20" y1="12" x2="4" y2="12"/>
+  <polyline points="10 18 4 12 10 6"/>
+  
+</svg>
+ Предыдущий</span>
+        <span class='screen-reader-text'>Предыдущая запись: </span>Ещё раз о безопасности или где хранить токен</a>
+    </div><div class='next-entry sep-before'>
+      <a href='/post/2018/04/angular-toc/'>
+        <span class='screen-reader-text'>Следующая запись: </span>Цикл статей про Angular<span aria-hidden='true'>Следующий <svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <line x1="4" y1="12" x2="20" y2="12"/>
+  <polyline points="14 6 20 12 14 18"/>
+  
+</svg>
+</span>
+      </a>
+    </div></div>
+</nav>
+
+
+
+
+      </main>
+
+      <footer id='footer' class='footer'>
+        <div class='container sep-before'><div class='copyright'>
+  <p>Материалы распространяются по <a rel="noreferrer" href="https://creativecommons.org/licenses/by/4.0/" target="_blank">лицензии CC BY</a> &copy; 2018-2021 vporoshok <br>Увидели ошибку? Буду рад <a rel="noreferrer" href="https://github.com/vporoshok/vporoshok.github.io" target="_blank">PR&rsquo;у</a></p>
+</div>
+
+        </div>
+      </footer>
+
+    </div>
+  </div><script>window.__assets_js_src="/assets/js/"</script>
+
+<script src='/assets/js/main.67d669ac.js'></script><script type='text/x-mathjax-config'>
+  MathJax.Hub.Config({})
+</script>
+
+<script type='text/javascript' async src='//unpkg.com/mathjax@2.7.5/MathJax.js?config=TeX-MML-AM_CHTML'></script>
+
+</body>
+
+</html>
+

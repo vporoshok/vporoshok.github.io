@@ -1,0 +1,1071 @@
+<!DOCTYPE html>
+<html lang='ru'>
+<head>
+    <meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='description' content='Локоть к локтю, кирпич к стене'>
+<meta name='theme-color' content='#ffcd00'>
+
+<meta property='og:title' content='Кучи с эффективным слиянием • Где-то на дальнем сервере'>
+<meta property='og:description' content='Локоть к локтю, кирпич к стене'>
+<meta property='og:url' content='https://vporoshok.me/slides/2018/11/meldable-heaps/'>
+<meta property='og:site_name' content='Где-то на дальнем сервере'>
+<meta property='og:type' content='article'><meta property='article:section' content='slides'><meta property='article:published_time' content='2018-11-15T14:00:00Z'/><meta property='article:modified_time' content='2018-11-13T21:14:15&#43;04:00'/><meta name='twitter:card' content='summary'>
+
+<meta name="generator" content="Hugo 0.57.2" />
+
+    <title>Кучи с эффективным слиянием • Где-то на дальнем сервере</title>
+    <link rel='canonical' href='https://vporoshok.me/slides/2018/11/meldable-heaps/'>
+    
+    <link rel='icon' href='/favicon.ico'>
+    <link rel='stylesheet' href='/assets/css/main.6a060eb7.css'><link rel='stylesheet' href='/assets/custom.css'><style>
+:root{--color-accent:#ffcd00;}
+</style>
+
+
+
+    <link rel="stylesheet" href="/assets/shower/themes/material/styles/styles.css">
+    <style>
+        .shower {
+            --slide-ratio: calc(16 / 9);
+        }
+        .caption a {
+            display: inline-block;
+            font-size: 0.8em;
+            margin-left: 2em;
+        }
+        .mermaid {
+            text-align: center;
+        }
+        .mermaid div {
+            transform: translate(-25%, -25%);
+        }
+        .slide {
+            background-repeat: no-repeat;
+            background-size: cover;
+        }
+        .slide a {
+            background: none;
+        }
+        .slide.section {
+            display: flex;
+            padding: 0;
+            align-items: center;
+            justify-content: center;
+            text-shadow: white 0 0 10px;
+        }
+        .slide.section h2 {
+            font-weight: normal;
+        }
+        .slide.compact pre {
+            padding-top: 0;
+        }
+        .slide.black * {
+            color: white;
+            text-shadow: black 0 0 10px;
+        }
+        img.cover {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+    </style>
+</head>
+<body class="shower list entry-content">
+    <header class="caption">
+        <h1>Кучи с эффективным слиянием</h1>
+        <p>Локоть к локтю, кирпич к стене <a href="/post/2018/11/meldable-heaps/">Назад</a></p>
+    </header>
+
+    <style>
+    .w-75 {
+        width: 75%;
+        margin-left: auto;
+        margin-right: auto;
+    }
+    .w-50 {
+        width: 50%;
+        margin-left: auto;
+        margin-right: auto;
+    }
+    .w-25 {
+        width: 25%;
+        margin-left: auto;
+        margin-right: auto;
+    }
+</style>
+
+<section class="slide entry clear"><h2 class="shout">
+        Кучи с эффективным слиянием
+    </h2></section>
+
+
+<section id="toc" class="slide entry toc"><h2>
+        План
+    </h2><div class="columns two"><ol>
+<li><a href="#problem">задача и применение</a></li>
+<li><a href="#binomial">биномиальные кучи</a>
+
+<ol>
+<li><a href="#address">хранение и адресация</a></li>
+<li><a href="#binomial-meld">слияние</a></li>
+<li><a href="#binomial-min">извлечение минимума</a></li>
+</ol></li>
+<li><a href="#leftish">левацкие кучи</a></li>
+</ol></div></section>
+
+
+<section id="problem" class="slide entry section"><h2>
+        Задача и применение
+    </h2></section>
+
+
+<section class="slide entry"><h2>
+        Задача и применение
+    </h2>Операция слияния куч находит применение в таких алгоритмах, как многопутевые слияния, поиск кратчайшего пути в графе и других. Вместо добавления новых элементов по одному.</section>
+
+
+<section id="binomial" class="slide entry section"><h2>
+        Биномиальные кучи
+    </h2></section>
+
+
+<section class="slide entry"><h2>
+        Биномиальные кучи
+    </h2><dl>
+<dt>Биномиальная куча</dt>
+<dd>лес, состоящий из биномиальных деревьев</dd>
+</dl></section>
+
+
+<section class="slide entry"><h2>
+        Биномиальные деревья
+    </h2><figure>
+    <div class="mermaid">
+graph TD
+    subgraph k = 3
+    H(( ))
+    H --- I(( ))
+    H --- J(( ))
+    H --- K(( ))
+    J --- L(( ))
+    K --- M(( ))
+    K --- N(( ))
+    N --- O(( ))
+    end
+
+    subgraph k = 2
+    D(( ))
+    D --- E(( ))
+    D --- F(( ))
+    F --- G(( ))
+    end
+
+    subgraph k = 1
+    B(( ))
+    B --- C(( ))
+    end
+
+    subgraph k = 0
+    A(( ))
+    end
+</div>
+<figcaption>
+        Рис.&thinsp;1.
+        
+    </figcaption>
+</figure></section>
+
+
+<section class="slide entry"><h2>
+        Биномиальные деревья
+    </h2>Биномиальное дерево порядка \(0\) состоит из одной вершины, а биномиальное дерево порядка \(k\) является объединением двух деревьев порядка \(k - 1\) так, что корень одного из них является сыном корня другого.</section>
+
+
+<section class="slide entry"><h2>
+        Биномиальные кучи
+    </h2><p><div class="equation">
+[
+\tbinom{5}{i} = (1, 5, 10, 10, 5, 1)
+]
+</div>
+<figure></p>
+
+<pre><code>&lt;div class=&quot;mermaid&quot;&gt;
+</code></pre>
+
+<p>graph TD</p>
+
+<pre><code>A(( ))
+
+A --- B(( ))
+A --- C(( ))
+A --- D(( ))
+A --- E(( ))
+A --- F(( ))
+
+C --- G(( ))
+D --- H(( ))
+D --- J(( ))
+E --- I(( ))
+E --- K(( ))
+E --- L(( ))
+F --- M(( ))
+F --- N(( ))
+F --- O(( ))
+F --- P(( ))
+
+J --- Q(( ))
+K --- R(( ))
+L --- S(( ))
+L --- T(( ))
+N --- U(( ))
+O --- V(( ))
+O --- W(( ))
+P --- X(( ))
+P --- Y(( ))
+P --- Z(( ))
+
+T --- a(( ))
+W --- b(( ))
+Y --- c(( ))
+Z --- d(( ))
+Z --- e(( ))
+
+e --- f(( ))
+
+classDef zero  fill:LightCoral
+classDef one   fill:SpringGreen
+classDef two   fill:SkyBlue
+classDef three fill:MediumPurple
+classDef four  fill:#b666d2
+
+class A zero
+class B,C,D,E,F one
+class G,H,J,I,K,L,M,N,O,P two
+class Q,R,S,T,U,V,W,X,Y,Z three
+class a,b,c,d,e four
+</code></pre>
+
+<p></div>
+<figcaption></p>
+
+<pre><code>    Рис.&amp;thinsp;2.
+
+&lt;/figcaption&gt;
+</code></pre>
+
+<p></figure></p>
+</section>
+
+
+<section id="address" class="slide entry section"><h2>
+        Хранение и адресация
+    </h2></section>
+
+
+<section class="slide entry"><h2>
+        Хранение и адресация
+    </h2><dl>
+<dt>Хранение в виде массива</dt>
+<dd>корень хранится в нулевом элементе и для \(i\)-го элемента его дети имеют индексы \(i + 2^j\), где \(j &lt; k_i\) степени ветвления вершины \(i\).</dd>
+</dl></section>
+
+
+<section class="slide entry"><h2>
+        Хранение и адресация
+    </h2><figure>
+    <div class="mermaid w-75">
+graph TD
+    A((0))
+
+    A --- B((1))
+    A --- C((2))
+    A --- D((4))
+    A --- E((8))
+
+    C --- F((3))
+    D --- G((5))
+    D --- H((6))
+    E --- J((9))
+    E --- I((10))
+    E --- K((12))
+
+    H --- L((7))
+    I --- M((11))
+    K --- N((13))
+    K --- O((14))
+
+    O --- P((15))
+
+    classDef zero  fill:LightCoral
+    classDef one   fill:SpringGreen
+    classDef two   fill:SkyBlue
+    classDef three fill:MediumPurple
+    classDef four  fill:#b666d2
+
+    class A zero
+    class B,C,D,E one
+    class F,G,H,J,I,K two
+    class L,M,N,O three
+    class P four
+</div>
+<figcaption>
+        Рис.&thinsp;3.
+        
+    </figcaption>
+</figure></section>
+
+
+<section class="slide entry"><h2>
+        Хранение и адресация
+    </h2>Left-Child, Right-Sibling (LCRS)</p>
+
+<figure>
+    <div class="mermaid">
+graph LR
+    A(( ))
+
+    A --> B(( ))
+    B -.-> C(( ))
+    C -.-> D(( ))
+    D -.-> E(( ))
+
+    C --> F(( ))
+    D --> G(( ))
+    G -.-> H(( ))
+    E --> J(( ))
+    J -.-> I(( ))
+    I -.-> K(( ))
+
+    H --> L(( ))
+    I --> M(( ))
+    K --> N(( ))
+    N -.-> O(( ))
+
+    O --> P(( ))
+
+    classDef zero  fill:LightCoral
+    classDef one   fill:SpringGreen
+    classDef two   fill:SkyBlue
+    classDef three fill:MediumPurple
+    classDef four  fill:#b666d2
+
+    class A zero
+    class B,C,D,E one
+    class F,G,H,J,I,K two
+    class L,M,N,O three
+    class P four
+</div>
+<figcaption>
+        Рис.&thinsp;4.
+        
+    </figcaption>
+</figure></section>
+
+
+<section class="slide entry"><h2>
+        Хранение и адресация
+    </h2>Left-Child, Right-Sibling (LCRS)</p>
+
+<figure>
+    <div class="mermaid">
+graph LR
+    A(( ))
+
+    A --> B(( ))
+    B -.-> C(( ))
+    C -.-> D(( ))
+    D -.-> A
+
+    C --> E(( ))
+    E -.-> C
+    D --> F(( ))
+    F -.-> G(( ))
+    G -.-> D
+
+    G --> H(( ))
+    H -.-> G
+
+    classDef zero  fill:LightCoral
+    classDef one   fill:SpringGreen
+    classDef two   fill:SkyBlue
+    classDef three fill:MediumPurple
+
+    class A zero
+    class B,C,D one
+    class E,F,G two
+    class H three
+</div>
+<figcaption>
+        Рис.&thinsp;5.
+        
+    </figcaption>
+</figure></section>
+
+
+<section class="slide entry"><h2>
+        Биномиальные кучи
+    </h2><div class="equation">
+\[
+(3, 12, 7, 4, 5, 2, 8, 9, 21, 1, 15, 24, 19)
+\]
+</div>
+<div class="equation next">
+\[
+13 = 1 + 4 + 8 = 2^0 + 2^2 + 2^3
+\]
+</div>
+<div class="equation next">
+\[
+(3), (12, 7, 4, 5), (2, 8, 9, 21, 1, 15, 24, 19)
+\]
+</div></section>
+
+
+<section class="slide entry"><h2>
+        Биномиальные кучи
+    </h2><figure>
+    <div class="mermaid w-75">
+graph TD
+    subgraph k = 3
+    F((2))
+    F --- G((8))
+    F --- H((9))
+    F --- I((21))
+    H --- J((1))
+    I --- K((15))
+    I --- L((24))
+    L --- M((19))
+    end
+    subgraph k = 2
+    B((12))
+    B --- C((7))
+    B --- D((4))
+    D --- E((5))
+    end
+    subgraph k = 0
+    A((3))
+    end
+</div>
+<figcaption>
+        Рис.&thinsp;6.
+        
+    </figcaption>
+</figure></section>
+
+
+<section class="slide entry"><h2>
+        Биномиальные кучи
+    </h2><figure>
+    <div class="mermaid w-75">
+graph TD
+    subgraph k = 3
+    F((1))
+    F --- G((8))
+    F --- H((2))
+    F --- I((15))
+    H --- J((9))
+    I --- K((21))
+    I --- L((19))
+    L --- M((24))
+    end
+    subgraph k = 2
+    B((4))
+    B --- C((7))
+    B --- D((5))
+    D --- E((12))
+    end
+    subgraph k = 0
+    A((3))
+    end
+</div>
+<figcaption>
+        Рис.&thinsp;7.
+        
+    </figcaption>
+</figure></section>
+
+
+<section id="binomial-meld" class="slide entry section"><h2>
+        Слияние биномиальных куч
+    </h2></section>
+
+
+<section class="slide entry"><h2>
+        Слияние биномиальных куч
+    </h2><figure>
+    <div class="mermaid">
+graph TD
+    subgraph k = 1
+    O((7))
+    O --- P((30))
+    end
+    subgraph k = 0
+    N((4))
+    end
+    classDef second fill:LightCoral
+    class N,O,P second
+</div>
+<figcaption>
+        Рис.&thinsp;8.
+        
+    </figcaption>
+</figure></section>
+
+
+<section class="slide entry"><h2>
+        Слияние биномиальных куч
+    </h2><figure>
+    <div class="mermaid">
+graph TD
+    subgraph k = 1
+    A((3))
+    A --- N((4))
+    end
+    classDef first fill:SpringGreen
+    class A,B,C,D,E,F,G,H,I,J,K,L,M first
+    classDef second fill:LightCoral
+    class N,O,P second
+</div>
+<figcaption>
+        Рис.&thinsp;9.
+        
+    </figcaption>
+</figure></section>
+
+
+<section class="slide entry"><h2>
+        Слияние биномиальных куч
+    </h2><figure>
+    <div class="mermaid">
+graph TD
+    subgraph k = 2
+    A((3))
+    A --- N((4))
+    A --- O((7))
+    O --- P((30))
+    end
+    classDef first fill:SpringGreen
+    class A,B,C,D,E,F,G,H,I,J,K,L,M first
+    classDef second fill:LightCoral
+    class N,O,P second
+</div>
+<figcaption>
+        Рис.&thinsp;10.
+        
+    </figcaption>
+</figure></section>
+
+
+<section class="slide entry"><h2>
+        Слияние биномиальных куч
+    </h2><figure>
+    <div class="mermaid">
+graph TD
+    subgraph k = 3
+    A((3))
+    A --- N((4))
+    A --- O((7))
+    O --- P((30))
+    A --- B((4))
+    B --- C((7))
+    B --- D((5))
+    D --- E((12))
+    end
+    classDef first fill:SpringGreen
+    class A,B,C,D,E,F,G,H,I,J,K,L,M first
+    classDef second fill:LightCoral
+    class N,O,P second
+</div>
+<figcaption>
+        Рис.&thinsp;11.
+        
+    </figcaption>
+</figure></section>
+
+
+<section class="slide entry"><h2>
+        Слияние биномиальных куч
+    </h2><figure>
+    <div class="mermaid w-75">
+graph TD
+    subgraph k = 4
+    F((1))
+    F --- G((8))
+    F --- H((2))
+    F --- I((15))
+    H --- J((9))
+    I --- K((21))
+    I --- L((19))
+    L --- M((24))
+    F --- A((3))
+    A --- N((4))
+    A --- O((7))
+    O --- P((30))
+    A --- B((4))
+    B --- C((7))
+    B --- D((5))
+    D --- E((12))
+    end
+    classDef first fill:SpringGreen
+    class A,B,C,D,E,F,G,H,I,J,K,L,M first
+    classDef second fill:LightCoral
+    class N,O,P second
+</div>
+<figcaption>
+        Рис.&thinsp;12.
+        
+    </figcaption>
+</figure></section>
+
+
+<section class="slide entry"><h2>
+        Слияние биномиальных куч
+    </h2><p>Результирующий набор деревьев</p>
+
+<div class="equation">
+\[
+\begin{array}{r}
+  + \begin{array}{r}
+        1101\\
+          11
+    \end{array}\\
+    \hline
+    \begin{array}{r}
+       10000
+    \end{array}
+\end{array}
+\]
+</div>
+
+<p class="next">Количество деревьев в лесу размера \(n\)?</p>
+
+<div class="equation next">
+\[
+\leqslant \lfloor 1 + \log n \rfloor
+\]
+</div>
+</section>
+
+
+<section class="slide entry"><h2>
+        Слияние биномиальных куч
+    </h2><p>Слияние двух деревьев операция константной сложности:</p>
+
+<ul>
+<li>выбрать минимум из двух корней;</li>
+<li>назначить меньший корень родителем большего;</li>
+</ul>
+
+<p>Слияние двух лесов из \(n\) и \(m\) элементов равна \(O(\log \max (n, m))\).</p>
+
+<p>Учётная стоимость вставки равна \(O(1)\).</p>
+</section>
+
+
+<section id="binomial-min" class="slide entry section"><h2>
+        Извлечение минимума
+    </h2></section>
+
+
+<section class="slide entry"><h2>
+        Извлечение минимума
+    </h2><figure>
+    <div class="mermaid w-75">
+graph TD
+    subgraph k = 4
+    F((1))
+    F --- G((8))
+    F --- H((2))
+    F --- I((15))
+    H --- J((9))
+    I --- K((21))
+    I --- L((19))
+    L --- M((24))
+    F --- A((3))
+    A --- N((4))
+    A --- O((7))
+    O --- P((30))
+    A --- B((4))
+    B --- C((7))
+    B --- D((5))
+    D --- E((12))
+    end
+    classDef first fill:SpringGreen
+    class A,B,C,D,E,F,G,H,I,J,K,L,M first
+    classDef second fill:LightCoral
+    class N,O,P second
+</div>
+<figcaption>
+        Рис.&thinsp;13.
+        
+    </figcaption>
+</figure></section>
+
+
+<section class="slide entry"><h2>
+        Извлечение минимума
+    </h2><figure>
+    <div class="mermaid w-75">
+graph TD
+    subgraph k = 3
+    A((3))
+    A --- N((4))
+    A --- O((7))
+    O --- P((30))
+    A --- B((4))
+    B --- C((7))
+    B --- D((5))
+    D --- E((12))
+    end
+    subgraph k = 2
+    I((15))
+    I --- K((21))
+    I --- L((19))
+    L --- M((24))
+    end
+    subgraph k = 1
+    H((2))
+    H --- J((9))
+    end
+    subgraph k = 0
+    G((8))
+    end
+    classDef first fill:SpringGreen
+    class A,B,C,D,E,F,G,H,I,J,K,L,M first
+    classDef second fill:LightCoral
+    class N,O,P second
+</div>
+<figcaption>
+        Рис.&thinsp;14.
+        
+    </figcaption>
+</figure></section>
+
+
+<section id="leftish" class="slide entry section"><h2>
+        Левацкие кучи
+    </h2></section>
+
+
+<section class="slide entry"><h2>
+        Левацкие кучи
+    </h2><dl>
+<dt>Ранг вершины</dt>
+<dd>высота полного двоичного поддерева с корнем в этой вершине.</dd>
+</dl>
+
+<div class="equation">
+\[
+    r(\varnothing) = 0, \qquad r(v) = 1 + \min\{v_l, v_r\},
+\]
+</div>
+
+<p class="next">Дерево будем называть <em>левацким</em>, если в любой его вершине ранг левого сына не меньше ранга правого сына.</section>
+
+
+<section class="slide entry"><h2>
+        Левацкие кучи
+    </h2><figure>
+    <div class="mermaid">
+graph TD
+    A((3))
+    A --- B((3))
+    A --- C((2))
+    B --- D((3))
+    B --- E((2))
+    C --- F((2))
+    C --- G((1))
+    D --- H((2))
+    D --- I((2))
+    E --- J((1))
+    E --- K((1))
+    F --- L((2))
+    F --- M((1))
+    G --- N((1))
+    G --- O((0))
+    H --- P((1))
+    H --- Q((1))
+    I --- R((1))
+    I --- S((1))
+    J --- T((1))
+    J --- U((0))
+    L --- V((1))
+    L --- W((1))
+    M --- X((1))
+    M --- Y((0))
+    N --- Z((1))
+    N --- a((0))
+
+    classDef zero opacity:0.3,fill:LightCoral
+    class O,U,Y,a zero
+    classDef one   fill:SpringGreen
+    class G,J,K,M,N,P,Q,R,S,T,V,W,X,Z one
+    classDef two   fill:SkyBlue
+    class C,E,F,H,I,L two
+    classDef three fill:MediumPurple
+    class A,B,D three
+</div>
+<figcaption>
+        Рис.&thinsp;15.
+        
+    </figcaption>
+</figure></section>
+
+
+<section class="slide entry"><h2>
+        Левацкие кучи
+    </h2><figure>
+    <div class="mermaid w-25">
+graph TD
+    a0((a0))
+    a0 --- A0{A0}
+    a0 --- a1((a1))
+    a1 --- A1{A1}
+    a1 --- a2((a2))
+    a2 --- A2{A2}
+    a2 --- a3((a3))
+    a3 --- A3{A3}
+    a3 --- a4(( ))
+</div>
+<figcaption>
+        Рис.&thinsp;16.
+        
+    </figcaption>
+</figure></section>
+
+
+<section class="slide entry"><h2>
+        Левацкие кучи
+    </h2>Также будем обозначать через \(x(A, B)\) дерево с корнем в вершине \(x\) с двумя поддеревьями: \(A\) и \(B\), левым и правым соответственно.</p>
+
+<figure>
+    <div class="mermaid">
+graph TD
+    x((x))
+    x --- A{A}
+    x --- B{B}
+</div>
+<figcaption>
+        Рис.&thinsp;17.
+        
+    </figcaption>
+</figure></section>
+
+
+<section class="slide entry"><h2>
+        Левацкие кучи
+    </h2><div class="equation">
+\[
+    \def\meld{\operatorname{meld}}
+
+    \begin{gathered}
+        \meld(A, \varnothing) = \meld(\varnothing, A) = A,\\
+        \\
+        \\
+        \meld(x(A, B), y(C, D)) = \begin{cases}
+            x(A, \meld(B, y(C, D))), &\text{если } x \leqslant y;\\
+            y(C, \meld(D, x(A, B))), &\text{иначе}.
+        \end{cases}
+    \end{gathered}
+\]
+</div></section>
+
+
+<section class="slide entry"><h2>
+        Левацкие кучи
+    </h2><figure>
+    <div class="mermaid w-50">
+graph TD
+    subgraph &nbsp;
+    y((y))
+    y --- C{C}
+    y --- D{D}
+    end
+    subgraph &nbsp;
+    x((x))
+    x --- A{A}
+    x --- B{B}
+    end
+</div>
+<figcaption>
+        Рис.&thinsp;18.
+        
+    </figcaption>
+</figure>
+
+<figure>
+    <div class="mermaid w-50 next">
+graph TD
+    subgraph &nbsp;
+    y((y))
+    y --- C{C}
+    y --- D{"D + x(A, B)"}
+    end
+    subgraph &nbsp;
+    x((x))
+    x --- A{A}
+    x --- B{"B + y(C, D)"}
+    end
+</div>
+<figcaption>
+        Рис.&thinsp;19.
+        
+    </figcaption>
+</figure></section>
+
+
+<section class="slide entry"><h2>
+        Левацкие кучи
+    </h2><figure>
+    <div class="mermaid w-50">
+graph TD
+    subgraph B
+    b0((2))
+    b0 --- B0{B0}
+    b0 --- b1((6))
+    b1 --- B1{B1}
+    b1 --- b2((7))
+    b2 --- B2{B2}
+    b2 --- b3((12))
+    end
+    subgraph A
+    a0((1))
+    a0 --- A0{A0}
+    a0 --- a1((3))
+    a1 --- A1{A1}
+    a1 --- a2((5))
+    a2 --- A2{A2}
+    a2 --- a3((8))
+    end
+    classDef A fill:LightCoral
+    class a0,a1,a2,a3,A0,A1,A2 A
+    classDef B fill:SpringGreen
+    class b0,b1,b2,b3,B0,B1,B2 B
+</div>
+<figcaption>
+        Рис.&thinsp;20.
+        
+    </figcaption>
+</figure></section>
+
+
+<section class="slide entry"><h2>
+        Левацкие кучи
+    </h2><figure>
+    <div class="mermaid w-75">
+graph TD
+    subgraph A + B
+    c0((1))
+    c0 --- C0{A0}
+    c0 --- c1((2))
+    c1 --- C1{B0}
+    c1 --- c2((3))
+    c2 --- C2{A1}
+    c2 --- c3((5))
+    c3 --- C3{A2}
+    c3 --- c4((6))
+    c4 --- C4{B1}
+    c4 --- c5((7))
+    c5 --- C5{B2}
+    c5 --- c6((8))
+    c6 --- C6(( ))
+    c6 --- c7((12))
+    end
+    subgraph B
+    b0((2))
+    b0 --- B0{B0}
+    b0 --- b1((6))
+    b1 --- B1{B1}
+    b1 --- b2((7))
+    b2 --- B2{B2}
+    b2 --- b3((12))
+    end
+    subgraph A
+    a0((1))
+    a0 --- A0{A0}
+    a0 --- a1((3))
+    a1 --- A1{A1}
+    a1 --- a2((5))
+    a2 --- A2{A2}
+    a2 --- a3((8))
+    end
+    classDef A fill:LightCoral
+    class a0,a1,a2,a3,A0,A1,A2,c0,C0,c2,C2,c3,C3,c6 A
+    classDef B fill:SpringGreen
+    class b0,b1,b2,b3,B0,B1,B2,c1,C1,c4,C4,c5,C5,c7 B
+    classDef zero opacity:0.3,fill:LightCoral
+    class C6 zero
+</div>
+<figcaption>
+        Рис.&thinsp;21.
+        
+    </figcaption>
+</figure></section>
+
+
+<section class="slide entry"><h2>
+        Левацкие кучи
+    </h2><p>Осталось развернуть.</p>
+
+<p class="next">Сложность слияния: \(O(r(A) + r(B)) = O(\log n)\).</p>
+<p class="next">Все операции сводятся к слиянию, кроме decrease_key.</p>
+<p class="next">Дополнительная память.</p>
+</section>
+
+
+<p><section id="skew" class="slide entry section"><h2>
+        Косые кучи
+    </h2></section>
+
+<section id="random" class="slide entry section"><h2>
+        Рандомизированные кучи
+    </h2></section>
+</p>
+
+<section id="further" class="slide entry"><h2>
+        Дополнительное чтение
+    </h2><ul>
+<li>Vuillemin, Jean. &ldquo;A data structure for manipulating priority queues.&rdquo; <em>Communications of the ACM</em>. vol. 21, no. 4, 1978, pp. 309–315.</li>
+<li>Fredman, Michael L., and al. &ldquo;The pairing heap: a new form of self-adjusting heap.&rdquo; <em>Algorithmica</em>. vol. 1, no. 1, 1986, pp. 111–129.</li>
+<li>Crane, Clark A. <em>Linear Lists and Priority Queues as Balanced Binary Trees</em> Ph.D. thesis. Department of Computer Science, Stanford University, 1972.</li>
+</ul></section>
+
+
+<section class="slide entry"><h2>
+        Дополнительное чтение
+    </h2><ul>
+<li>Sleator, Daniel Dominic and Tarjan, Robert Endre. &ldquo;Self-Adjusting Heaps.&rdquo; <em>SIAM Journal on Computing</em>. vol. 15, no. 1, 1986, pp. 52–69.</li>
+<li>Gambin, A. and Malinowski, A. &ldquo;Randomized Meldable Priority Queues.&rdquo; <em>Proceedings of the 25th Conference on Current Trends in Theory and Practice of Informatics: Theory and Practice of Informatics (SOFSEM &lsquo;98)</em>. Ed. Branislav Rovan, 1998, pp. 344-349.</li>
+</ul></section>
+
+
+<section class="slide entry clear section"><h2>
+        Спасибо за внимание
+    </h2></section>
+
+
+
+    <footer class="badge">
+        <a href="/">На главную</a>
+    </footer>
+
+    <div class="progress"></div>
+
+    <script src="/assets/shower/shower.min.js"></script><script>window.__assets_js_src="/assets/js/"</script>
+
+<script src='/assets/js/main.67d669ac.js'></script><link rel='stylesheet' href='/assets/katex/katex.min.css'>
+<script src='/assets/katex/katex.min.js'></script>
+<script src='/assets/katex/contrib/auto-render.min.js'></script>
+
+<script type='text/javascript'>
+  renderMathInElement(document.querySelector('.entry-content'),{"throwOnError":true});
+</script><script src='/assets/mermaid.min.js' />
+
+<script type='text/javascript'>
+  mermaid.initialize({});
+</script>
+
+</body>
+</html>

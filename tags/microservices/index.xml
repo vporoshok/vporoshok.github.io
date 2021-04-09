@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>microservices on Где-то на дальнем сервере</title>
+    <link>https://vporoshok.me/tags/microservices/</link>
+    <description>Recent content in microservices on Где-то на дальнем сервере</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>ru</language>
+    <lastBuildDate>Wed, 21 Aug 2019 03:25:57 +0000</lastBuildDate>
+    
+	<atom:link href="https://vporoshok.me/tags/microservices/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Действия в действии</title>
+      <link>https://vporoshok.me/post/2019/08/actions-in-action/</link>
+      <pubDate>Wed, 21 Aug 2019 03:25:57 +0000</pubDate>
+      
+      <guid>https://vporoshok.me/post/2019/08/actions-in-action/</guid>
+      <description>В статье Чистая архитектура на Go предлагается изолировать бизнес-логику микросервиса в так называемых Действиях. В данной статье разбираются различные наработанные практики и подходы по написанию Действий.
+DIContainer Практически любое действие так или иначе зависит от внешних систем, будь то база данных, файловая система, часы или логер. Всё, что связано с побочными эффектами. Собрать все зависимости в один объект, идея не новая, но в контексте Go несколько кропотливая. Итак, до создания первого действия необходимо описать зависимости.</description>
+    </item>
+    
+    <item>
+      <title>Чистая архитектура на Go</title>
+      <link>https://vporoshok.me/post/2018/04/clean-architect/</link>
+      <pubDate>Sun, 15 Apr 2018 14:14:40 +0000</pubDate>
+      
+      <guid>https://vporoshok.me/post/2018/04/clean-architect/</guid>
+      <description>О том, что такое чистая архитектура можно почитать в оригинале, а также в переводе. Кроме того на том же хабре есть переводы статей о переложении этого подхода на Go: раз, два и три. Но все это разбивается о реальную жизнь, транзакции, переиспользование кода, протомонолит и прочие проблемы. Но обо всём по порядку.
+ ⚠️Внимание!Всё описанное является сугубо моим мнением, основанным на некотором количестве боли, испытываемой в работе, особенно с циклическими импортами.</description>
+    </item>
+    
+  </channel>
+</rss>

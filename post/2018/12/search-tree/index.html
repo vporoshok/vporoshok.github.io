@@ -1,0 +1,692 @@
+<!DOCTYPE html>
+<html lang='ru'><head>
+  <meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='description' content='Ты не заметишь этот миг, лишь только завтра поутру'>
+<meta name='theme-color' content='#ffcd00'>
+
+<meta property='og:title' content='Деревья поиска. АВЛ-деревья • Где-то на дальнем сервере'>
+<meta property='og:description' content='Ты не заметишь этот миг, лишь только завтра поутру'>
+<meta property='og:url' content='https://vporoshok.me/post/2018/12/search-tree/'>
+<meta property='og:site_name' content='Где-то на дальнем сервере'>
+<meta property='og:type' content='article'><meta property='article:section' content='post'><meta property='article:tag' content='data-structure'><meta property='article:tag' content='complexity'><meta property='article:published_time' content='2018-12-20T14:00:00Z'/><meta property='article:modified_time' content='2019-03-31T08:35:33&#43;04:00'/><meta name='twitter:card' content='summary'>
+
+<meta name="generator" content="Hugo 0.57.2" />
+
+  <title>Деревья поиска. АВЛ-деревья • Где-то на дальнем сервере</title>
+  <link rel='canonical' href='https://vporoshok.me/post/2018/12/search-tree/'>
+  
+  
+  <link rel='icon' href='/favicon.ico'>
+<link rel='stylesheet' href='/assets/css/main.6a060eb7.css'><link rel='stylesheet' href='/assets/custom.css'><style>
+:root{--color-accent:#ffcd00;}
+</style>
+
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+	ga('create', 'UA-41042060-2', 'auto');
+	
+	ga('send', 'pageview');
+}
+</script>
+<script async src='https://www.google-analytics.com/analytics.js'></script>
+
+  
+
+</head>
+<body class='page type-post has-sidebar'>
+
+  <div class='site'><div id='sidebar' class='sidebar'>
+  <a class='screen-reader-text' href='#main-menu'>Перейти к основному меню</a>
+
+  <div class='container'><section class='widget widget-about sep-after'>
+  <header>
+    
+    <div class='logo'>
+      <a href='/'>
+        <img src='/images/logo.jpg' alt="Вернуться на главную">
+      </a>
+    </div>
+    
+    <h2 class='title site-title '>
+    vporoshok.me
+    </h2>
+    <div class='desc'>
+    Где-то на дальнем сервере
+    </div>
+  </header>
+
+</section>
+<section class='widget widget-social_menu sep-after'><nav aria-label='Соцсети'>
+    <ul><li>
+        <a href='https://twitter.com/vporoshok' target='_blank' rel='noopener'>
+          <span class='screen-reader-text'>Открыть Twitter-акаунт в новой вкладке</span><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"/>
+  
+</svg>
+</a>
+      </li><li>
+        <a href='https://github.com/vporoshok' target='_blank' rel='noopener'>
+          <span class='screen-reader-text'>Открыть Github-акаунт в новой вкладке</span><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/>
+  
+</svg>
+</a>
+      </li><li>
+        <a href='mailto:vporoshok@gmail.com' target='_blank' rel='noopener'>
+          <span class='screen-reader-text'>Связаться через Email</span><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+  <polyline points="22,6 12,13 2,6"/>
+  
+</svg>
+</a>
+      </li><li>
+        <a href='https://t.me/vporoshok' target='_blank' rel='noopener'>
+          <span class='screen-reader-text'>Открыть Telegram-акаунт в новой вкладке</span><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <path d="m 22.05,1.577 c -0.393,-0.016 -0.784,0.08 -1.117,0.235 -0.484,0.186 -4.92,1.902 -9.41,3.64 C 9.263,6.325 7.005,7.198 5.267,7.867 3.53,8.537 2.222,9.035 2.153,9.059 c -0.46,0.16 -1.082,0.362 -1.61,0.984 -0.79581202,1.058365 0.21077405,1.964825 1.004,2.499 1.76,0.564 3.58,1.102 5.087,1.608 0.556,1.96 1.09,3.927 1.618,5.89 0.174,0.394 0.553,0.54 0.944,0.544 l -0.002,0.02 c 0,0 0.307,0.03 0.606,-0.042 0.3,-0.07 0.677,-0.244 1.02,-0.565 0.377,-0.354 1.4,-1.36 1.98,-1.928 l 4.37,3.226 0.035,0.02 c 0,0 0.484,0.34 1.192,0.388 0.354,0.024 0.82,-0.044 1.22,-0.337 0.403,-0.294 0.67,-0.767 0.795,-1.307 0.374,-1.63 2.853,-13.427 3.276,-15.38 L 23.676,4.725 C 23.972,3.625 23.863,2.617 23.18,2.02 22.838,1.723 22.444,1.593 22.05,1.576 Z"/>
+  
+</svg>
+</a>
+      </li></ul>
+  </nav>
+</section><section class='widget widget-sidebar_menu sep-after'><nav id='sidebar-menu' class='menu sidebar-menu' aria-label='Боковое меню'>
+    <div class='container'>
+      <ul><li class='item'>
+  <a href='/categories/algorithm/'>Алгоритмы</a></li><li class='item'>
+  <a href='/categories/develop/'>Разработка</a></li><li class='item'>
+  <a href='/categories/life-style/'>Образ жизни</a></li><li class='item'>
+  <a href='/categories/book/'>Книги</a></li><li class='item'>
+  <a href='/slides/'>Презентации</a></li><li class='item'>
+  <a href='/categories/project/'>Проекты</a></li></ul>
+    </div>
+  </nav>
+
+</section><section class='widget widget-taxonomy_cloud sep-after'>
+  <header>
+    <h4 class='title widget-title'>Тэги</h4>
+  </header>
+
+  <div class='container list-container'>
+  <ul class='list taxonomy-cloud no-shuffle'><li>
+        <a href='/tags/algorithm/' style='font-size:1em'>algorithm</a>
+      </li><li>
+        <a href='/tags/angular/' style='font-size:1em'>angular</a>
+      </li><li>
+        <a href='/tags/architect/' style='font-size:1.625em'>architect</a>
+      </li><li>
+        <a href='/tags/blog/' style='font-size:1em'>blog</a>
+      </li><li>
+        <a href='/tags/checklist/' style='font-size:1.375em'>checklist</a>
+      </li><li>
+        <a href='/tags/complexity/' style='font-size:1.5em'>complexity</a>
+      </li><li>
+        <a href='/tags/csrf/' style='font-size:1em'>CSRF</a>
+      </li><li>
+        <a href='/tags/data-structure/' style='font-size:1.375em'>data-structure</a>
+      </li><li>
+        <a href='/tags/distributed-system/' style='font-size:1em'>distributed system</a>
+      </li><li>
+        <a href='/tags/event/' style='font-size:1em'>event</a>
+      </li><li>
+        <a href='/tags/git/' style='font-size:1em'>git</a>
+      </li><li>
+        <a href='/tags/go/' style='font-size:2em'>go</a>
+      </li><li>
+        <a href='/tags/graph/' style='font-size:1.125em'>graph</a>
+      </li><li>
+        <a href='/tags/hackathon/' style='font-size:1em'>hackathon</a>
+      </li><li>
+        <a href='/tags/keynote/' style='font-size:1em'>keynote</a>
+      </li><li>
+        <a href='/tags/logging/' style='font-size:1em'>logging</a>
+      </li><li>
+        <a href='/tags/management/' style='font-size:1.125em'>management</a>
+      </li><li>
+        <a href='/tags/memory/' style='font-size:1.25em'>memory</a>
+      </li><li>
+        <a href='/tags/microservices/' style='font-size:1.125em'>microservices</a>
+      </li><li>
+        <a href='/tags/orgmode/' style='font-size:1em'>orgmode</a>
+      </li><li>
+        <a href='/tags/php/' style='font-size:1em'>PHP</a>
+      </li><li>
+        <a href='/tags/python/' style='font-size:1.125em'>python</a>
+      </li><li>
+        <a href='/tags/rules/' style='font-size:1.125em'>rules</a>
+      </li><li>
+        <a href='/tags/rxjs/' style='font-size:1em'>rxjs</a>
+      </li><li>
+        <a href='/tags/scheme/' style='font-size:1.125em'>scheme</a>
+      </li><li>
+        <a href='/tags/scrum/' style='font-size:1.125em'>scrum</a>
+      </li><li>
+        <a href='/tags/security/' style='font-size:1em'>security</a>
+      </li><li>
+        <a href='/tags/sicp/' style='font-size:1.125em'>sicp</a>
+      </li><li>
+        <a href='/tags/sorting/' style='font-size:1em'>sorting</a>
+      </li><li>
+        <a href='/tags/state-machine/' style='font-size:1em'>state-machine</a>
+      </li><li>
+        <a href='/tags/team-lead/' style='font-size:1em'>team-lead</a>
+      </li><li>
+        <a href='/tags/testing/' style='font-size:1.125em'>testing</a>
+      </li><li>
+        <a href='/tags/tips-and-tricks/' style='font-size:1.25em'>tips and tricks</a>
+      </li><li>
+        <a href='/tags/toc/' style='font-size:1em'>toc</a>
+      </li><li>
+        <a href='/tags/tutorial/' style='font-size:1.125em'>tutorial</a>
+      </li><li>
+        <a href='/tags/typescript/' style='font-size:1em'>typescript</a>
+      </li><li>
+        <a href='/tags/web/' style='font-size:1em'>web</a>
+      </li><li>
+        <a href='/tags/work/' style='font-size:1em'>work</a>
+      </li></ul>
+</div>
+
+
+</section>
+</div>
+
+  <div class='sidebar-overlay'></div>
+</div><div class='main'><nav id='main-menu' class='menu main-menu' aria-label='Основное меню'>
+  <div class='container'>
+    <a class='screen-reader-text' href='#content'>Перейти к содержимому</a>
+
+<button id='sidebar-toggler' class='sidebar-toggler' aria-controls='sidebar'>
+  <span class='screen-reader-text'>Скрыть / показать боковую панель</span>
+  <span class='open'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <line x1="3" y1="12" x2="21" y2="12" />
+  <line x1="3" y1="6" x2="21" y2="6" />
+  <line x1="3" y1="18" x2="21" y2="18" />
+  
+</svg>
+</span>
+  <span class='close'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <line x1="18" y1="6" x2="6" y2="18" />
+  <line x1="6" y1="6" x2="18" y2="18" />
+  
+</svg>
+</span>
+</button>
+    <ul><li class='item'>
+        <a href='/post/'>Блог</a>
+      </li><li class='item'>
+        <a href='/page/about/'>Обо мне</a>
+      </li></ul>
+  </div>
+</nav><div class='header-widgets'>
+        <div class='container'></div>
+      </div>
+
+      <header id='header' class='header site-header'>
+        <div class='container sep-after'>
+          <div class='header-info'><p class='site-title title'>Где-то на дальнем сервере</p><p class='desc site-desc'>Заметки о программировании и не только</p>
+          </div>
+        </div>
+      </header>
+
+      <main id='content'>
+
+
+<article lang='ru' class='entry'>
+  <header class='header entry-header'>
+  <div class='container sep-after'>
+    <div class='header-info'>
+      <h1 class='title'>Деревья поиска. АВЛ-деревья</h1>
+      
+<p class='desc'>Ты не заметишь этот миг, лишь только завтра поутру</p>
+
+
+    </div>
+    
+<div class='entry-meta'>
+  <span class='posted-on'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+  <line x1="16" y1="2" x2="16" y2="6"/>
+  <line x1="8" y1="2" x2="8" y2="6"/>
+  <line x1="3" y1="10" x2="21" y2="10"/>
+  
+</svg>
+<span class='screen-reader-text'>Опубликовано </span>
+  <time class='entry-date' datetime='2018-12-20T14:00:00Z'>2018-12-20</time>
+</span>
+
+  
+  
+<span class='reading-time'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <circle cx="12" cy="12" r="10"/>
+  <polyline points="12 6 12 12 15 15"/>
+  
+</svg>
+9 минут на чтение
+</span>
+
+
+  
+</div>
+
+
+  </div>
+</header>
+
+  
+  
+<details class='container entry-toc'>
+  <summary class='title'>
+    <span>Оглавление</span>
+  </summary>
+  <nav id="TableOfContents">
+<ul>
+<li>
+<ul>
+<li><a href="#деревья-поиска">Деревья поиска</a>
+<ul>
+<li><a href="#операции">Операции</a></li>
+</ul></li>
+<li><a href="#деревья-с-поддержкой-баланса">Деревья с поддержкой баланса</a>
+<ul>
+<li><a href="#повороты">Повороты</a></li>
+</ul></li>
+<li><a href="#авл-дерево">АВЛ-дерево</a></li>
+<li><a href="#хранение-деревьев-для-минимизации-чтений-с-диска">Хранение деревьев для минимизации чтений с диска</a></li>
+<li><a href="#вопросы">Вопросы</a></li>
+<li><a href="#задания">Задания</a></li>
+<li><a href="#дополнительное-чтение">Дополнительное чтение</a></li>
+</ul></li>
+</ul>
+</nav>
+</details>
+
+
+  <div class='container entry-content'>
+  
+
+<p>Большие объёмы данных требуют особых подходов к задаче поиска. Если для нахождения элемента среди пары сотен элементов за линейное время достаточно хорошо, то когда речь идёт о тысячах и миллионах элементов, линейное время оказывается неоправданно большим. Можно воспользоваться известным нам бинарным поиском или даже его адаптацией <a href="/post/2018/10/merge-sort/">галопированием</a>. Но и это оказывается неэффективно при работе с данными, не влезающими в оперативную память. Действительно, пусть у нас есть файл размера 1 Гб с отсортированными данными. Пусть буфер чтения составляет 1 Кб. Тогда для бинарного поиска потребуется \(\log\frac{2^{30}}{2^{10}} = \log 2^{20} = 20\) чтений с диска. Это очень много. Давайте рассмотрим структуры, позволяющие искать быстрее и использовать компактные индексы по данным.</p>
+
+<h2 id="деревья-поиска">Деревья поиска</h2>
+
+<p><em>Арностью</em> дерева будем называть количество число \(k\) такое, что для любой вершины дерева количество сыновей этой вершины не превосходит \(k\). В общем случае можно считать, что для любой вершины количество сыновей строго равно \(k\), отсутствующих сыновей можно заменить пустыми поддеревьями \(\varnothing\).</p>
+
+<p>В общем случае для \(k\)-арного дерева для любой вершины \(v\) обозначим поддеревья её сыновей через \(T(v, i)\), где \(i \in k\). Будем называть такое дерево деревом поиска, если в каждой вершине \(v\) хранится неубывающий набор из \(k - 1\) ключа: \({v_i \colon 0 &lt; i &lt; k }\), такой что для любого \(0 &lt; i &lt; k\) ключи элементов \(i-1\) поддерева \(T(v, i - 1)\) не превосходят \(v_i\), а ключи элементов поддерева \(T(v, i)\) не меньше \(v_i\).</p>
+
+<figure>
+        <img src="/post/2018/12/img/search-tree-01.svg" alt="5-арный узел дерева поиска">
+    
+<figcaption>
+        Рис.&thinsp;1.
+        5-арный узел дерева поиска
+    </figcaption>
+</figure>
+
+
+<p>Для начала ограничим ветвистость рассматриваемых деревьев до \(2\). Деревья с большей ветвистостью обычно называются B-деревьями и будут рассматриваться в другой статье. Перепишем определение дерева поиска для бинарного случая, переведя набор ключей в понятие отображения.</p>
+
+<p>Двоичное дерево будем называть <em>двоичным деревом поиска</em>, если для каждой вершины дерева \(u\) определено отображение в линейно упорядоченное множество \(k(u)\), при этом для любой вершины из дерева её левого сына образ этого отображения меньше или равен образа вершины \(u\), а для правого дерева выполнено аналогичное неравенство со знаком больше или равно. То есть:
+<div class="equation">
+\[
+\forall u \in T \implies
+    (\forall v \in T_{u_\ell} \implies v \leqslant u) \land
+    (\forall v \in T_{u_r} \implies v \geqslant u)
+\]
+</div></p>
+
+<p>В качестве примера можно рассмотреть следующее дерево поиска:</p>
+
+<figure>
+        <img src="/post/2018/12/img/search-tree-02.svg" width="400px" }} alt="Двоичное дерево поиска">
+    
+<figcaption>
+        Рис.&thinsp;2.
+        Двоичное дерево поиска
+    </figcaption>
+</figure>
+
+
+<p>В таком дереве достаточно просто найти элемент. Мы должны, начиная с корня, сравнивать ключ текущей вершины с искомым и, в зависимости от результата сравнения, двигаться в левое или правое поддерево. Для примера путь поиска ключа 8 будет выглядеть примерно так:</p>
+
+<figure>
+        <img src="/post/2018/12/img/search-tree-03.svg" width="400px" }} alt="Поиск в дереве поиска">
+    
+<figcaption>
+        Рис.&thinsp;3.
+        Поиск в дереве поиска
+    </figcaption>
+</figure>
+
+
+<aside class="admonition">
+    <h4>
+        <span class="admonition-icon">ℹ️</span>Замечание</h4>Отметим, что в определении используются нестрогие неравенства по той же причине, что и в быстрой сортировке: при использовании строгих неравенств хотя бы с одной стороны может возникнуть ситуация, при которой мы не сможем достичь сбалансированности высоты дерева. А как видно из примера, сложность поиска равна \(O(h)\), где \(h\) &mdash; высота дерева.</aside>
+
+
+<aside class="admonition">
+    <h4>
+        <span class="admonition-icon">⚠️</span>Внимание!</h4><p>В определении дерева поиска всегда необходимо рассматривать все ключи определённого поддерева. Иногда можно встретить следующее определение дерева поиска:
+\[
+\forall u \in T \implies (u_\ell \leqslant u) \land (u_r \geqslant u).
+\]</p>
+
+<p>Под такое определение подходит и следующее дерево:</p>
+
+<figure>
+        <img src="/post/2018/12/img/search-tree-04.svg" width="400px" }} alt="Неправильное дерево поиска">
+    
+<figcaption>
+        Рис.&thinsp;4.
+        Неправильное дерево поиска
+    </figcaption>
+</figure>
+
+<p>Но вот найти в таком дереве вряд ли что-то получится.</p>
+</aside>
+
+
+<h3 id="операции">Операции</h3>
+
+<p>Помимо операции поиска такие деревья должны поддерживать операцию вставки, которая сводится к поиску места для вставки и непосредственной вставки. Обычно именно эта операция усложняется для того, чтобы дерево было сбалансированным. Различные реализации этой операции мы рассмотрим в соответствующих разделах.</p>
+
+<p>Кроме этого на деревьях поиска часто рассматривают операцию взятия интервала (range scan) &mdash; выбрать все элементы, чьи ключи находятся в интервале \((a, b)\), то есть \(\{u \in T \colon a &lt; k(u) &lt; b\}\). Здесь стоит отметить, что не смотря на то, что стоимость отдельного поиска составляет \(O(h)\), учётная стоимость перехода от элемента к элементу при взятии интервала составляет \(O(1)\)(<a id="qback-1" href="#qlink-1">?</a>).</p>
+
+<p>Также бывает необходимо обойти все вершины и применить к каждой определённую функцию. Большинство алгоритмов обхода являются рекурсивными и можно выделить следующие фазы обхода конкретной вершины:</p>
+
+<ul>
+<li><strong>N</strong> &mdash; применение функции к текущей вершине;</li>
+<li><strong>L</strong> &mdash; рекурсивное рассмотрение левого поддерева;</li>
+<li><strong>R</strong> &mdash; рекурсивное рассмотрение правого поддерева;</li>
+</ul>
+
+<p>Собственно чаще всего применяется обход слева направо, то есть фаза <strong>L</strong> должна проходить раньше <strong>R</strong>. А вот фазу <strong>N</strong> можно разместить в одной из трёх позиций, получая следующие обходы (пример обхода на дереве с рисунка 2):</p>
+
+<ul>
+<li><strong>NLR</strong> &mdash; прямой обход (pre-order): 10, 6, 1, 7, 6, 8, 18, 13, 21;</li>
+<li><strong>LNR</strong> &mdash; центрированный обход (in-order): 1, 6, 6, 7, 8, 10, 13, 18, 21;</li>
+<li><strong>LRN</strong> &mdash; обратный обход (post-order): 1, 6, 8, 7, 6, 13, 21, 18, 10;</li>
+</ul>
+
+<p>Прямой обход подходит для получения разницы <a href="https://ru.wikipedia.org/wiki/Дерево_хешей">Merkle tree</a>, обратный обход позволяет упростить сериализацию и десериализацию деревьев поиска, когда при десериализации для каждого элемента применяется простая операция вставки. А центрированный обход похож на выбор интервала \((-\infty; +\infty)\).</p>
+
+<p>Есть ещё одна операция, которая часто оказывается востребованной для дерева поиска: удаление элемента. Эту операцию можно разделить на 2 подвида: удаление по ключу или удаление по локатору. Собственно от этого зависит то, как искать элемент, а сама операция удаления сводится к объединению поддеревьев сыновей удаляемого элемента:</p>
+
+<figure>
+        <img src="/post/2018/12/img/search-tree-05.svg" width="400px" }} alt="Объединение деревьев поиска (до)">
+    
+<figcaption>
+        Рис.&thinsp;5.
+        Объединение деревьев поиска (до)
+    </figcaption>
+</figure>
+
+
+<figure>
+        <img src="/post/2018/12/img/search-tree-06.svg" width="600px" }} alt="Объединение деревьев поиска (после)">
+    
+<figcaption>
+        Рис.&thinsp;6.
+        Объединение деревьев поиска (после)
+    </figcaption>
+</figure>
+
+
+<h2 id="деревья-с-поддержкой-баланса">Деревья с поддержкой баланса</h2>
+
+<p>Как было замечено выше, сложность операций поиска и вставки напрямую зависит от высоты дерева, поэтому хорошо бы поддерживать дерево сбалансированным. Для этого существует несколько подходов. Целый класс алгоритмов поддержки баланса построенны на хранении дополнительной информации в вершинах: АВЛ-, красно-чёрные, АА-деревья, дуча и другие. Собственно как и для левацких куч, где была необходимость в хранении дополнительной информации, так и для некоторых алгоритмов этого класса дополнительную информацию можно заменить случайностью. Помимо этого есть класс алгоритмов, поддерживающих баланс за счёт своего строения: B-деревья и, отчасти, splay-деревья.</p>
+
+<h3 id="повороты">Повороты</h3>
+
+<p>Для рассматриваемых в данной статье алгоритмов необходима базовая операция поворота дерева. Визуально поворот выглядит следующим образом:</p>
+
+<figure>
+        <img src="/post/2018/12/img/search-tree-07.svg" alt="Поворот вершины">
+    
+<figcaption>
+        Рис.&thinsp;7.
+        Поворот вершины
+    </figcaption>
+</figure>
+
+
+<p>Перестроение графа из состояния 1 в состояние 2 называется правым поворотом, обратное &mdash; левым. Очевидно, что при таких поворотах свойства дерева поиска сохраняются:
+<div class="equation">
+\[
+\begin{gathered}
+    \forall u \in \alpha \implies u \leqslant x, \\
+    \forall u \in \beta  \implies x \leqslant u \leqslant y, \\
+    \forall u \in \gamma \implies y \leqslant u,
+\end{gathered}
+\]
+</div>
+то есть свойства сортирующего дерева инвариантны относительно поворотов. При этом после правого поворота высота левого поддерева уменьшилась как минимум на единицу, а высота правого поддерева увеличилась как минимум на единицу. То есть применяя подобные повороты можно балансировать высоты правого и левого поддеревьев.</p>
+
+<p>Вооружившись операциями поворотов, мы можем перейти к рассмотрению АВЛ-деревьев.</p>
+
+<h2 id="авл-дерево">АВЛ-дерево</h2>
+
+<p>АВЛ-дерево было изобретено советскими математиками <a href="https://ru.wikipedia.org/wiki/%D0%90%D0%B4%D0%B5%D0%BB%D1%8C%D1%81%D0%BE%D0%BD-%D0%92%D0%B5%D0%BB%D1%8C%D1%81%D0%BA%D0%B8%D0%B9,_%D0%93%D0%B5%D0%BE%D1%80%D0%B3%D0%B8%D0%B9_%D0%9C%D0%B0%D0%BA%D1%81%D0%B8%D0%BC%D0%BE%D0%B2%D0%B8%D1%87">Адельсон-Вельским</a> и <a href="https://ru.wikipedia.org/wiki/%D0%9B%D0%B0%D0%BD%D0%B4%D0%B8%D1%81,_%D0%95%D0%B2%D0%B3%D0%B5%D0%BD%D0%B8%D0%B9_%D0%9C%D0%B8%D1%85%D0%B0%D0%B9%D0%BB%D0%BE%D0%B2%D0%B8%D1%87">Ландисом</a> в 1962 году и названо по первым буквам их фамилий. Это дерево является классическим примером дерева поиска с поддержкой баланса. Иногда, под термином <em>самобалансирующееся двоичное дерево поиска</em> (self-balancing binary search tree) понимается именно АВЛ-дерево. Например, в книге Н. Вирта раздел, посвящённый деревьям поиска, рассматривает именно АВЛ-деревья.</p>
+
+<p>В классической реализации АВЛ-дерева в каждой вершине \(u\) хранится высота дерева с корнем в этой вершине \(h(u)\). Будем считать, что высота пустого дерева равно нулю, а высота непустого дерева на единицу больше максимума высот его правого и левого поддеревьев.
+<div class="equation">
+\[
+h(\varnothing) = 0 \quad\text{и}\quad h(u) = 1 + \max(h(u_\ell), h(u_r)).
+\]
+</div></p>
+
+<p>В качестве инварианта, который мы будем поддерживать, возьмём следующее правило:</p>
+
+<blockquote>
+<p>Высоты правого и левого поддеревьев любой вершины должны отличаться не более, чем на единицу.</p>
+</blockquote>
+
+<p>Этот инвариант может нарушиться после вставки нового элемента. Давайте добавим к дереву, изображённому на рисунке 2 новый элемент: 9. Для начала мы должны выполнить поиск ключа 9 в имеющемся дереве. Этот поиск приведёт нас к вершине 8, которая является листом. Таким образом новый элемент мы должны вставить как правый сын этой вершины, оставив левого сына пустым:</p>
+
+<figure>
+        <img src="/post/2018/12/img/search-tree-08.svg" width="400px" }} alt="Вставка нового элемента в дерево поиска">
+    
+<figcaption>
+        Рис.&thinsp;8.
+        Вставка нового элемента в дерево поиска
+    </figcaption>
+</figure>
+
+
+<p>Давайте рассмотрим высоты вершин для полученного дерева.</p>
+
+<figure>
+        <img src="/post/2018/12/img/search-tree-09.svg" alt="Высоты вершин до и после вставки элемента">
+    
+<figcaption>
+        Рис.&thinsp;9.
+        Высоты вершин до и после вставки элемента
+    </figcaption>
+</figure>
+
+
+<p>Здесь стоит заметить, что после вставки высота может измениться только у вершин, располагающихся на пути поиска места вставки, поэтому необходимо сохранить этот путь в стек и после вставки вернуться по нему, обновляя высоты вершин. При этом в некоторых вершинах может нарушиться правило, выбранное нами в качестве инварианта. В нашем примере это вершина с ключом 6:</p>
+
+<figure>
+        <img src="/post/2018/12/img/search-tree-10.svg" width="400px" }} alt="Нарушение инварианта АВЛ-дерева">
+    
+<figcaption>
+        Рис.&thinsp;10.
+        Нарушение инварианта АВЛ-дерева
+    </figcaption>
+</figure>
+
+
+<p>Для восстановления баланса необходимо выполнить левый поворот вокруг этой вершины, после чего получим следующее дерево высот:</p>
+
+<figure>
+        <img src="/post/2018/12/img/search-tree-11.svg" width="600px" }} alt="Поворот проблемной вершины">
+    
+<figcaption>
+        Рис.&thinsp;11.
+        Поворот проблемной вершины
+    </figcaption>
+</figure>
+
+
+<p>В итоге мы получаем дерево, в каждой вершине которого выполняется инвариант АВЛ-дерева:</p>
+
+<figure>
+        <img src="/post/2018/12/img/search-tree-12.svg" width="600px" }} alt="АВЛ-дерево после вставки и балансировки">
+    
+<figcaption>
+        Рис.&thinsp;12.
+        АВЛ-дерево после вставки и балансировки
+    </figcaption>
+</figure>
+
+
+<p>Стоит отметить, что инвариант АВЛ-дерева не эквивалентен правилу сбалансированности (расстояния от листьев до корня равны с точностью до единицы), так, например, для любого натурального \(n\) можно построить АВЛ-дерево, в котором будут два листа, расстояния которых до корня будут отличаться на \(n\) (<a id="qback-2" href="#qlink-2">?</a>).</p>
+
+<p>Проблема АВЛ-дерева заключается в том, что в каждой вершине необходимо хранить высоту её поддерева, что при большом количестве данных является существенными затратами. На самом деле размер дополнительной памяти можно сократить до 2 бит на вершину, храня в них лишь 3 состояния:</p>
+
+<ul>
+<li><code>00</code> &mdash; высота левого и правого поддерева равны;</li>
+<li><code>01</code> &mdash; высота правого поддерева больше высоты левого поддерева на 1;</li>
+<li><code>10</code> &mdash; высота левого поддерева больше высоты правого поддерева на 1;</li>
+</ul>
+
+<p>Этих вариантов хватит для описания инварианта АВЛ-дерева, а также позволит понять &mdash; нарушен ли инвариант при возврате по стеку поиска.</p>
+
+<h2 id="хранение-деревьев-для-минимизации-чтений-с-диска">Хранение деревьев для минимизации чтений с диска</h2>
+
+<p>Во вступлении было упомянуто о том, что деревья поиска позволяют также минимизировать чтения с диска. Для этого необходимо хранить деревья определённым образом. Разобьём всё дерево на поддеревья размером в блок чтения с диска, например 1 Кб. Пусть в узлах хранятся данные размером в 8 байт, тогда дерево размером 1 Кб будет содержать \(1024 / 8 = 128\) узлов, \(64\) из которых являются листьями. Под каждым листом мы можем «подцепить» два других дерева в качестве сыновей. Получится дерево деревьев:</p>
+
+<figure>
+        <img src="/post/2018/12/img/search-tree-13.svg" alt="Хранение дерева как фрактала">
+    
+<figcaption>
+        Рис.&thinsp;13.
+        Хранение дерева как фрактала
+    </figcaption>
+</figure>
+
+
+<p>При таком подходе 1 Гб данных можно уложить в 3 слоя таких деревьев. Таким образом для поиска элемента будет достаточно будет считать по одному дереву с каждого слоя, то есть совершить 3 чтения. При этом можно хранить деревья из 3 слоёв локально, так что при увеличении количества данных можно будет рассматривать это дерево как структуру, состоящую из гигабайтных деревьев.</p>
+
+<p>Такой подход к хранению структур данных называется кеш-независимым (cache-oblivious) и позволяет не только уменьшить количество чтений с диска, но и оптимизировать работу с кеш-линиями процессора.</p>
+
+<h2 id="вопросы">Вопросы</h2>
+
+<ol>
+<li><a id="qlink-1" href="#qback-1">^</a> Докажите учётную стоимость операции получения следующего элемента при взятии интервала. Какова будет сложность обхода всего дерева?</li>
+<li><a id="qlink-2" href="#qback-2">^</a> Докажите этот факт. А также докажите, что высота дерева всё равно будет ограничена \(O(\log n)\).</li>
+<li>Прочитайте статью Randomized binary search trees<sup class="footnote-ref" id="fnref:1"><a href="#fn:1">1</a></sup> и покажите достоинства и недостатки АВЛ и рандомизированных деревьев.</li>
+</ol>
+
+<h2 id="задания">Задания</h2>
+
+<ol>
+<li>Реализуйте АВЛ-дерево с хранением в каждом элементе лишь одного из трёх состояний: высоты поддеревьев равны, высота левого поддерева больше, высота правого поддерева больше.</li>
+<li>Реализуйте операцию удаления элемента из АВЛ-дерева по ключу.</li>
+<li><strong>*</strong> Реализуйте хранение АВЛ-дерева в виде фрактальной структуры.</li>
+</ol>
+
+<h2 id="дополнительное-чтение">Дополнительное чтение</h2>
+
+<ol>
+<li>Вирт, Никлаус. <em>Алгоритмы и структуры данных. Новая версия для Оберона</em>. Перевод Ткачев, Ф. В., М.: ДМК Пресс, 2016.</li>
+</ol>
+<div class="footnotes">
+
+<hr />
+
+<ol>
+<li id="fn:1">Martinez, Conrado; Roura, Salvador. &ldquo;Randomized binary search trees.&rdquo; <em>Journal of the ACM (ACM Press)</em>. vol. 45 iss. 2, 1998, pp. 288–323. <a href="http://akira.ruc.dk/~keld/teaching/algoritmedesign_f08/Artikler/03/Martinez97.pdf">http://akira.ruc.dk/~keld/teaching/algoritmedesign_f08/Artikler/03/Martinez97.pdf</a>
+ <a class="footnote-return" href="#fnref:1"><sup>[return]</sup></a></li>
+</ol>
+</div>
+
+</div>
+
+  
+<footer class='entry-footer'>
+  <div class='container sep-before'><div class='categories'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <path d="M22,19a2,2,0,0,1-2,2H4a2,2,0,0,1-2-2V5A2,2,0,0,1,4,3H9l2,3h9a2,2,0,0,1,2,2Z"/>
+  
+</svg>
+<span class='screen-reader-text'>category: </span><a class='category' href='/categories/algorithm/'>Алгоритмы</a></div>
+<div class='tags'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <path d="M20.59,13.41l-7.17,7.17a2,2,0,0,1-2.83,0L2,12V2H12l8.59,8.59A2,2,0,0,1,20.59,13.41Z"/>
+  <line x1="7" y1="7" x2="7" y2="7"/>
+  
+</svg>
+<span class='screen-reader-text'>Тэги: </span><a class='tag' href='/tags/data-structure/'>data-structure</a>, <a class='tag' href='/tags/complexity/'>complexity</a></div>
+
+  </div>
+</footer>
+
+
+</article>
+
+<nav class='entry-nav'>
+  <div class='container'><div class='prev-entry sep-before'>
+      <a href='/post/2018/11/introduction/'>
+        <span aria-hidden='true'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <line x1="20" y1="12" x2="4" y2="12"/>
+  <polyline points="10 18 4 12 10 6"/>
+  
+</svg>
+ Предыдущий</span>
+        <span class='screen-reader-text'>Предыдущая запись: </span>Как и для чего изучать алгоритмы</a>
+    </div><div class='next-entry sep-before'>
+      <a href='/post/2019/01/hackathon/'>
+        <span class='screen-reader-text'>Следующая запись: </span>Хакатон. Как не перестать улыбаться за 24 часа<span aria-hidden='true'>Следующий <svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <line x1="4" y1="12" x2="20" y2="12"/>
+  <polyline points="14 6 20 12 14 18"/>
+  
+</svg>
+</span>
+      </a>
+    </div></div>
+</nav>
+
+
+
+
+      </main>
+
+      <footer id='footer' class='footer'>
+        <div class='container sep-before'><div class='copyright'>
+  <p>Материалы распространяются по <a rel="noreferrer" href="https://creativecommons.org/licenses/by/4.0/" target="_blank">лицензии CC BY</a> &copy; 2018-2021 vporoshok <br>Увидели ошибку? Буду рад <a rel="noreferrer" href="https://github.com/vporoshok/vporoshok.github.io" target="_blank">PR&rsquo;у</a></p>
+</div>
+
+        </div>
+      </footer>
+
+    </div>
+  </div><script>window.__assets_js_src="/assets/js/"</script>
+
+<script src='/assets/js/main.67d669ac.js'></script><link rel='stylesheet' href='/assets/katex/katex.min.css'>
+<script src='/assets/katex/katex.min.js'></script>
+<script src='/assets/katex/contrib/auto-render.min.js'></script>
+
+<script type='text/javascript'>
+  renderMathInElement(document.querySelector('.entry-content'),{"throwOnError":true});
+</script><script src='/assets/mermaid.min.js' />
+
+<script type='text/javascript'>
+  mermaid.initialize({});
+</script>
+
+</body>
+
+</html>
+

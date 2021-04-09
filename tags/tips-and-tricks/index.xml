@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>tips and tricks on Где-то на дальнем сервере</title>
+    <link>https://vporoshok.me/tags/tips-and-tricks/</link>
+    <description>Recent content in tips and tricks on Где-то на дальнем сервере</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>ru</language>
+    <lastBuildDate>Wed, 21 Aug 2019 03:25:57 +0000</lastBuildDate>
+    
+	<atom:link href="https://vporoshok.me/tags/tips-and-tricks/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Действия в действии</title>
+      <link>https://vporoshok.me/post/2019/08/actions-in-action/</link>
+      <pubDate>Wed, 21 Aug 2019 03:25:57 +0000</pubDate>
+      
+      <guid>https://vporoshok.me/post/2019/08/actions-in-action/</guid>
+      <description>В статье Чистая архитектура на Go предлагается изолировать бизнес-логику микросервиса в так называемых Действиях. В данной статье разбираются различные наработанные практики и подходы по написанию Действий.
+DIContainer Практически любое действие так или иначе зависит от внешних систем, будь то база данных, файловая система, часы или логер. Всё, что связано с побочными эффектами. Собрать все зависимости в один объект, идея не новая, но в контексте Go несколько кропотливая. Итак, до создания первого действия необходимо описать зависимости.</description>
+    </item>
+    
+    <item>
+      <title>Полезные приёмы по работе с ошибками в Go</title>
+      <link>https://vporoshok.me/post/2019/05/errors/</link>
+      <pubDate>Sat, 04 May 2019 19:12:14 +0000</pubDate>
+      
+      <guid>https://vporoshok.me/post/2019/05/errors/</guid>
+      <description>Язык Go поощряет использование возвращаемых ошибок, при этом не накладывая больших ограничений на то, что скрывается внутри самой ошибки. Несмотря на многословность, подобную практику можно выгодно использовать. Давайте посмотрим какие удобные способы работы есть с ошибками.
+pkg/errors Первое, что необходимо включить в свой проект, это библиотеку github.com/pkg/errors, которая позволяет быстро конструировать ошибки, а также добавлять контекст и, конечно, стек вызова. Лично у меня пальцы уже автоматом набирают
+return errors.WithStack(err) Одной из ключевых особенностей ошибок, созданных с помощью пакета, является то, что у них есть метод Cause, позволяющий получить первоначальную ошибку.</description>
+    </item>
+    
+    <item>
+      <title>Декораторы в Go</title>
+      <link>https://vporoshok.me/post/2019/01/decorators/</link>
+      <pubDate>Thu, 24 Jan 2019 16:25:25 +0000</pubDate>
+      
+      <guid>https://vporoshok.me/post/2019/01/decorators/</guid>
+      <description>Довольно большая часть моей работы заключается в написании библиотечного кода. Кода, который будет многократно использоваться как другими программистами, так и мной самим. Поэтому одним из важных критериев становится удобство интерфейсов. Некоторые применяемые мной практики рассмотрены в этой статье.
+Перехватчики Концепция middleware появилась, конечно, задолго до go. Будем называть их перехватчиками, что не по фен-шую, но лучше, чем «слой промежуточного программного обеспечения». Однако, именно в go эта концепция достигла своего апогея.</description>
+    </item>
+    
+  </channel>
+</rss>

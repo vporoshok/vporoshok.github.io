@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>management on Где-то на дальнем сервере</title>
+    <link>https://vporoshok.me/tags/management/</link>
+    <description>Recent content in management on Где-то на дальнем сервере</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>ru</language>
+    <lastBuildDate>Fri, 09 Apr 2021 12:34:13 +0000</lastBuildDate>
+    
+	<atom:link href="https://vporoshok.me/tags/management/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Работа над задачей</title>
+      <link>https://vporoshok.me/post/2021/04/work/</link>
+      <pubDate>Fri, 09 Apr 2021 12:34:13 +0000</pubDate>
+      
+      <guid>https://vporoshok.me/post/2021/04/work/</guid>
+      <description>Каждый день по работе я сталкиваюсь с разными задачами. Принципы работы с ними складывались как-то спонтанно, местами ценой набитых шишек. В этой статье хочу собрать всё и структурировать. В основном для себя, но вдруг окажется полезным ещё кому-нибудь.
+Что важно Задачи можно решать разными способами, это как с сортировкой. В конце концов можно писать код до тех пор, пока задача не решится (возможно через пару лет усердного труда отдела программистов).</description>
+    </item>
+    
+    <item>
+      <title>O3: разговоры тет-а-тет</title>
+      <link>https://vporoshok.me/post/2019/03/one-on-one/</link>
+      <pubDate>Sun, 17 Mar 2019 17:35:25 +0000</pubDate>
+      
+      <guid>https://vporoshok.me/post/2019/03/one-on-one/</guid>
+      <description>Разговоры один на один между куратором и сотрудниками часто в англоязычных источниках называются one-on-one или просто O3. Для многих компаний это обычная практика, а среди европейских it-компаний уже трудно найти ту, где такие сессии не проводятся. Так давайте разбираться что это, для чего и как.
+Что же такое O3? O3 это приватная встреча между куратором и сотрудником. Такие встречи обычно проводятся раз в одну или две недели. На этих встречах обсуждаются текущее состояние сотрудника, его переживания связанные с работой, вопросы, которые не столь критичны, что требуют незамедлительной реакции, но важны в перспективе.</description>
+    </item>
+    
+  </channel>
+</rss>

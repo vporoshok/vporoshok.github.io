@@ -1,0 +1,37 @@
+graph TD
+    A((3))
+    A --- B((3))
+    A --- C((2))
+    B --- D((3))
+    B --- E((2))
+    C --- F((2))
+    C --- G((1))
+    D --- H((2))
+    D --- I((2))
+    E --- J((1))
+    E --- K((1))
+    F --- L((2))
+    F --- M((1))
+    G --- N((1))
+    G --- O((0))
+    H --- P((1))
+    H --- Q((1))
+    I --- R((1))
+    I --- S((1))
+    J --- T((1))
+    J --- U((0))
+    L --- V((1))
+    L --- W((1))
+    M --- X((1))
+    M --- Y((0))
+    N --- Z((1))
+    N --- a((0))
+
+    classDef zero opacity:0.3,fill:LightCoral
+    class O,U,Y,a zero
+    classDef one   fill:SpringGreen
+    class G,J,K,M,N,P,Q,R,S,T,V,W,X,Z one
+    classDef two   fill:SkyBlue
+    class C,E,F,H,I,L two
+    classDef three fill:MediumPurple
+    class A,B,D three

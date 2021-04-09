@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>sicp on Где-то на дальнем сервере</title>
+    <link>https://vporoshok.me/tags/sicp/</link>
+    <description>Recent content in sicp on Где-то на дальнем сервере</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>ru</language>
+    <lastBuildDate>Fri, 04 Oct 2019 15:17:31 +0000</lastBuildDate>
+    
+	<atom:link href="https://vporoshok.me/tags/sicp/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>SICP: 1.1 Элементы программирования</title>
+      <link>https://vporoshok.me/post/2019/10/sicp-elementary/</link>
+      <pubDate>Fri, 04 Oct 2019 15:17:31 +0000</pubDate>
+      
+      <guid>https://vporoshok.me/post/2019/10/sicp-elementary/</guid>
+      <description>Префиксная нотация и комбинации Программа на языке Лисп представляет из себя набор комбинаций (combination) и особых форм (special form). Комбинациями называются кортежи, состоящие из команды и операндов (аргументов):
+(&amp;lt;op&amp;gt; &amp;lt;arg1&amp;gt; [...&amp;lt;args&amp;gt;]) В качестве операции могут выступать базовые арифметические операции, встроенные в язык (+, -, * и /). Например
+(+ 8 4) ;&amp;gt; 12 (здесь и далее ответы интерпретатора пишутся в комментарии, начинающемся с ;&amp;gt;)
+(/ 128 8) ;&amp;gt; 16 Первое время кажется сложным воспринимать такую запись, где операция предшествует операндам.</description>
+    </item>
+    
+    <item>
+      <title>SICP: Введение</title>
+      <link>https://vporoshok.me/post/2019/07/sicp-intro/</link>
+      <pubDate>Tue, 30 Jul 2019 09:16:26 +0000</pubDate>
+      
+      <guid>https://vporoshok.me/post/2019/07/sicp-intro/</guid>
+      <description>В очередной раз взялся за эту книгу, признанную фундаментальной для изучения программирования, основу для многих курсов и по сей день актуальную. Итак, знаменитая СИКП или книга Структура и интерпретация компьютерных программ. Эта книга, написанная в MIT, является классическим учебником программирования, используемым во многих университетах по всему миру.
+Эта книга проводит читателя от азов программирования до сложных конструкций, вплоть до построения собственного интерпретатора языка. В ней разбирается то, как работает с кодом программ компьютер, а также то, как удобнее работать с ним человеку.</description>
+    </item>
+    
+  </channel>
+</rss>

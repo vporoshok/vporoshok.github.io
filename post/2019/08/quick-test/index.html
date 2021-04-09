@@ -1,0 +1,657 @@
+<!DOCTYPE html>
+<html lang='ru'><head>
+  <meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='description' content='Как используя golden-файлы, моки и щепотку рефлексии быстро протестировать сложную логику'>
+<meta name='theme-color' content='#ffcd00'>
+
+<meta property='og:title' content='Быстро пишем функциональные тесты • Где-то на дальнем сервере'>
+<meta property='og:description' content='Как используя golden-файлы, моки и щепотку рефлексии быстро протестировать сложную логику'>
+<meta property='og:url' content='https://vporoshok.me/post/2019/08/quick-test/'>
+<meta property='og:site_name' content='Где-то на дальнем сервере'>
+<meta property='og:type' content='article'><meta property='article:section' content='post'><meta property='article:tag' content='go'><meta property='article:tag' content='testing'><meta property='article:published_time' content='2019-08-25T15:44:33Z'/><meta property='article:modified_time' content='2020-07-04T13:36:24&#43;04:00'/><meta name='twitter:card' content='summary'>
+
+<meta name="generator" content="Hugo 0.57.2" />
+
+  <title>Быстро пишем функциональные тесты • Где-то на дальнем сервере</title>
+  <link rel='canonical' href='https://vporoshok.me/post/2019/08/quick-test/'>
+  
+  
+  <link rel='icon' href='/favicon.ico'>
+<link rel='stylesheet' href='/assets/css/main.6a060eb7.css'><link rel='stylesheet' href='/assets/custom.css'><style>
+:root{--color-accent:#ffcd00;}
+</style>
+
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+	ga('create', 'UA-41042060-2', 'auto');
+	
+	ga('send', 'pageview');
+}
+</script>
+<script async src='https://www.google-analytics.com/analytics.js'></script>
+
+  
+
+</head>
+<body class='page type-post has-sidebar'>
+
+  <div class='site'><div id='sidebar' class='sidebar'>
+  <a class='screen-reader-text' href='#main-menu'>Перейти к основному меню</a>
+
+  <div class='container'><section class='widget widget-about sep-after'>
+  <header>
+    
+    <div class='logo'>
+      <a href='/'>
+        <img src='/images/logo.jpg' alt="Вернуться на главную">
+      </a>
+    </div>
+    
+    <h2 class='title site-title '>
+    vporoshok.me
+    </h2>
+    <div class='desc'>
+    Где-то на дальнем сервере
+    </div>
+  </header>
+
+</section>
+<section class='widget widget-social_menu sep-after'><nav aria-label='Соцсети'>
+    <ul><li>
+        <a href='https://twitter.com/vporoshok' target='_blank' rel='noopener'>
+          <span class='screen-reader-text'>Открыть Twitter-акаунт в новой вкладке</span><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"/>
+  
+</svg>
+</a>
+      </li><li>
+        <a href='https://github.com/vporoshok' target='_blank' rel='noopener'>
+          <span class='screen-reader-text'>Открыть Github-акаунт в новой вкладке</span><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/>
+  
+</svg>
+</a>
+      </li><li>
+        <a href='mailto:vporoshok@gmail.com' target='_blank' rel='noopener'>
+          <span class='screen-reader-text'>Связаться через Email</span><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+  <polyline points="22,6 12,13 2,6"/>
+  
+</svg>
+</a>
+      </li><li>
+        <a href='https://t.me/vporoshok' target='_blank' rel='noopener'>
+          <span class='screen-reader-text'>Открыть Telegram-акаунт в новой вкладке</span><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <path d="m 22.05,1.577 c -0.393,-0.016 -0.784,0.08 -1.117,0.235 -0.484,0.186 -4.92,1.902 -9.41,3.64 C 9.263,6.325 7.005,7.198 5.267,7.867 3.53,8.537 2.222,9.035 2.153,9.059 c -0.46,0.16 -1.082,0.362 -1.61,0.984 -0.79581202,1.058365 0.21077405,1.964825 1.004,2.499 1.76,0.564 3.58,1.102 5.087,1.608 0.556,1.96 1.09,3.927 1.618,5.89 0.174,0.394 0.553,0.54 0.944,0.544 l -0.002,0.02 c 0,0 0.307,0.03 0.606,-0.042 0.3,-0.07 0.677,-0.244 1.02,-0.565 0.377,-0.354 1.4,-1.36 1.98,-1.928 l 4.37,3.226 0.035,0.02 c 0,0 0.484,0.34 1.192,0.388 0.354,0.024 0.82,-0.044 1.22,-0.337 0.403,-0.294 0.67,-0.767 0.795,-1.307 0.374,-1.63 2.853,-13.427 3.276,-15.38 L 23.676,4.725 C 23.972,3.625 23.863,2.617 23.18,2.02 22.838,1.723 22.444,1.593 22.05,1.576 Z"/>
+  
+</svg>
+</a>
+      </li></ul>
+  </nav>
+</section><section class='widget widget-sidebar_menu sep-after'><nav id='sidebar-menu' class='menu sidebar-menu' aria-label='Боковое меню'>
+    <div class='container'>
+      <ul><li class='item'>
+  <a href='/categories/algorithm/'>Алгоритмы</a></li><li class='item'>
+  <a href='/categories/develop/'>Разработка</a></li><li class='item'>
+  <a href='/categories/life-style/'>Образ жизни</a></li><li class='item'>
+  <a href='/categories/book/'>Книги</a></li><li class='item'>
+  <a href='/slides/'>Презентации</a></li><li class='item'>
+  <a href='/categories/project/'>Проекты</a></li></ul>
+    </div>
+  </nav>
+
+</section><section class='widget widget-taxonomy_cloud sep-after'>
+  <header>
+    <h4 class='title widget-title'>Тэги</h4>
+  </header>
+
+  <div class='container list-container'>
+  <ul class='list taxonomy-cloud no-shuffle'><li>
+        <a href='/tags/algorithm/' style='font-size:1em'>algorithm</a>
+      </li><li>
+        <a href='/tags/angular/' style='font-size:1em'>angular</a>
+      </li><li>
+        <a href='/tags/architect/' style='font-size:1.625em'>architect</a>
+      </li><li>
+        <a href='/tags/blog/' style='font-size:1em'>blog</a>
+      </li><li>
+        <a href='/tags/checklist/' style='font-size:1.375em'>checklist</a>
+      </li><li>
+        <a href='/tags/complexity/' style='font-size:1.5em'>complexity</a>
+      </li><li>
+        <a href='/tags/csrf/' style='font-size:1em'>CSRF</a>
+      </li><li>
+        <a href='/tags/data-structure/' style='font-size:1.375em'>data-structure</a>
+      </li><li>
+        <a href='/tags/distributed-system/' style='font-size:1em'>distributed system</a>
+      </li><li>
+        <a href='/tags/event/' style='font-size:1em'>event</a>
+      </li><li>
+        <a href='/tags/git/' style='font-size:1em'>git</a>
+      </li><li>
+        <a href='/tags/go/' style='font-size:2em'>go</a>
+      </li><li>
+        <a href='/tags/graph/' style='font-size:1.125em'>graph</a>
+      </li><li>
+        <a href='/tags/hackathon/' style='font-size:1em'>hackathon</a>
+      </li><li>
+        <a href='/tags/keynote/' style='font-size:1em'>keynote</a>
+      </li><li>
+        <a href='/tags/logging/' style='font-size:1em'>logging</a>
+      </li><li>
+        <a href='/tags/management/' style='font-size:1.125em'>management</a>
+      </li><li>
+        <a href='/tags/memory/' style='font-size:1.25em'>memory</a>
+      </li><li>
+        <a href='/tags/microservices/' style='font-size:1.125em'>microservices</a>
+      </li><li>
+        <a href='/tags/orgmode/' style='font-size:1em'>orgmode</a>
+      </li><li>
+        <a href='/tags/php/' style='font-size:1em'>PHP</a>
+      </li><li>
+        <a href='/tags/python/' style='font-size:1.125em'>python</a>
+      </li><li>
+        <a href='/tags/rules/' style='font-size:1.125em'>rules</a>
+      </li><li>
+        <a href='/tags/rxjs/' style='font-size:1em'>rxjs</a>
+      </li><li>
+        <a href='/tags/scheme/' style='font-size:1.125em'>scheme</a>
+      </li><li>
+        <a href='/tags/scrum/' style='font-size:1.125em'>scrum</a>
+      </li><li>
+        <a href='/tags/security/' style='font-size:1em'>security</a>
+      </li><li>
+        <a href='/tags/sicp/' style='font-size:1.125em'>sicp</a>
+      </li><li>
+        <a href='/tags/sorting/' style='font-size:1em'>sorting</a>
+      </li><li>
+        <a href='/tags/state-machine/' style='font-size:1em'>state-machine</a>
+      </li><li>
+        <a href='/tags/team-lead/' style='font-size:1em'>team-lead</a>
+      </li><li>
+        <a href='/tags/testing/' style='font-size:1.125em'>testing</a>
+      </li><li>
+        <a href='/tags/tips-and-tricks/' style='font-size:1.25em'>tips and tricks</a>
+      </li><li>
+        <a href='/tags/toc/' style='font-size:1em'>toc</a>
+      </li><li>
+        <a href='/tags/tutorial/' style='font-size:1.125em'>tutorial</a>
+      </li><li>
+        <a href='/tags/typescript/' style='font-size:1em'>typescript</a>
+      </li><li>
+        <a href='/tags/web/' style='font-size:1em'>web</a>
+      </li><li>
+        <a href='/tags/work/' style='font-size:1em'>work</a>
+      </li></ul>
+</div>
+
+
+</section>
+</div>
+
+  <div class='sidebar-overlay'></div>
+</div><div class='main'><nav id='main-menu' class='menu main-menu' aria-label='Основное меню'>
+  <div class='container'>
+    <a class='screen-reader-text' href='#content'>Перейти к содержимому</a>
+
+<button id='sidebar-toggler' class='sidebar-toggler' aria-controls='sidebar'>
+  <span class='screen-reader-text'>Скрыть / показать боковую панель</span>
+  <span class='open'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <line x1="3" y1="12" x2="21" y2="12" />
+  <line x1="3" y1="6" x2="21" y2="6" />
+  <line x1="3" y1="18" x2="21" y2="18" />
+  
+</svg>
+</span>
+  <span class='close'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <line x1="18" y1="6" x2="6" y2="18" />
+  <line x1="6" y1="6" x2="18" y2="18" />
+  
+</svg>
+</span>
+</button>
+    <ul><li class='item'>
+        <a href='/post/'>Блог</a>
+      </li><li class='item'>
+        <a href='/page/about/'>Обо мне</a>
+      </li></ul>
+  </div>
+</nav><div class='header-widgets'>
+        <div class='container'></div>
+      </div>
+
+      <header id='header' class='header site-header'>
+        <div class='container sep-after'>
+          <div class='header-info'><p class='site-title title'>Где-то на дальнем сервере</p><p class='desc site-desc'>Заметки о программировании и не только</p>
+          </div>
+        </div>
+      </header>
+
+      <main id='content'>
+
+
+<article lang='ru' class='entry'>
+  <header class='header entry-header'>
+  <div class='container sep-after'>
+    <div class='header-info'>
+      <h1 class='title'>Быстро пишем функциональные тесты</h1>
+      
+<p class='desc'>Как используя golden-файлы, моки и щепотку рефлексии быстро протестировать сложную логику</p>
+
+
+    </div>
+    
+<div class='entry-meta'>
+  <span class='posted-on'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+  <line x1="16" y1="2" x2="16" y2="6"/>
+  <line x1="8" y1="2" x2="8" y2="6"/>
+  <line x1="3" y1="10" x2="21" y2="10"/>
+  
+</svg>
+<span class='screen-reader-text'>Опубликовано </span>
+  <time class='entry-date' datetime='2019-08-25T15:44:33Z'>2019-08-25</time>
+</span>
+
+  
+  
+<span class='reading-time'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <circle cx="12" cy="12" r="10"/>
+  <polyline points="12 6 12 12 15 15"/>
+  
+</svg>
+9 минут на чтение
+</span>
+
+
+  
+</div>
+
+
+  </div>
+</header>
+
+  
+  
+<details class='container entry-toc'>
+  <summary class='title'>
+    <span>Оглавление</span>
+  </summary>
+  <nav id="TableOfContents">
+<ul>
+<li>
+<ul>
+<li><a href="#пара-слов-о-классификации-тестов">Пара слов о классификации тестов</a></li>
+<li><a href="#где-располагаются-функциональные-тесты">Где располагаются функциональные тесты?</a></li>
+<li><a href="#di-зависимости-и-моки">DI. Зависимости и моки</a></li>
+<li><a href="#golden-файлы">Golden-файлы</a></li>
+<li><a href="#сюита-собираем-всё-вместе">Сюита. Собираем всё вместе</a></li>
+<li><a href="#вспомогательные-методы-и-базовая-сюита">Вспомогательные методы и базовая сюита</a></li>
+<li><a href="#выводы">Выводы</a></li>
+</ul></li>
+</ul>
+</nav>
+</details>
+
+
+  <div class='container entry-content'>
+  
+
+<h2 id="пара-слов-о-классификации-тестов">Пара слов о классификации тестов</h2>
+
+<p>Напомню, что традиционно выделяют следующие виды тестов:</p>
+
+<ul>
+<li><strong>Модульные</strong> &mdash; они же юнит-тесты. Это тесты изолированные внутри пакета/модуля, которые тестируют отдельные методы классов и помогают при разработке.</li>
+<li><strong>Функциональные</strong> &mdash; тесты, обращающиеся к пакету/модулю как к чёрному ящику, вызывая только публичные методы.</li>
+<li><strong>Интеграционные</strong> &mdash; (и их подвиды: end-to-end и сценарные тесты) проводятся в среде приближенной к рабочей, с реальными бд и другими сервисами.</li>
+</ul>
+
+<p>Не вдаваясь в холивары, будем придерживаюсь той точки зрения, что модульные тесты это инструмент для разработки, когда есть сложная логика, которую легко протестировать. Для них редко нужны моки. В них можно и нужно тестировать приватные методы и функции. Они близки к реализации и при рефакторинге их часто приходится переписывать или просто выкидывать. Ориентироваться на них в приёмке кода нужно с той же степенью как на название локальных переменных.</p>
+
+<p>Функциональные же тесты фиксируют внешний интерфейс пакета/модуля, таким образом при рефакторинге они не должны меняться. И при приёмке кода изменения в них должны тщательно проверяться. В таких тестах всё окружение заменяется моками, чтобы проверить краевые сценарии. Именно о них в контексте Go и пойдёт речь.</p>
+
+<p>Интеграционные тесты вообще выделяются в отдельный пакет или даже проект. О них мы поговорим как-нибудь в другой раз.</p>
+
+<h2 id="где-располагаются-функциональные-тесты">Где располагаются функциональные тесты?</h2>
+
+<p>Если опираться на архитектуру, описанную в статье <a href="/post/2018/04/clean-architect/">Чистая архитектура на Go</a>, то основная бизнес-логика сервиса должна располагаться в действиях, в пакете <code>action</code>. (Подробнее о написании самих действий можно почитать в статье <a href="/post/2019/08/actions-in-action/">Действия в действии</a>.) Каждая команда, предоставляемая сервисом должна по сути 1 к 1 соотносится с действием.</p>
+
+<p>У сервиса могут быть разные интерфейсы, может быть одновременно несколько интерфейсов, например, HTTP и gRPC, или SOA поверх AMQP. Может быть несколько точек входа, например, проект может одновременно выступать и как HTTP-сервис, и собираться в виде утилиты командной строки. За интерфейсы отвечает слой сервисов, в котором происходит обработка параметров запроса с приведением к типам, моделям и интерфейсам проекта (разбор тела HTTP-запроса или преобразование protobuf-модели к внутренней), а также сериализацией ответа. Сама же логика работы сервиса должна оставаться в действиях.</p>
+
+<p>Таким образом, действие не должно знать откуда его вызвали и как были получены аргументы этого вызова (пришли ли они через RabbitMQ или были переданы флагами командной строки). Соответственно функциональность сервиса собрана в пакете <code>action</code> и именно в нём и будем располагать функциональные тесты.</p>
+
+<p>Одной из ключевых особенностей функциональных тестов является то, что они должны относится к действиям как чёрным ящикам. Для того, чтобы избежать соблазна обратиться к приватным функциям или методам, отделим тесты в отдельный пакет. В Go для этого не нужно создавать отдельную папку, достаточно в заголовке файла теста прописать другое имя пакета:</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#080;font-weight:bold">package</span> action_test</code></pre></div>
+<p>Кроме того, можно одновременно в пакете держать и юнит-тесты, которые будут относится к пакету <code>action</code> и иметь доступ к приватным полям и методам. Например, пусть у нас есть действие <code>Login</code>, расположенное в файле <code>login.go</code>, тогда юнит тесты можно расположить в файле <code>login_unit_test.go</code>, оставив заголовком</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#080;font-weight:bold">package</span> action</code></pre></div>
+<p>а функциональные тесты положить в файл <code>login_func_test.go</code>, назвав пакет с суффиксом <code>_test</code>. Тогда пакет действий будет внешним по отношению к функциональным тестам и его надо импортировать аналогично тому, как это делается в сервисах:</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#080;font-weight:bold">import</span> (
+    <span style="background-color:#fff0f0">&#34;testing&#34;</span>
+
+    <span style="background-color:#fff0f0">&#34;path/to/project/internal/action&#34;</span>
+)
+
+<span style="color:#080;font-weight:bold">func</span> <span style="color:#06b;font-weight:bold">TestLogin</span>(t <span style="color:#333">*</span>testing.T) {
+    action.<span style="color:#06b;font-weight:bold">Login</span>(<span style="color:#333">...</span>)
+}</code></pre></div>
+<h2 id="di-зависимости-и-моки">DI. Зависимости и моки</h2>
+
+<p>Как упоминалось в предыдущих статьях, все внешние зависимости и побочные эффекты действий должны передаваться с помощью контейнера зависимостей <code>DIContainer</code>, интерфейс которого описывается в пакете <code>action</code>. Например,</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#888">// di_container.go
+</span><span style="color:#888"></span><span style="color:#080;font-weight:bold">package</span> action
+
+<span style="color:#080;font-weight:bold">import</span> (
+    <span style="background-color:#fff0f0">&#34;context&#34;</span>
+
+    <span style="background-color:#fff0f0">&#34;path/to/project/internal/model&#34;</span>
+
+    <span style="background-color:#fff0f0">&#34;github.com/jonboulle/clockwork&#34;</span>
+    <span style="background-color:#fff0f0">&#34;go.uber.org/zap&#34;</span>
+)
+
+<span style="color:#888">// DIContainer is a dependency injection container
+</span><span style="color:#888"></span><span style="color:#080;font-weight:bold">type</span> DIContainer <span style="color:#080;font-weight:bold">interface</span> {
+    <span style="color:#06b;font-weight:bold">GetClock</span>() clockwork.Clock
+    <span style="color:#06b;font-weight:bold">GetLogger</span>() <span style="color:#333">*</span>zap.Logger
+    <span style="color:#06b;font-weight:bold">GetTxManager</span>() TxManager
+    <span style="color:#06b;font-weight:bold">GetUserRepository</span>() UserRepository
+}
+
+<span style="color:#888">// TxManager is a service to wrap part of logic in transaction
+</span><span style="color:#888"></span><span style="color:#080;font-weight:bold">type</span> TxManager <span style="color:#080;font-weight:bold">interface</span> {
+    <span style="color:#06b;font-weight:bold">WithTx</span>(context.Context, <span style="color:#080;font-weight:bold">func</span>(context.Context) <span style="color:#339;font-weight:bold">error</span>) <span style="color:#339;font-weight:bold">error</span>
+}
+
+<span style="color:#888">// UserRepository is a persistence layer of user-objects
+</span><span style="color:#888"></span><span style="color:#080;font-weight:bold">type</span> UserRepository <span style="color:#080;font-weight:bold">interface</span> {
+    <span style="color:#06b;font-weight:bold">ListAll</span>(context.Context) ([]model.User, <span style="color:#339;font-weight:bold">error</span>)
+    <span style="color:#06b;font-weight:bold">GetByID</span>(ctx context.Context, id <span style="color:#339;font-weight:bold">string</span>) (model.User, <span style="color:#339;font-weight:bold">error</span>)
+    <span style="color:#06b;font-weight:bold">GetByEmail</span>(ctx context.Context, email <span style="color:#339;font-weight:bold">string</span>) (model.User, <span style="color:#339;font-weight:bold">error</span>)
+    <span style="color:#888">// ...
+</span><span style="color:#888"></span>}</code></pre></div>
+<p>Добавим комментарии для автоматической генерации моков:</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#888">//go:generate mkdir -p mock
+</span><span style="color:#888"></span><span style="color:#333">//</span><span style="color:#080;font-weight:bold">go</span>:generate minimock <span style="color:#333">-</span>o .<span style="color:#333">/</span>mock<span style="color:#333">/</span> <span style="color:#333">-</span>s .<span style="color:#080;font-weight:bold">go</span> <span style="color:#333">-</span>g</code></pre></div>
+<p>В большинстве рабочих проектов я использовал <a href="https://github.com/golang/mock">gomock</a> для генерации моков, но последнее время стал переходить на <a href="https://github.com/gojuno/minimock">minimock</a> в связи с тем, что код для работы с моками оказывается куда лаконичнее.</p>
+
+<p>После этого выполним команду генерации</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ go generate path/to/project/internal/action</code></pre></div>
+<p>что должно создать подпакет <code>mock</code> в пакете действий, где будут расположены моки для всех интерфейсов пакета действий.</p>
+
+<p>Далее в тестах моки можно использовать очень просто:</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#080;font-weight:bold">import</span> (
+    <span style="color:#888">//...
+</span><span style="color:#888"></span>    <span style="background-color:#fff0f0">&#34;path/to/project/internal/action/mock&#34;</span>
+
+    <span style="background-color:#fff0f0">&#34;github.com/gojuno/minimock/v3&#34;</span>
+    <span style="background-color:#fff0f0">&#34;github.com/jonboulle/clockwork&#34;</span>
+    <span style="background-color:#fff0f0">&#34;go.uber.org/zap&#34;</span>
+)
+
+<span style="color:#080;font-weight:bold">func</span> <span style="color:#06b;font-weight:bold">TestLogin</span>(t <span style="color:#333">*</span>testing.T) {
+    ctrl <span style="color:#333">:=</span> minimock.<span style="color:#06b;font-weight:bold">NewController</span>(t)
+    <span style="color:#080;font-weight:bold">defer</span> ctrl.<span style="color:#06b;font-weight:bold">Finish</span>()
+
+    ctx <span style="color:#333">:=</span> context.<span style="color:#06b;font-weight:bold">Background</span>()
+    di <span style="color:#333">:=</span> <span style="color:#06b;font-weight:bold">MakeLoginDI</span>(t, ctrl)
+
+    res, err <span style="color:#333">:=</span> action.<span style="color:#06b;font-weight:bold">Login</span>(ctx, di, <span style="color:#333">...</span>)
+    <span style="color:#888">// check res and err
+</span><span style="color:#888"></span>}
+
+<span style="color:#080;font-weight:bold">func</span> <span style="color:#06b;font-weight:bold">MakeLoginDI</span>(
+    t <span style="color:#333">*</span>testing.T, ctrl <span style="color:#333">*</span>minimock.Controller
+) <span style="color:#333">*</span>mock.DIContainerMock {
+
+    t.<span style="color:#06b;font-weight:bold">Helper</span>()
+    di <span style="color:#333">:=</span> mock.<span style="color:#06b;font-weight:bold">NewDIContainerMock</span>(ctrl)
+
+    clock <span style="color:#333">:=</span> clockwork.<span style="color:#06b;font-weight:bold">NewFakeClock</span>()
+    di.GetClockMock.<span style="color:#06b;font-weight:bold">Return</span>(clock)
+
+    logger <span style="color:#333">:=</span> zap.<span style="color:#06b;font-weight:bold">NewNop</span>()
+    di.GetLoggerMock.<span style="color:#06b;font-weight:bold">Return</span>(logger)
+
+    txManager <span style="color:#333">:=</span> mock.<span style="color:#06b;font-weight:bold">NewTxManagerMock</span>(ctrl)
+    txManager.WithTxMock.<span style="color:#06b;font-weight:bold">Set</span>(
+        <span style="color:#080;font-weight:bold">func</span>(ctx context.Context, <span style="color:#06b;font-weight:bold">fn</span>(context.Context) <span style="color:#339;font-weight:bold">error</span>) <span style="color:#339;font-weight:bold">error</span> {
+            <span style="color:#080;font-weight:bold">return</span> <span style="color:#06b;font-weight:bold">fn</span>(ctx)
+        },
+    )
+    di.GetTxManagerMock.<span style="color:#06b;font-weight:bold">Return</span>(txManager)
+
+    <span style="color:#080;font-weight:bold">return</span> di
+}</code></pre></div>
+<p>Подробнее в документации к проекту <a href="https://github.com/gojuno/minimock">minimock</a>.</p>
+
+<h2 id="golden-файлы">Golden-файлы</h2>
+
+<p>Частой оказывается ситуация, когда результат действия достаточно большой или действие имеет множество побочных эффектов: изменения в бд, отправленные сообщения в очереди, изменения в кеше и так далее. На каждое изменение можно написать проверку в коде теста. Однако, код самого теста при этом сильно разрастается и его становится тяжело читать. Если в модульных тестах это говорит о проблеме архитектуры, ведь каждый отдельный метод должен иметь очень ограниченный набор изменений, то говоря о функциональных тестах, набор изменений производимый действием в большей степени определяется бизнес-задачей и не может быть изменён (хотя, если действие влияет на слишком большой набор внешних систем, то возможно стоит пересмотреть архитектуру системы).</p>
+
+<p>Рассмотрим действие, которое составляет отчёт по покупкам в интернет магазине. Пусть, к примеру, в отчёте должны выводиться товары, купленные за указанный период в порядке уменьшения доходности. Возможны различные краевые условия, которые могут повлиять на этот отчёт: размер скидки, цена доставки и многое другое. Если мы захотим протестировать все возможные варианты небольшими тестами, разбирающими, конкретный случай, количество тест-кейсов будет расти комбинаторно новым требованиям. Например, надо сделать тест, в котором будет товар со скидкой, а также товар со скидкой и дорогой доставкой. С другой стороны, можно написать тест, который покроет сразу все комбинации, то есть в отчётном периоде будет и товар со скидкой, и с дорогой доставкой, и товар со скидкой и доставкой враз. Но получившийся отчёт будет сложно проверить программно. По сути программа для проверки корректности отчёта будет дублировать логику его составления.</p>
+
+<p>Для решения этой задачи есть подход, называемый golden-файлы. Это текстовые файлы (могут быть и бинарные, но для бэкенда это редкость), в которых содержится референсный результат выполнения тестируемой функции. Тесты, использующие golden-файлы имеют 2 режима:</p>
+
+<ul>
+<li>создание/обновление golden-файлов;</li>
+<li>сравнение с golden-файлами.</li>
+</ul>
+
+<p>Можно просто положить рядом с тестом текстовый файл, содержащий отчёт, например, в формате json. А в коде теста сравнить результат выполнения действия с данными из файла. Код такого теста будет достаточно короткий и понятный. А корректность отчёта нужно будет проверить вручную один раз, зато потом тест будет выполняться автоматически вплоть до того момента, пока не изменятся бизнес-требования к тестируемому действию. А в тот момент, когда изменятся требования, например, нам надо будет убрать из отчёта возвращённые товары. В этот момент нам надо будет переделать код составления отчёта, после чего запустить тест в режиме обновления golden-файлов, и вручную проверить получившийся результат.</p>
+
+<p>Также изменения в golden-файлах будут видны на код-ревью, ведь эти файлы сохраняются в репозиторий также как код самих тестов, а соответственно при их изменении ревьювер увидит что и как в них изменилось.</p>
+
+<p>Для облегчения работы с golden-файлами в Go есть библиотека <a href="https://godoc.org/gotest.tools/golden">gotest.tools/golden</a>, с помощью которой легко сравнивать и обновлять содержимое golden-файлов.</p>
+
+<p>Большой головной болью при тестировании с помощью golden-файлов являются сайд-эффекты, например, если бы наш отчёт содержал дату и время своего формирования, то они бы изменялись при каждом запуске. Именно поэтому все сайд-эффекты должны быть вынесены из действий как зависимости. Например, удобно использовать библиотеку для подмены часов <a href="https://github.com/jonboulle/clockwork">github.com/jonboulle/clockwork</a>, а также не использовать глобальные генераторы случайных чисел. Например, если отчёт должен иметь уникальный идентификатор (UUID), то лучше добавить в контейнер зависимостей генератор идентификаторов:</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#080;font-weight:bold">import</span> (
+    <span style="color:#888">// ...
+</span><span style="color:#888"></span>    <span style="background-color:#fff0f0">&#34;github.com/gofrs/uuid&#34;</span>
+)
+
+<span style="color:#080;font-weight:bold">type</span> DIContainer <span style="color:#080;font-weight:bold">interface</span> {
+    <span style="color:#888">// ...
+</span><span style="color:#888"></span>    <span style="color:#06b;font-weight:bold">GetUUIDGenerator</span>() <span style="color:#333">*</span>uuid.Generator
+}</code></pre></div>
+<h2 id="сюита-собираем-всё-вместе">Сюита. Собираем всё вместе</h2>
+
+<p>Итак, функциональный тест обрастает вспомогательным кодом по подготовке моков, по сравнению с референсным выводом. В рамках одной функции всё это будет читаться достаточно тяжело. Кроме того, возможно для некоторых тестов подойдут одни и те же моки, так что хорошо бы их сделать переиспользуемыми. В этом случае оказывается удобно объединить несколько тестов и вспомогательные методы в один класс, так называемую тестовую сюиту. Для этого отлично подходит пакет <a href="https://godoc.org/github.com/stretchr/testify/suite">github.com/stretchr/testify/suite</a>, предоставляющий базовый объект сюиты, который можно расширять под собственные нужды. Тогда тест может выглядеть примерно следующим образом:</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#080;font-weight:bold">package</span> action_test
+
+<span style="color:#080;font-weight:bold">import</span> (
+    <span style="background-color:#fff0f0">&#34;context&#34;</span>
+
+    <span style="background-color:#fff0f0">&#34;path/to/project/internal/action&#34;</span>
+    <span style="background-color:#fff0f0">&#34;path/to/project/internal/action/mock&#34;</span>
+
+    <span style="background-color:#fff0f0">&#34;github.com/gojuno/minimock/v3&#34;</span>
+    <span style="background-color:#fff0f0">&#34;github.com/stretchr/testify/suite&#34;</span>
+    <span style="background-color:#fff0f0">&#34;go.uber.org/zap&#34;</span>
+    <span style="background-color:#fff0f0">&#34;gotest.tools/golden&#34;</span>
+)
+
+<span style="color:#080;font-weight:bold">type</span> LoginSuite <span style="color:#080;font-weight:bold">struct</span> {
+    suite.Suite
+    ctrl <span style="color:#333">*</span>minimock.Controller
+}
+
+<span style="color:#080;font-weight:bold">func</span> <span style="color:#06b;font-weight:bold">TestLogin</span>(t <span style="color:#333">*</span>testing.T) {
+    suite.<span style="color:#06b;font-weight:bold">Run</span>(t, <span style="color:#007020">new</span>(LoginSuite))
+}
+
+<span style="color:#080;font-weight:bold">func</span> (s <span style="color:#333">*</span>LoginSuite) <span style="color:#06b;font-weight:bold">SetupTest</span>() {
+    s.ctrl = minimock.<span style="color:#06b;font-weight:bold">NewController</span>(s.<span style="color:#06b;font-weight:bold">T</span>())
+}
+
+<span style="color:#080;font-weight:bold">func</span> (s <span style="color:#333">*</span>LoginSuite) <span style="color:#06b;font-weight:bold">TearDownTest</span>() {
+    s.ctrl.<span style="color:#06b;font-weight:bold">Finish</span>()
+}
+
+<span style="color:#080;font-weight:bold">func</span> (s <span style="color:#333">*</span>LoginSuite) <span style="color:#06b;font-weight:bold">TestOK</span>() {
+    ctx <span style="color:#333">:=</span> context.<span style="color:#06b;font-weight:bold">Background</span>()
+    di <span style="color:#333">:=</span> s.<span style="color:#06b;font-weight:bold">MakeDI</span>()
+
+    token, err <span style="color:#333">:=</span> action.<span style="color:#06b;font-weight:bold">Login</span>(ctx, di, <span style="background-color:#fff0f0">&#34;user@example.com&#34;</span>, <span style="background-color:#fff0f0">&#34;test password&#34;</span>)
+    s.<span style="color:#06b;font-weight:bold">Require</span>().<span style="color:#06b;font-weight:bold">NoError</span>(err)
+    golden.<span style="color:#06b;font-weight:bold">Assert</span>(s.<span style="color:#06b;font-weight:bold">T</span>(), token, <span style="background-color:#fff0f0">&#34;user@example.com&#34;</span>)
+}
+
+<span style="color:#080;font-weight:bold">func</span> (s <span style="color:#333">*</span>LoginSuite) <span style="color:#06b;font-weight:bold">MakeDI</span>() <span style="color:#333">*</span>mock.DIContainerMock {
+    di <span style="color:#333">:=</span> mock.<span style="color:#06b;font-weight:bold">NewDIContainerMock</span>(s.ctrl)
+
+    clock <span style="color:#333">:=</span> clockwork.<span style="color:#06b;font-weight:bold">NewFakeClock</span>()
+    di.GetClockMock.<span style="color:#06b;font-weight:bold">Return</span>(clock)
+
+    logger <span style="color:#333">:=</span> zap.<span style="color:#06b;font-weight:bold">NewNop</span>()
+    di.GetLoggerMock.<span style="color:#06b;font-weight:bold">Return</span>(logger)
+
+    userRepository <span style="color:#333">:=</span> mock.<span style="color:#06b;font-weight:bold">NewUserRepositoryMock</span>(s.ctrl)
+    <span style="color:#888">// подготовка userRepository
+</span><span style="color:#888"></span>    di.GetUserRepositoryMock.<span style="color:#06b;font-weight:bold">Return</span>(userRepository)
+
+    <span style="color:#080;font-weight:bold">return</span> di
+}</code></pre></div>
+<h2 id="вспомогательные-методы-и-базовая-сюита">Вспомогательные методы и базовая сюита</h2>
+
+<p>Многие вспомогательные методы повторяются из теста в тест, например, подготовка логера. С одной стороны можно просто возвращать NopLogger, который просто не пишет логи никуда, с другой стороны может оказаться полезным увидеть логи упавшего сервиса, так что обычно я создаю логер, который пишет в буфер, а в функции <code>TearDownTest</code> я добавляю проверку прошёл тест или нет и, если не прошёл, вывожу буфер на экран.</p>
+
+<p>Также удобно строить моки различных репозиториев сущностей поверх json-файлов со списком этих самых сущностей. Так что метод десериализовать данные из файла на входной объект также используется в подавляющем большинстве тестов. Такие методы можно вынести в базовый класс сюиты, а сюиты тестов наследовать уже от неё:</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#888">// base_suite_test.go
+</span><span style="color:#888"></span><span style="color:#080;font-weight:bold">package</span> action_test
+
+
+<span style="color:#080;font-weight:bold">import</span> (
+	<span style="background-color:#fff0f0">&#34;bytes&#34;</span>
+	<span style="background-color:#fff0f0">&#34;io&#34;</span>
+	<span style="background-color:#fff0f0">&#34;os&#34;</span>
+	<span style="background-color:#fff0f0">&#34;path/filepath&#34;</span>
+
+	<span style="background-color:#fff0f0">&#34;github.com/gojuno/minimock/v3&#34;</span>
+	<span style="background-color:#fff0f0">&#34;github.com/stretchr/testify/suite&#34;</span>
+	<span style="background-color:#fff0f0">&#34;go.uber.org/zap&#34;</span>
+	<span style="background-color:#fff0f0">&#34;go.uber.org/zap/zapcore&#34;</span>
+	<span style="background-color:#fff0f0">&#34;gotest.tools/golden&#34;</span>
+)
+
+<span style="color:#080;font-weight:bold">type</span> BaseSuite <span style="color:#080;font-weight:bold">struct</span> {
+	suite.Suite
+	ctrl <span style="color:#333">*</span>minimock.Controller
+	logs <span style="color:#333">*</span>bytes.Buffer
+}
+
+<span style="color:#080;font-weight:bold">func</span> (s <span style="color:#333">*</span>BaseSuite) <span style="color:#06b;font-weight:bold">SetupSuite</span>() {
+	s.logs = <span style="color:#007020">new</span>(bytes.Buffer)
+	core <span style="color:#333">:=</span> zapcore.<span style="color:#06b;font-weight:bold">NewCore</span>(
+		zapcore.<span style="color:#06b;font-weight:bold">NewConsoleEncoder</span>(
+			zap.<span style="color:#06b;font-weight:bold">NewDevelopmentEncoderConfig</span>(),
+		),
+		zapcore.<span style="color:#06b;font-weight:bold">AddSync</span>(s.logs),
+		zap.<span style="color:#06b;font-weight:bold">LevelEnablerFunc</span>(<span style="color:#080;font-weight:bold">func</span>(_ zapcore.Level) <span style="color:#339;font-weight:bold">bool</span> {
+			<span style="color:#080;font-weight:bold">return</span> <span style="color:#080;font-weight:bold">true</span>
+		}),
+	)
+	logger <span style="color:#333">:=</span> zap.<span style="color:#06b;font-weight:bold">New</span>(core)
+	zap.<span style="color:#06b;font-weight:bold">ReplaceGlobals</span>(logger.<span style="color:#06b;font-weight:bold">Named</span>(<span style="background-color:#fff0f0">&#34;test&#34;</span>))
+}
+
+<span style="color:#080;font-weight:bold">func</span> (s <span style="color:#333">*</span>BaseSuite) <span style="color:#06b;font-weight:bold">SetupTest</span>() {
+	s.ctrl = minimock.<span style="color:#06b;font-weight:bold">NewController</span>(s.<span style="color:#06b;font-weight:bold">T</span>())
+}
+
+<span style="color:#080;font-weight:bold">func</span> (s <span style="color:#333">*</span>BaseSuite) <span style="color:#06b;font-weight:bold">TearDownTest</span>() {
+	s.ctrl.<span style="color:#06b;font-weight:bold">Finish</span>()
+	<span style="color:#080;font-weight:bold">if</span> s.<span style="color:#06b;font-weight:bold">T</span>().<span style="color:#06b;font-weight:bold">Failed</span>() {
+		_, _ = io.<span style="color:#06b;font-weight:bold">Copy</span>(os.Stderr, s.logs)
+	}
+}
+
+<span style="color:#080;font-weight:bold">func</span> (s <span style="color:#333">*</span>BaseSuite) <span style="color:#06b;font-weight:bold">UnmarshalFile</span>(v <span style="color:#080;font-weight:bold">interface</span>{}, path <span style="color:#333">...</span><span style="color:#339;font-weight:bold">string</span>) {
+    buf <span style="color:#333">:=</span> golden.<span style="color:#06b;font-weight:bold">Get</span>(s.<span style="color:#06b;font-weight:bold">T</span>(), filepath.<span style="color:#06b;font-weight:bold">Join</span>(path<span style="color:#333">...</span>))
+    s.<span style="color:#06b;font-weight:bold">Require</span>().<span style="color:#06b;font-weight:bold">NoError</span>(json.<span style="color:#06b;font-weight:bold">Unmarshal</span>(data, v))
+}</code></pre></div>
+<h2 id="выводы">Выводы</h2>
+
+<p>Разобравшись в предложенных инструментах и подходах, а также подготовив базовую сюиту, написание функционального теста на написанное действие займёт всего несколько минут, но повысит уверенность в собственном коде, а также даст поддержку при внесении изменений в будущем.</p>
+
+</div>
+
+  
+<footer class='entry-footer'>
+  <div class='container sep-before'><div class='categories'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <path d="M22,19a2,2,0,0,1-2,2H4a2,2,0,0,1-2-2V5A2,2,0,0,1,4,3H9l2,3h9a2,2,0,0,1,2,2Z"/>
+  
+</svg>
+<span class='screen-reader-text'>category: </span><a class='category' href='/categories/develop/'>Разработка</a></div>
+<div class='tags'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <path d="M20.59,13.41l-7.17,7.17a2,2,0,0,1-2.83,0L2,12V2H12l8.59,8.59A2,2,0,0,1,20.59,13.41Z"/>
+  <line x1="7" y1="7" x2="7" y2="7"/>
+  
+</svg>
+<span class='screen-reader-text'>Тэги: </span><a class='tag' href='/tags/go/'>go</a>, <a class='tag' href='/tags/testing/'>testing</a></div>
+
+  </div>
+</footer>
+
+
+</article>
+
+<nav class='entry-nav'>
+  <div class='container'><div class='prev-entry sep-before'>
+      <a href='/post/2019/08/actions-in-action/'>
+        <span aria-hidden='true'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <line x1="20" y1="12" x2="4" y2="12"/>
+  <polyline points="10 18 4 12 10 6"/>
+  
+</svg>
+ Предыдущий</span>
+        <span class='screen-reader-text'>Предыдущая запись: </span>Действия в действии</a>
+    </div><div class='next-entry sep-before'>
+      <a href='/post/2019/10/sicp-elementary/'>
+        <span class='screen-reader-text'>Следующая запись: </span>SICP: 1.1 Элементы программирования<span aria-hidden='true'>Следующий <svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <line x1="4" y1="12" x2="20" y2="12"/>
+  <polyline points="14 6 20 12 14 18"/>
+  
+</svg>
+</span>
+      </a>
+    </div></div>
+</nav>
+
+
+
+
+      </main>
+
+      <footer id='footer' class='footer'>
+        <div class='container sep-before'><div class='copyright'>
+  <p>Материалы распространяются по <a rel="noreferrer" href="https://creativecommons.org/licenses/by/4.0/" target="_blank">лицензии CC BY</a> &copy; 2018-2021 vporoshok <br>Увидели ошибку? Буду рад <a rel="noreferrer" href="https://github.com/vporoshok/vporoshok.github.io" target="_blank">PR&rsquo;у</a></p>
+</div>
+
+        </div>
+      </footer>
+
+    </div>
+  </div><script>window.__assets_js_src="/assets/js/"</script>
+
+<script src='/assets/js/main.67d669ac.js'></script>
+
+</body>
+
+</html>
+

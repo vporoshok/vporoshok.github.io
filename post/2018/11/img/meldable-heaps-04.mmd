@@ -1,0 +1,33 @@
+graph LR
+    A(( ))
+
+    A --> B(( ))
+    B -.-> C(( ))
+    C -.-> D(( ))
+    D -.-> E(( ))
+
+    C --> F(( ))
+    D --> G(( ))
+    G -.-> H(( ))
+    E --> J(( ))
+    J -.-> I(( ))
+    I -.-> K(( ))
+
+    H --> L(( ))
+    I --> M(( ))
+    K --> N(( ))
+    N -.-> O(( ))
+
+    O --> P(( ))
+
+    classDef zero  fill:LightCoral
+    classDef one   fill:SpringGreen
+    classDef two   fill:SkyBlue
+    classDef three fill:MediumPurple
+    classDef four  fill:#b666d2
+
+    class A zero
+    class B,C,D,E one
+    class F,G,H,J,I,K two
+    class L,M,N,O three
+    class P four

@@ -1,0 +1,86 @@
+@media print {
+    .sidebar,
+    .menu,
+    .site-header,
+    .entry-toc,
+    .entry-footer,
+    .entry-nav,
+    .sep-after:after,
+    .sep-before:before,
+    .no-print {
+        display: none;
+    }
+
+    .sep-after {
+        margin-bottom: 1em;
+    }
+    .sep-before {
+        margin-top: 1em;
+    }
+}
+
+@media screen and (min-width: 920px) {
+    .main {
+        width: 100%;
+    }
+}
+
+blockquote {
+    font-style: normal;
+}
+
+.d-flex {
+    display: flex;
+}
+
+figure h4 {
+    font-size: 0.8em;
+    font-weight: normal;
+    font-style: italic;
+    text-align: center;
+}
+
+.admonition {
+    margin-bottom: 1.5em;
+    padding: 1em;
+    background: #eee;
+}
+
+.admonition :last-child {
+    margin-bottom: 0;
+}
+
+.admonition-icon {
+    margin: 0em 0.4em 0 0;
+}
+
+.theorem dt {
+    float: left;
+    font-size: 1em;
+    margin: 0 0.5em 0 0;
+}
+
+.theorem dd {
+    margin: 0 0 1.5em;
+    font-style: italic;
+}
+
+figure {
+    margin: 2em 0;
+}
+
+figure img,
+figure figcaption {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    font-style: italic;
+    text-align: center;
+}
+
+blockquote footer {
+    position: relative;
+    margin: 1.5em 1em 0;
+    text-align: right;
+    font-size: 0.8em;
+}

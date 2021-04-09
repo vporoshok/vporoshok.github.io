@@ -1,0 +1,660 @@
+<!DOCTYPE html>
+<html lang='ru'>
+<head>
+    <meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='description' content='О том как CSS подвержен второму закону термодинамики. Проблемы, заблуждения и способы их решения. О том, почему для больших проектов утилитарные классы оказываются лучше БЭМ'>
+<meta name='theme-color' content='#ffcd00'>
+
+<meta property='og:title' content='Не пишите CSS • Где-то на дальнем сервере'>
+<meta property='og:description' content='О том как CSS подвержен второму закону термодинамики. Проблемы, заблуждения и способы их решения. О том, почему для больших проектов утилитарные классы оказываются лучше БЭМ'>
+<meta property='og:url' content='https://vporoshok.me/slides/2019/02/utility-classes/'>
+<meta property='og:site_name' content='Где-то на дальнем сервере'>
+<meta property='og:type' content='article'><meta property='article:section' content='slides'><meta property='article:published_time' content='2019-02-24T10:31:26Z'/><meta property='article:modified_time' content='2019-02-25T20:52:28&#43;04:00'/><meta name='twitter:card' content='summary'>
+
+<meta name="generator" content="Hugo 0.57.2" />
+
+    <title>Не пишите CSS • Где-то на дальнем сервере</title>
+    <link rel='canonical' href='https://vporoshok.me/slides/2019/02/utility-classes/'>
+    
+    <link rel='icon' href='/favicon.ico'>
+    <link rel='stylesheet' href='/assets/css/main.6a060eb7.css'><link rel='stylesheet' href='/assets/custom.css'><style>
+:root{--color-accent:#ffcd00;}
+</style>
+
+
+
+    <link rel="stylesheet" href="/assets/shower/themes/material/styles/styles.css">
+    <style>
+        .shower {
+            --slide-ratio: calc(16 / 9);
+        }
+        .caption a {
+            display: inline-block;
+            font-size: 0.8em;
+            margin-left: 2em;
+        }
+        .mermaid {
+            text-align: center;
+        }
+        .mermaid div {
+            transform: translate(-25%, -25%);
+        }
+        .slide {
+            background-repeat: no-repeat;
+            background-size: cover;
+        }
+        .slide a {
+            background: none;
+        }
+        .slide.section {
+            display: flex;
+            padding: 0;
+            align-items: center;
+            justify-content: center;
+            text-shadow: white 0 0 10px;
+        }
+        .slide.section h2 {
+            font-weight: normal;
+        }
+        .slide.compact pre {
+            padding-top: 0;
+        }
+        .slide.black * {
+            color: white;
+            text-shadow: black 0 0 10px;
+        }
+        img.cover {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+    </style>
+</head>
+<body class="shower list entry-content">
+    <header class="caption">
+        <h1>Не пишите CSS</h1>
+        <p>О том как CSS подвержен второму закону термодинамики. Проблемы, заблуждения и способы их решения. О том, почему для больших проектов утилитарные классы оказываются лучше БЭМ</p>
+    </header>
+
+    <style>
+.title h2 {
+    font-weight: bold;
+    text-align: right;
+}
+.shadow figure:after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    background-color: rgba(0, 0, 0, 0.3);
+}
+#stop-digging h2 {
+    position: absolute;
+    margin-top: 150px;
+}
+.cards {
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+    align-items: stretch;
+    font-size: 0.7rem;
+    font-weight: 300;
+    line-height: 1.3;
+}
+.card {
+    width: 23%;
+    border: 1px solid slateblue;
+}
+.card img {
+    background: lavender;
+}
+.card img.person {
+    display: block;
+    width: 80%;
+    border-radius: 100%;
+    margin: 10px auto 0;
+}
+.card h3 {
+    margin: 5px 10px 5px;
+    padding: 0;
+    font-size: 1.4em;
+    color: darkslateblue;
+}
+.card .date {
+    margin: 0 10px 5px;
+    text-align: right;
+    color: dimgrey;
+    font-style: italic;
+}
+.summary {
+    margin: 5px 10px;
+}
+.summary a {
+    color: darkslateblue;
+}
+
+</style>
+
+<section id="title" class="slide entry title clear black">
+    <figure>
+        <img class="cover" src="../img/road_ends.jpg" alt="Road ends sign"><figcaption class="copyright bottom">Photo by Lubo Minar on Unsplash</figcaption></figure>
+    <h2>Не пишите CSS<br><small class="next">каждый день</small></h2></section>
+
+
+<section id="quick-question" class="slide entry"><h2>
+        Как сверстать?
+    </h2><p><style>
+.center {
+position: absolute;
+top: 50%;
+left: 50%;
+transform: translate(-50%, -50%);
+align-items: center;
+}
+.celebrity {
+display: flex;
+width: 500px;
+padding: 1.2rem;
+border-radius: 1rem;
+border: 1px solid dimgrey;
+}
+.celebrity .photo {
+width: 130px;
+height: 130px;
+object-fit: scale-down;
+border-radius: 50%;
+background: black;
+}
+.celebrity .about {
+margin-left: 1.2rem;
+font-size: 1rem;
+}
+.celebrity .name {
+margin: 1rem 0 1rem;
+padding: 0;
+font-size: 2rem;
+font-weight: bold;
+}
+.celebrity p:last-child {
+margin-bottom: 0;
+}
+</style>
+<div class="celebrity center">
+<img class="photo" src="../img/kharper-li.jpg">
+<div class="about">
+<h2 class="name">Нелл Харпер Ли</h2>
+<p class="short">Американская писательница, автор романа «Убить пересмешника», лауреат пулитцеровской премии.</p>
+</div>
+</div>
+<style>
+.answer {
+position: absolute;
+transform: translate(-50%, 0);
+}
+.answer-1 { bottom: 30%; left: 15%; color: hotpink; }
+.answer-2 { bottom: 48%; left: 15%; color: peru; }
+.answer-3 { bottom: 66%; left: 15%; color: chocolate; }
+.answer-4 { bottom: 70%; left: 50%; color: tomato; }
+.answer-5 { bottom: 66%; left: 85%; color: olive; }
+.answer-6 { bottom: 48%; left: 85%; color: teal; }
+.answer-7 { bottom: 30%; left: 85%; color: slateblue; }
+</style>
+<div class="answer answer-1 next">flexbox</div>
+<div class="answer answer-2 next">float</div>
+<div class="answer answer-3 next">absolute</div>
+<div class="answer answer-4 next">inline</div>
+<div class="answer answer-5 next">grid</div>
+<div class="answer answer-6 next">table</div>
+<div class="answer answer-7 next">background</div></p>
+</section>
+
+
+<section id="hello" class="slide entry"><h2>
+        Всем привет!
+    </h2><p><img style="float:right;width:20%" src="/images/logo-orig.jpg"></p>
+
+<ul>
+<li>Бастрыков Евгений</li>
+<li>Программирую с 2013</li>
+<li>Преподаю «Алгоритмы и структуры данных»</li>
+<li>Разрабатываю elma365
+<p class="note"><a href="https://vporoshok.me" target="_blank">vporoshok.me</a></p></li>
+</ul>
+</section>
+
+
+<section id="toc" class="slide entry toc"><h2>
+        План
+    </h2><ol>
+<li><a href="#history">Исторический экскурс и семантическая вёрстка</a></li>
+<li><a href="#troubles-1">Проблемы CSS</a></li>
+<li><a href="#oocss">OOCSS и БЭМ</a></li>
+<li><a href="#troubles-2">Проблемы контейнеров</a></li>
+<li><a href="#preprocessors">Препроцессоры</a></li>
+<li><a href="#troubles-3">Проблемы препроцессоров</a></li>
+<li><a href="#stop-digging">Как перестать писать CSS?</a></li>
+<li><a href="#next">Что дальше?</a></li>
+</ol></section>
+
+
+<section id="history" class="slide entry section black"><h2>
+        Исторический экскурс<br>и семантическая вёрстка
+    </h2>
+    <figure>
+        <img class="cover" src="../img/spiral.jpg" alt="Spiral staircase"><figcaption class="copyright bottom">Photo by Jenny Marvin on Unsplash</figcaption></figure>
+    </section>
+
+
+<section class="slide entry"><h2>
+        Сначала был HTML
+    </h2><p>HTML 3.2 (1997)</p>
+<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-html" data-lang="html">&lt;<span style="color:#070">img</span> <span style="color:#00c">align</span><span style="color:#333">=</span><span style="background-color:#fff0f0">&#34;right&#34;</span> <span style="color:#00c">src</span><span style="color:#333">=</span><span style="background-color:#fff0f0">&#34;alice.jpg&#34;</span> /&gt;
+&lt;<span style="color:#070">font</span> <span style="color:#00c">face</span><span style="color:#333">=</span><span style="background-color:#fff0f0">&#34;Arial&#34;</span> <span style="color:#00c">size</span><span style="color:#333">=</span><span style="background-color:#fff0f0">&#34;4&#34;</span> <span style="color:#00c">color</span><span style="color:#333">=</span><span style="background-color:#fff0f0">&#34;firebrick&#34;</span>&gt;
+    Похоже на экспорт Word&#39;а
+&lt;/<span style="color:#070">font</span>&gt;</code></pre></div></section>
+
+
+<section class="slide entry"><h2 class="shout">
+        CSS 1.0 (1996)
+    </h2></section>
+
+
+<section class="slide entry"><h2>
+        Семантическая верстка
+    </h2><div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-latex" data-lang="latex"><span style="color:#080;font-weight:bold">\section</span><span style="color:#007020">{</span>Семантическая вёрстка<span style="color:#007020">}</span>
+<span style="color:#080;font-weight:bold">\begin</span><span style="color:#007020">{</span>definition<span style="color:#007020">}</span>
+    <span style="color:#080;font-weight:bold">\emph</span><span style="color:#007020">{</span>Семантической<span style="color:#007020">}</span> вёрсткой называется разметка
+    смысла текста, а не его <span style="color:#080;font-weight:bold">\textit</span><span style="color:#007020">{</span>оформления<span style="color:#007020">}</span>.
+
+    Таким образом оформление отделяется, и может быть
+    изменено независимо от содержимого.
+<span style="color:#080;font-weight:bold">\begin</span><span style="color:#007020">{</span>definition<span style="color:#007020">}</span></code></pre></div></section>
+
+
+<section id="troubles-1" class="slide entry section black"><h2>
+        Проблемы CSS
+    </h2>
+    <figure>
+        <img class="cover" src="../img/hole.jpg" alt="Hole in floor"><figcaption class="copyright bottom">Photo by Quinten de Graaf on Unsplash</figcaption></figure>
+    </section>
+
+
+<section class="slide entry"><h2>
+        Проблемы CSS
+    </h2><p>Что хорошо для книги не всегда хорошо для сайта</p>
+
+<p>Книги не расширяются и не изменяются после публикации</p>
+
+<p>Сайты превращаются в порталы, расширяют функциональность, эволюционируют и меняют дизайн</p>
+</section>
+
+
+<section class="slide entry"><h2>
+        Проблемы CSS
+    </h2><ul>
+<li>Неоднозначность решения;
+<li class="next">Глобальное пространство имён;
+<li class="next">Сложность селекторов и определение веса;
+<li class="next">Отсутствие наследования;
+<li class="next">Влияние оформления контейнера на оформление содержимого;
+</ul></section>
+
+
+<section class="slide entry"><h2>
+        Сложность селекторов
+    </h2><div class="columns two"><div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-css" data-lang="css">.<span style="color:#b06;font-weight:bold">blue</span> {
+    <span style="color:#080;font-weight:bold">background</span>: <span style="color:#080;font-weight:bold">blue</span>;
+}
+.<span style="color:#b06;font-weight:bold">red</span> {
+    <span style="color:#080;font-weight:bold">background</span>: <span style="color:#080;font-weight:bold">red</span>;
+}</code></pre></div><div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-html" data-lang="html">&lt;<span style="color:#070">div</span> <span style="color:#00c">class</span><span style="color:#333">=</span><span style="background-color:#fff0f0">&#34;red blue&#34;</span>&gt;&lt;/<span style="color:#070">div</span>&gt;</code></pre></div></div>
+
+<p><style>
+.redblue {
+position: absolute;
+bottom: 120px;
+right: 200px;
+width: 200px;
+height: 200px;
+background: red;
+}
+</style>
+<div class="redblue next"></div></p>
+</section>
+
+
+<section class="slide entry"><h2>
+        Специфичность и вес селекторов
+    </h2><div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-css" data-lang="css"><span style="color:#070">input</span><span style="color:#333">[</span><span style="color:#070">type</span><span style="color:#333">~=</span><span style="background-color:#fff0f0">&#34;checkbox&#34;</span><span style="color:#333">]</span>.<span style="color:#b06;font-weight:bold">checkbox</span> <span style="color:#333">+</span> <span style="color:#070">label</span>:<span style="color:#555;font-weight:bold">before</span> {<span style="color:#888">/*...*/</span>}
+
+<span style="color:#333">[</span><span style="color:#070">class</span><span style="color:#333">^=</span><span style="background-color:#fff0f0">&#34;icon-&#34;</span><span style="color:#333">],</span> <span style="color:#333">[</span><span style="color:#070">class</span><span style="color:#333">*=</span><span style="background-color:#fff0f0">&#34; icon-&#34;</span><span style="color:#333">]</span> {<span style="color:#888">/*...*/</span>}</code></pre></div></section>
+
+
+<section class="slide entry"><h2>
+        Проблема чистого листа
+    </h2>
+    <figure>
+        <img class="cover" src="../img/blank.jpg" alt="Blank wall prepared to be colored"><figcaption class="copyright bottom">Photo by rawpixel on Unsplash</figcaption></figure>
+    <ul>
+<li>количество компонентов слишком велико
+<li class="next">когда надо универсализировать компонент или разделить?
+<li class="next">объём CSS растёт геометрически
+<li class="next">редизайн в итоге становится практически невозможным
+</ul></section>
+
+
+<section id="oocss" class="slide entry section black shadow"><h2>
+        OOCSS и БЭМ
+    </h2>
+    <figure>
+        <img class="cover" src="../img/raspberry.jpg" alt="Raspberry"><figcaption class="copyright bottom">Photo by Fancycrave on Unsplash</figcaption></figure>
+    </section>
+
+
+<section class="slide entry"><h2>
+        Object-Oriented CSS
+    </h2><ul>
+<li>объект &mdash; повторяющийся компонент;</li>
+<li>объект становится namespace&rsquo;ом для селекторов;</li>
+<li>отделение формы от оформления;</li>
+<li>объект не должен влиять на оформление содержимого;</li>
+</ul></section>
+
+
+<section class="slide entry"><h2>
+        Блок__Элемент_Модификатор</span>
+    </h2><ul>
+<li>блок &mdash; минимальная единица построения интерфейса;</li>
+<li>блоки можно вкладывать друг в друга;</li>
+<li>элементы существуют только внутри блока;</li>
+<li>элементы можно вкладывать друг в друга, но не отражать эту структуру в именах;</li>
+<li>стилизация с помощью модификаторов;</li>
+</ul></section>
+
+
+<section class="slide entry"><h2>
+        Какие проблемы решены
+    </h2><ul>
+<li>Неоднозначность решения;</li>
+<li><del>Глобальное пространство имён</del> <strong>уникальные имена</strong>;</li>
+<li><del>Сложность селекторов и определение веса</del> <strong>один класс</strong>;</li>
+<li><del>Отсутствие наследования</del> <strong>модификаторы</strong>;</li>
+<li>Влияние оформления контейнера на оформление содержимого;</li>
+<li><strong>Проблема чистого листа</strong>;</li>
+</ul></section>
+
+
+<section class="slide entry"><h2>
+        Страница новостей
+    </h2><div class="cards">
+<article class="card">
+<img src="../img/landscape.svg">
+<h3>Милиционер спас котёнка</h3>
+<div class="date">14 февраля 2019</div>
+<p class="summary">Стриптизёр Алексей в форме милиционера шёл по вызову для поздравления одинокой девушки Оксаны, когда увидел плачущего мальчика… <a href="#">Читать далее</a>
+</article>
+<article class="card">
+<img src="../img/landscape.svg">
+<h3>Кроты на льду</h3>
+<div class="date">12 февраля 2019</div>
+<p class="summary">Так решил назвать свой дебютный короткометражный фильм Андрей Шмятушкин. Критики отзываются о картине весьма положительно… <a href="#">Читать далее</a>
+</article>
+<article class="card">
+<img src="../img/landscape.svg">
+<h3>iVibro X</h3>
+<div class="date">12 февраля 2019</div>
+<p class="summary">Компания DuneHills представили новую модель виброфона iVibro X. Главным нововведением этой модели стала система по распознаванию лица пользователя и автоматическая подстройка… <a href="#">Читать далее</a>
+</article>
+<article class="card">
+<img src="../img/landscape.svg">
+<h3>Очень старая новость</h3>
+<div class="date">04 июля 2018</div>
+<p class="summary">Серьёзно, это такая старая новость, что я и забыл о чём она, так что непонятно чего вы тут ожидали увидеть… <a href="#">Читать далее</a>
+</article>
+</div>
+</section>
+
+
+<section class="slide entry"><h2>
+        Страница событий
+    </h2><div class="cards">
+<article class="card">
+<img src="../img/landscape.svg">
+<h3>Концерт Василия Незадвыгина</h3>
+<div class="date">24 февраля 2019</div>
+<p class="summary">Неподражаемый Василий Незадвыгин выступит с новой программой «Мне бы не задвинуть»… <a href="#">Читать далее</a>
+</article>
+<article class="card">
+<img src="../img/landscape.svg">
+<h3>Опера «На краю ионизатора»</h3>
+<div class="date">25 февраля 2019</div>
+<p class="summary">Переосмысление роли интернета вещей и возобновляемых источников питания в новой постановке театра роботов-пылесосов… <a href="#">Читать далее</a>
+</article>
+<article class="card">
+<img src="../img/landscape.svg">
+<h3>Последний день зимы</h3>
+<div class="date">28 февраля 2019</div>
+<p class="summary">На главной площади города состоится прощание с зимой. В программе будет синхронный танец средств по уборке снега, а также… <a href="#">Читать далее</a>
+</article>
+<article class="card">
+<img src="../img/landscape.svg">
+<h3>Выставка горшечных растений</h3>
+<div class="date">04 июля 2019</div>
+<p class="summary">Вы что серьёзно это читаете? Ладно, подойдите после доклада и скажите «я прочитал»… <a href="#">Читать далее</a>
+</article>
+</div>
+</section>
+
+
+<section class="slide entry"><h2>
+        Страница авторов
+    </h2><div class="cards">
+<article class="card">
+<img class="person" src="../img/person.svg">
+<h3>Котейко Л.И.</h3>
+<p class="summary">Людмилу с детства интересовали кошки. Но просто содержать кошку было мало, так что Людмила стала писать статьи про кошек. Кошки в каждый дом!
+</article>
+<article class="card">
+<img class="person" src="../img/person.svg">
+<h3>Репейников В.И.</h3>
+<p class="summary">Василий — профессионал своего дела. Больше всего он любит журналистские расследования, бывает прицепится как репей…
+</article>
+<article class="card">
+<img class="person" src="../img/person.svg">
+<h3>Бастрыков Е.С.</h3>
+<p class="summary">Евгений чуть было не стал графоманом, но после того как устроился в нашу газету стал выручать редакцию в те дни, когда новостей совсем нет.
+</article>
+<article class="card">
+<img class="person" src="../img/person.svg">
+<h3>Апостроф П.П.</h3>
+<p class="summary">Пётр очень серьёзно относится к своей работе и оттачивает свои статьи до последней минуты, отдавая их редактору буквально перед отдачей в печать. Но в его статьях ещё ни разу не нашли ни единой ошибки!
+</article>
+</div>
+</section>
+
+
+<section class="slide entry"><h2>
+        Страница партнёров
+    </h2><div class="cards">
+<article class="card">
+<img class="partner" src="../img/logo.svg">
+<h3>Лебеди и паравозы</h3>
+</article>
+<article class="card">
+<img class="partner" src="../img/logo.svg">
+<h3>Translit inc.</h3>
+</article>
+<article class="card">
+<img class="partner" src="../img/logo.svg">
+<h3>Банк «Покрытие»</h3>
+</article>
+<article class="card">
+<img class="partner" src="../img/logo.svg">
+<h3>Театр роботов-пылесосов</h3>
+</article>
+</div></section>
+
+
+<section class="slide entry"><h2>
+        Новые требования
+    </h2><ul>
+<li>Авторов разместить по 5 в строке, потому как у них карточки поменьше.</li>
+<li>У новостей сделать синюю полоску сверху.</li>
+</ul></section>
+
+
+<section class="slide entry"><h2>
+        Добавим модификаторов
+    </h2><div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-html" data-lang="html">&lt;<span style="color:#070">div</span> <span style="color:#00c">class</span><span style="color:#333">=</span><span style="background-color:#fff0f0">&#34;card-item</span> <span style="color:#00c">card-item_wide</span> <span style="color:#00c">card-item_shadowed</span>
+<span style="color:#00c">card-item_rulled</span> <span style="color:#00c">card-item_with-footer</span> <span style="color:#00c">card-item_hot</span>
+<span style="color:#00c">card-item_starred</span><span style="color:#f00;background-color:#faa">”</span>&gt;</code></pre></div></section>
+
+
+<section id="troubles-2" class="slide entry section black shadow"><h2>
+        Проблемы контейнеров
+    </h2>
+    <figure>
+        <img class="cover" src="../img/containers.jpg" alt="Containers"><figcaption class="copyright bottom">Photo by Tim Easley on Unsplash</figcaption></figure>
+    </section>
+
+
+<section class="slide entry"><h2>
+        Проблемы контейнеров
+    </h2><ul>
+<li>имена контейнеров должны быть уникальными;</li>
+<li>семантические контейнеры увеличивают дублирование кода;</li>
+<li>проблема чистого листа лишь усугубляется;</li>
+</ul></section>
+
+
+<section id="preprocessors" class="slide entry section"><h2>
+        Препроцессоры
+    </h2>
+    <figure>
+        <img class="cover" src="../img/fragile.jpg" alt="Five stack of stone fragments"><figcaption class="copyright bottom">Photo by Ryan Stone on Unsplash</figcaption></figure>
+    </section>
+
+
+<section class="slide entry"><h2>
+        Какие проблемы решаются
+    </h2><ul>
+<li>Неоднозначность решения;</li>
+<li>Глобальное пространство имён;</li>
+<li>Сложность селекторов и определение веса;</li>
+<li><del>Отсутствие наследования</del> <strong>mixin</strong>;</li>
+<li>Влияние оформления контейнера на оформление содержимого;</li>
+<li><del>Проблема чистого листа</del> <strong>const</strong>;</li>
+</ul></section>
+
+
+<section id="troubles-3" class="slide entry section black"><h2>
+        Проблемы препроцессоров
+    </h2>
+    <figure>
+        <img class="cover" src="../img/blue_wall.jpg" alt="Blue wall with chaos of wires"><figcaption class="copyright bottom">Photo by Khara Woods on Unsplash</figcaption></figure>
+    </section>
+
+
+<section class="slide entry"><h2>
+        Проблемы препроцессоров
+    </h2><ul>
+<li>где заканчивается примесь и начинается класс наследника?</li>
+<li>имя примеси редко говорит обо всём, что она делает</li>
+<li>примесей может стать слишком много</li>
+<li>изменение примеси может привести к неожиданным эффектам</li>
+<li>переменные не решают проблемы чистого листа</li>
+</ul></section>
+
+
+<section id="stop-digging" class="slide entry section black shadow"><h2>
+        Как перестать писать CSS?
+    </h2>
+    <figure>
+        <img class="cover" src="../img/lake.jpg" alt="A men looks at the lake"><figcaption class="copyright bottom">Photo by Joshua Earle on Unsplash</figcaption></figure>
+    </section>
+
+
+<section class="slide entry"><h2>
+        Утилитарные классы
+    </h2><div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-html" data-lang="html">&lt;<span style="color:#070">div</span> <span style="color:#00c">class</span><span style="color:#333">=</span><span style="background-color:#fff0f0">&#34;p-2 my-1 d-f w-25&#34;</span>&gt;
+    &lt;<span style="color:#070">p</span> <span style="color:#00c">class</span><span style="color:#333">=</span><span style="background-color:#fff0f0">&#34;bg-success&#34;</span>&gt;
+        ...
+    &lt;/<span style="color:#070">p</span>&gt;
+&lt;/<span style="color:#070">div</span>&gt;</code></pre></div></section>
+
+
+<section class="slide entry"><h2>
+        Преимущества
+    </h2><ul>
+<li>однозначность решений;</li>
+<li>глобальное пространство имён больше не является проблемой;</li>
+<li>селекторы как и в БЭМ это только класс;</li>
+<li>нет проблемы чистого листа;</li>
+<li>не нужно писать CSS;</li>
+<li>объём CSS не увеличивается;</li>
+<li>классов мало и их поведение очевидно;</li>
+</ul></section>
+
+
+<section class="slide entry"><h2 class="shout">
+        Компоненты<br>Utility-first
+    </h2></section>
+
+
+<section id="next" class="slide entry section black"><h2>
+        Что дальше?
+    </h2>
+    <figure>
+        <img class="cover" src="../img/road.jpg" alt="Long road through desert"><figcaption class="copyright bottom">Photo by salvatore ventura on Unsplash</figcaption></figure>
+    </section>
+
+
+<section class="slide entry"><h2>
+        Что дальше?
+    </h2><ul>
+<li>SMACSS;</li>
+<li>стили без классов (normalize.css);</li>
+<li>сетка (grids / flexbox);</li>
+<li>тема (custom-properties / препроцессоры с их переменными);</li>
+<li>документация (KSS);</li>
+</ul></section>
+
+
+<section class="slide entry"><h2>
+        Почитать
+    </h2><ul>
+<li><a href="https://frontstuff.io/in-defense-of-utility-first-css">https://frontstuff.io/in-defense-of-utility-first-css</a></li>
+<li><a href="https://adamwathan.me/css-utility-classes-and-separation-of-concerns/">https://adamwathan.me/css-utility-classes-and-separation-of-concerns/</a></li>
+<li><a href="https://css-irl.info/a-year-of-utility-classes/">https://css-irl.info/a-year-of-utility-classes/</a></li>
+</ul></section>
+
+
+<section id="questions" class="slide entry"><h2 class="shout">
+        Вопросы?
+    </h2></section>
+
+
+<section id="thanks" class="slide entry section"><h2>
+        Спасибо за внимание!
+    </h2></section>
+
+
+
+    <footer class="badge">
+        <a href="/">На главную</a>
+    </footer>
+
+    <div class="progress"></div>
+
+    <script src="/assets/shower/shower.min.js"></script><script>window.__assets_js_src="/assets/js/"</script>
+
+<script src='/assets/js/main.67d669ac.js'></script>
+
+</body>
+</html>

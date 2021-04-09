@@ -1,0 +1,773 @@
+<!DOCTYPE html>
+<html lang='ru'><head>
+  <meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'>
+<meta name='description' content='Локоть к локтю, кирпич к стене'>
+<meta name='theme-color' content='#ffcd00'>
+
+<meta property='og:title' content='Кучи с эффективным слиянием • Где-то на дальнем сервере'>
+<meta property='og:description' content='Локоть к локтю, кирпич к стене'>
+<meta property='og:url' content='https://vporoshok.me/post/2018/11/meldable-heaps/'>
+<meta property='og:site_name' content='Где-то на дальнем сервере'>
+<meta property='og:type' content='article'><meta property='article:section' content='post'><meta property='article:tag' content='data-structure'><meta property='article:tag' content='complexity'><meta property='article:published_time' content='2018-11-15T14:00:00Z'/><meta property='article:modified_time' content='2020-07-04T13:36:24&#43;04:00'/><meta name='twitter:card' content='summary'>
+
+<meta name="generator" content="Hugo 0.57.2" />
+
+  <title>Кучи с эффективным слиянием • Где-то на дальнем сервере</title>
+  <link rel='canonical' href='https://vporoshok.me/post/2018/11/meldable-heaps/'>
+  
+  
+  <link rel='icon' href='/favicon.ico'>
+<link rel='stylesheet' href='/assets/css/main.6a060eb7.css'><link rel='stylesheet' href='/assets/custom.css'><style>
+:root{--color-accent:#ffcd00;}
+</style>
+
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+	ga('create', 'UA-41042060-2', 'auto');
+	
+	ga('send', 'pageview');
+}
+</script>
+<script async src='https://www.google-analytics.com/analytics.js'></script>
+
+  
+
+</head>
+<body class='page type-post has-sidebar'>
+
+  <div class='site'><div id='sidebar' class='sidebar'>
+  <a class='screen-reader-text' href='#main-menu'>Перейти к основному меню</a>
+
+  <div class='container'><section class='widget widget-about sep-after'>
+  <header>
+    
+    <div class='logo'>
+      <a href='/'>
+        <img src='/images/logo.jpg' alt="Вернуться на главную">
+      </a>
+    </div>
+    
+    <h2 class='title site-title '>
+    vporoshok.me
+    </h2>
+    <div class='desc'>
+    Где-то на дальнем сервере
+    </div>
+  </header>
+
+</section>
+<section class='widget widget-social_menu sep-after'><nav aria-label='Соцсети'>
+    <ul><li>
+        <a href='https://twitter.com/vporoshok' target='_blank' rel='noopener'>
+          <span class='screen-reader-text'>Открыть Twitter-акаунт в новой вкладке</span><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"/>
+  
+</svg>
+</a>
+      </li><li>
+        <a href='https://github.com/vporoshok' target='_blank' rel='noopener'>
+          <span class='screen-reader-text'>Открыть Github-акаунт в новой вкладке</span><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/>
+  
+</svg>
+</a>
+      </li><li>
+        <a href='mailto:vporoshok@gmail.com' target='_blank' rel='noopener'>
+          <span class='screen-reader-text'>Связаться через Email</span><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+  <polyline points="22,6 12,13 2,6"/>
+  
+</svg>
+</a>
+      </li><li>
+        <a href='https://t.me/vporoshok' target='_blank' rel='noopener'>
+          <span class='screen-reader-text'>Открыть Telegram-акаунт в новой вкладке</span><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <path d="m 22.05,1.577 c -0.393,-0.016 -0.784,0.08 -1.117,0.235 -0.484,0.186 -4.92,1.902 -9.41,3.64 C 9.263,6.325 7.005,7.198 5.267,7.867 3.53,8.537 2.222,9.035 2.153,9.059 c -0.46,0.16 -1.082,0.362 -1.61,0.984 -0.79581202,1.058365 0.21077405,1.964825 1.004,2.499 1.76,0.564 3.58,1.102 5.087,1.608 0.556,1.96 1.09,3.927 1.618,5.89 0.174,0.394 0.553,0.54 0.944,0.544 l -0.002,0.02 c 0,0 0.307,0.03 0.606,-0.042 0.3,-0.07 0.677,-0.244 1.02,-0.565 0.377,-0.354 1.4,-1.36 1.98,-1.928 l 4.37,3.226 0.035,0.02 c 0,0 0.484,0.34 1.192,0.388 0.354,0.024 0.82,-0.044 1.22,-0.337 0.403,-0.294 0.67,-0.767 0.795,-1.307 0.374,-1.63 2.853,-13.427 3.276,-15.38 L 23.676,4.725 C 23.972,3.625 23.863,2.617 23.18,2.02 22.838,1.723 22.444,1.593 22.05,1.576 Z"/>
+  
+</svg>
+</a>
+      </li></ul>
+  </nav>
+</section><section class='widget widget-sidebar_menu sep-after'><nav id='sidebar-menu' class='menu sidebar-menu' aria-label='Боковое меню'>
+    <div class='container'>
+      <ul><li class='item'>
+  <a href='/categories/algorithm/'>Алгоритмы</a></li><li class='item'>
+  <a href='/categories/develop/'>Разработка</a></li><li class='item'>
+  <a href='/categories/life-style/'>Образ жизни</a></li><li class='item'>
+  <a href='/categories/book/'>Книги</a></li><li class='item'>
+  <a href='/slides/'>Презентации</a></li><li class='item'>
+  <a href='/categories/project/'>Проекты</a></li></ul>
+    </div>
+  </nav>
+
+</section><section class='widget widget-taxonomy_cloud sep-after'>
+  <header>
+    <h4 class='title widget-title'>Тэги</h4>
+  </header>
+
+  <div class='container list-container'>
+  <ul class='list taxonomy-cloud no-shuffle'><li>
+        <a href='/tags/algorithm/' style='font-size:1em'>algorithm</a>
+      </li><li>
+        <a href='/tags/angular/' style='font-size:1em'>angular</a>
+      </li><li>
+        <a href='/tags/architect/' style='font-size:1.625em'>architect</a>
+      </li><li>
+        <a href='/tags/blog/' style='font-size:1em'>blog</a>
+      </li><li>
+        <a href='/tags/checklist/' style='font-size:1.375em'>checklist</a>
+      </li><li>
+        <a href='/tags/complexity/' style='font-size:1.5em'>complexity</a>
+      </li><li>
+        <a href='/tags/csrf/' style='font-size:1em'>CSRF</a>
+      </li><li>
+        <a href='/tags/data-structure/' style='font-size:1.375em'>data-structure</a>
+      </li><li>
+        <a href='/tags/distributed-system/' style='font-size:1em'>distributed system</a>
+      </li><li>
+        <a href='/tags/event/' style='font-size:1em'>event</a>
+      </li><li>
+        <a href='/tags/git/' style='font-size:1em'>git</a>
+      </li><li>
+        <a href='/tags/go/' style='font-size:2em'>go</a>
+      </li><li>
+        <a href='/tags/graph/' style='font-size:1.125em'>graph</a>
+      </li><li>
+        <a href='/tags/hackathon/' style='font-size:1em'>hackathon</a>
+      </li><li>
+        <a href='/tags/keynote/' style='font-size:1em'>keynote</a>
+      </li><li>
+        <a href='/tags/logging/' style='font-size:1em'>logging</a>
+      </li><li>
+        <a href='/tags/management/' style='font-size:1.125em'>management</a>
+      </li><li>
+        <a href='/tags/memory/' style='font-size:1.25em'>memory</a>
+      </li><li>
+        <a href='/tags/microservices/' style='font-size:1.125em'>microservices</a>
+      </li><li>
+        <a href='/tags/orgmode/' style='font-size:1em'>orgmode</a>
+      </li><li>
+        <a href='/tags/php/' style='font-size:1em'>PHP</a>
+      </li><li>
+        <a href='/tags/python/' style='font-size:1.125em'>python</a>
+      </li><li>
+        <a href='/tags/rules/' style='font-size:1.125em'>rules</a>
+      </li><li>
+        <a href='/tags/rxjs/' style='font-size:1em'>rxjs</a>
+      </li><li>
+        <a href='/tags/scheme/' style='font-size:1.125em'>scheme</a>
+      </li><li>
+        <a href='/tags/scrum/' style='font-size:1.125em'>scrum</a>
+      </li><li>
+        <a href='/tags/security/' style='font-size:1em'>security</a>
+      </li><li>
+        <a href='/tags/sicp/' style='font-size:1.125em'>sicp</a>
+      </li><li>
+        <a href='/tags/sorting/' style='font-size:1em'>sorting</a>
+      </li><li>
+        <a href='/tags/state-machine/' style='font-size:1em'>state-machine</a>
+      </li><li>
+        <a href='/tags/team-lead/' style='font-size:1em'>team-lead</a>
+      </li><li>
+        <a href='/tags/testing/' style='font-size:1.125em'>testing</a>
+      </li><li>
+        <a href='/tags/tips-and-tricks/' style='font-size:1.25em'>tips and tricks</a>
+      </li><li>
+        <a href='/tags/toc/' style='font-size:1em'>toc</a>
+      </li><li>
+        <a href='/tags/tutorial/' style='font-size:1.125em'>tutorial</a>
+      </li><li>
+        <a href='/tags/typescript/' style='font-size:1em'>typescript</a>
+      </li><li>
+        <a href='/tags/web/' style='font-size:1em'>web</a>
+      </li><li>
+        <a href='/tags/work/' style='font-size:1em'>work</a>
+      </li></ul>
+</div>
+
+
+</section>
+</div>
+
+  <div class='sidebar-overlay'></div>
+</div><div class='main'><nav id='main-menu' class='menu main-menu' aria-label='Основное меню'>
+  <div class='container'>
+    <a class='screen-reader-text' href='#content'>Перейти к содержимому</a>
+
+<button id='sidebar-toggler' class='sidebar-toggler' aria-controls='sidebar'>
+  <span class='screen-reader-text'>Скрыть / показать боковую панель</span>
+  <span class='open'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <line x1="3" y1="12" x2="21" y2="12" />
+  <line x1="3" y1="6" x2="21" y2="6" />
+  <line x1="3" y1="18" x2="21" y2="18" />
+  
+</svg>
+</span>
+  <span class='close'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <line x1="18" y1="6" x2="6" y2="18" />
+  <line x1="6" y1="6" x2="18" y2="18" />
+  
+</svg>
+</span>
+</button>
+    <ul><li class='item'>
+        <a href='/post/'>Блог</a>
+      </li><li class='item'>
+        <a href='/page/about/'>Обо мне</a>
+      </li></ul>
+  </div>
+</nav><div class='header-widgets'>
+        <div class='container'></div>
+      </div>
+
+      <header id='header' class='header site-header'>
+        <div class='container sep-after'>
+          <div class='header-info'><p class='site-title title'>Где-то на дальнем сервере</p><p class='desc site-desc'>Заметки о программировании и не только</p>
+          </div>
+        </div>
+      </header>
+
+      <main id='content'>
+
+
+<article lang='ru' class='entry'>
+  <header class='header entry-header'>
+  <div class='container sep-after'>
+    <div class='header-info'>
+      <h1 class='title'>Кучи с эффективным слиянием</h1>
+      
+<p class='desc'>Локоть к локтю, кирпич к стене</p>
+
+
+    </div>
+    
+<div class='entry-meta'>
+  <span class='posted-on'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+  <line x1="16" y1="2" x2="16" y2="6"/>
+  <line x1="8" y1="2" x2="8" y2="6"/>
+  <line x1="3" y1="10" x2="21" y2="10"/>
+  
+</svg>
+<span class='screen-reader-text'>Опубликовано </span>
+  <time class='entry-date' datetime='2018-11-15T14:00:00Z'>2018-11-15</time>
+</span>
+
+  
+  
+<span class='reading-time'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <circle cx="12" cy="12" r="10"/>
+  <polyline points="12 6 12 12 15 15"/>
+  
+</svg>
+11 минут на чтение
+</span>
+
+
+  <a href="/slides/2018/11/meldable-heaps/">
+    <svg class="icon" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+        <rect fill="none" height="20" rx="1" ry="1" stroke="rgb(0, 0, 0)" width="22" x="1" y="3"/>
+        <rect fill="none" height="13" stroke="rgb(0, 0, 0)" width="18" x="3" y="5"/>
+        <polygon points="10.6,9 15,11.3 10.6,13.6"/>
+    </svg>
+    <span>Слайды</span>
+</a>
+</div>
+
+
+  </div>
+</header>
+
+  
+  
+<details class='container entry-toc'>
+  <summary class='title'>
+    <span>Оглавление</span>
+  </summary>
+  <nav id="TableOfContents">
+<ul>
+<li>
+<ul>
+<li><a href="#биномиальные-кучи-1">Биномиальные кучи<sup class="footnote-ref" id="fnref:1"><a href="#fn:1">1</a></sup></a>
+<ul>
+<li><a href="#биномиальное-дерево">Биномиальное дерево</a></li>
+<li><a href="#адресация-в-биномиальном-дереве">Адресация в биномиальном дереве</a></li>
+<li><a href="#слияние-биномиальных-деревьев">Слияние биномиальных деревьев</a></li>
+<li><a href="#биномиальный-лес">Биномиальный лес</a></li>
+<li><a href="#вставка-и-извлечение-минимума">Вставка и извлечение минимума</a></li>
+<li><a href="#оценка-сложности">Оценка сложности</a></li>
+</ul></li>
+<li><a href="#левацкие-кучи-3">Левацкие кучи<sup class="footnote-ref" id="fnref:3"><a href="#fn:3">3</a></sup></a></li>
+<li><a href="#косые-кучи-4">Косые кучи<sup class="footnote-ref" id="fnref:4"><a href="#fn:4">4</a></sup></a></li>
+<li><a href="#рандомизированные-кучи-5">Рандомизированные кучи<sup class="footnote-ref" id="fnref:5"><a href="#fn:5">5</a></sup></a></li>
+<li><a href="#вопросы">Вопросы</a></li>
+<li><a href="#дополнительное-чтение">Дополнительное чтение</a></li>
+</ul></li>
+</ul>
+</nav>
+</details>
+
+
+  <div class='container entry-content'>
+  
+
+<p>В <a href="/post/2018/11/simple-heap/">статье про двоичную кучу</a> было рассказано про устройство такой структуры данных как <em>куча</em>, а также приведён пример реализации в виде двоичной кучи. Такая реализация обладает двумя бесспорными преимуществами: простотой и компактностью хранения. Однако одна операция, часто требуемая от кучи в ней имеет слишком высокую сложность, эта операция <em>слияние</em> (meld). По сути лучшим способом слияния двоичных куч является построение новой кучи на объединённом массиве элементов. Сложность такой операции будет \(O(n + m)\) или, если одна из сливаемых куч сильно меньше другой, то можно поэлементно добавить первую ко второй, получив сложность \(O(n \log m)\).</p>
+
+<p>Деревья, рассматриваемые в этой статье не отличаются простотой и компактностью, однако, оптимизированы для выполнения операции объединения. Собственно все операции в этих структурах сводятся к операции объединения.</p>
+
+<h2 id="биномиальные-кучи-1">Биномиальные кучи<sup class="footnote-ref" id="fnref:1"><a href="#fn:1">1</a></sup></h2>
+
+<p>Для начала нужно сказать, что биномиальная куча представляет из себя не одно дерево, а целый лес биномиальных деревьев. Но по порядку.</p>
+
+<h3 id="биномиальное-дерево">Биномиальное дерево</h3>
+
+<p>Самый простой способ определения того что из себя представляет биномиальное дерево является рекурентный. Биномиальное дерево порядка \(0\) состоит из одной вершины, а биномиальное дерево порядка \(k\) является объединением двух деревьев порядка \(k - 1\) так, что корень одного из них является сыном корня другого. Из этого определения очевидно, что количество элементов в биномиальном дереве порядка \(k\) равно \(2^k\). Вот как будут выглядеть несколько первых биномиальных деревьев:</p>
+
+<figure>
+        <img src="/post/2018/11/img/meldable-heaps-01.svg" alt="Несколько первых биномиальных деревьев">
+    
+<figcaption>
+        Рис.&thinsp;1.
+        Несколько первых биномиальных деревьев
+    </figcaption>
+</figure>
+
+
+<p>«Несложно» догадаться, что название «биномиальные» эти деревья получили от того, что количество вершин по уровням представляет из себя биномиальные последовательности, например, для \(k = 5\) биномиальная последовательность равна \((1, 5, 10, 10, 5, 1)\)</p>
+
+<figure>
+        <img src="/post/2018/11/img/meldable-heaps-02.svg" alt="Биномиальное дерево пятого порядка">
+    
+<figcaption>
+        Рис.&thinsp;2.
+        Биномиальное дерево пятого порядка
+    </figcaption>
+</figure>
+
+
+<p>Также несложно видеть, что высота такого дерева будет \(k + 1\).</p>
+
+<h3 id="адресация-в-биномиальном-дереве">Адресация в биномиальном дереве</h3>
+
+<p>С формой всё вроде понятно, но как хранить такое дерево? Вообще хранить деревья с переменной степенью ветвления та ещё морока, но есть более или менее универсальный способ, не зависящий от формы дерева вообще. Но, прежде чем перейти к нему, заметим, что вообще биномиальное дерево вполне отлично хранится в обычном массиве, при этом для нисхождения по дереву адресация будет однозначной.</p>
+
+<p>Пусть корень хранится в нулевом элементе и для \(i\)-го элемента его дети имеют индексы \(i + 2^j\), где \(j &lt; k_i\) степени ветвления вершины \(i\). Получаем примерно следующую картину:</p>
+
+<figure>
+        <img src="/post/2018/11/img/meldable-heaps-03.svg" alt="Индексация биномиального дерева с помощью массива">
+    
+<figcaption>
+        Рис.&thinsp;3.
+        Индексация биномиального дерева с помощью массива
+    </figcaption>
+</figure>
+
+
+<p>Также несложно видеть, что у корня будет \(k\) сыновей, а у сына \(i\)-го элемента с индексом \(i + 2^j\) будет \(j\) сыновей. Таким образом легко спускаться по дереву, хотя чистый спуск требуется редко, разве что для операции увеличения ключа. При этом способ узнать родителя элемента не такой очевидный (<a id="qback-1" href="#qlink-1">?</a>).</p>
+
+<p>Но это хорошо, до тех пор, пока такое дерево не меняется, потому как при любом изменении возможно выделение памяти и копирование данных. Так что сложность изменения может быть равно \(O(n)\).</p>
+
+<p>Вместо этого воспользуемся так называемым LCRS-деревом<sup class="footnote-ref" id="fnref:2"><a href="#fn:2">2</a></sup>. Эта аббревиатура расшифровывается как Left-Child, Right-Sibling, то есть каждый элемент хранит два указателя: на левого сына и следующего брата. Получается следующая картина:</p>
+
+<figure>
+        <img src="/post/2018/11/img/meldable-heaps-04.svg" alt="Индексация биномиального дерева с помощью Left-Child, Right-Sibling">
+    
+<figcaption>
+        Рис.&thinsp;4.
+        Индексация биномиального дерева с помощью Left-Child, Right-Sibling
+    </figcaption>
+</figure>
+
+
+<p>По сути, все сыновья вершины хранятся в односвязном списке. Такая схема хранения удобна для рассматриваемых ниже операций, однако, если необходимо реализовывать операцию уменьшения ключа, необходимо будет также хранить ссылку на родителя. Её можно разместить в последнем сыне вместо ссылки на следующего брата, как это показано ниже.</p>
+
+<figure>
+        <img src="/post/2018/11/img/meldable-heaps-05.svg" alt="Индексация биномиального дерева с помощью Left-Child, Right-Sibling и обратной ссылки на родителя">
+    
+<figcaption>
+        Рис.&thinsp;5.
+        Индексация биномиального дерева с помощью Left-Child, Right-Sibling и обратной ссылки на родителя
+    </figcaption>
+</figure>
+
+
+<p>Получатся зацикленные списки, по которым можно будет свободно обходить всё дерево (<a id="qback-2" href="#qlink-2">?</a>).</p>
+
+<h3 id="слияние-биномиальных-деревьев">Слияние биномиальных деревьев</h3>
+
+<p>Биномиальные деревья сливаются по определению, то есть</p>
+
+<blockquote>
+<p>Биномиальное дерево порядка \(k\) является объединением двух деревьев порядка \(k - 1\) так, что корень одного из них является сыном корня другого.</p>
+</blockquote>
+
+<p>При этом, конечно, мы можем сливать только деревья одного порядка. Если же добавить к биномиальным деревьям свойство кучи, что <em>любой элемент не меньше своего родителя</em>, то сливать такие деревья надо так, чтобы меньший корень оказался также корнем нового дерева.</p>
+
+<h3 id="биномиальный-лес">Биномиальный лес</h3>
+
+<p>Если в количество элементов в куче не является степенью двойки, тогда их надо разделить на нужное число биномиальных деревьев разной высоты. Например, возьмём \(13\) элементов:
+<div class="equation">
+\[
+(3, 12, 7, 4, 5, 2, 8, 9, 21, 1, 15, 24, 19).
+\]
+</div></p>
+
+<p>Число \(13\) представимо в виде \(1 + 4 + 8 = 2^0 + 2^2 + 2^3\). То есть элементы этого множества можно распределить по биномиальным деревьям порядков \(0\), \(2\) и \(3\).
+<div class="equation">
+\[
+(3), (12, 7, 4, 5), (2, 8, 9, 21, 1, 15, 24, 19).
+\]
+</div></p>
+
+<figure>
+        <img src="/post/2018/11/img/meldable-heaps-06.svg" alt="Биномиальный лес">
+    
+<figcaption>
+        Рис.&thinsp;6.
+        Биномиальный лес
+    </figcaption>
+</figure>
+
+
+<p>Осталось только переставить элементы в деревьях так, чтобы они удовлетворяли условию кучи, и вуаля!</p>
+
+<figure>
+        <img src="/post/2018/11/img/meldable-heaps-07.svg" alt="Биномиальная куча">
+    
+<figcaption>
+        Рис.&thinsp;7.
+        Биномиальная куча
+    </figcaption>
+</figure>
+
+
+<p>Определим на таких лесах операцию <em>meld</em>. Для этого будем сливать деревья одного порядка от младшего к старшему с переносом. Для примера сольём наш лес со следующим:</p>
+
+<figure>
+        <img src="/post/2018/11/img/meldable-heaps-08.svg" width="250px" }} alt="Другая биномиальная куча">
+    
+<figcaption>
+        Рис.&thinsp;8.
+        Другая биномиальная куча
+    </figcaption>
+</figure>
+
+
+<p>Младшими в обоих лесах оказываются деревья порядка \(0\). Сливаем их, сохраняя свойство кучи.</p>
+
+<figure>
+        <img src="/post/2018/11/img/meldable-heaps-09.svg" width="125px" }} alt="Слияние биномиальных куч (деревья порядка 0)">
+    
+<figcaption>
+        Рис.&thinsp;9.
+        Слияние биномиальных куч (деревья порядка 0)
+    </figcaption>
+</figure>
+
+
+<p>Получилось дерево порядка \(1\). Но второй лес также содержит дерево этого порядка, так что надо слить и их тоже, получив дерево порядка \(2\).</p>
+
+<figure>
+        <img src="/post/2018/11/img/meldable-heaps-10.svg" width="225px" }} alt="Слияние биномиальных куч (деревья порядка 1)">
+    
+<figcaption>
+        Рис.&thinsp;10.
+        Слияние биномиальных куч (деревья порядка 1)
+    </figcaption>
+</figure>
+
+
+<p>При этом первый лес также содержит дерево порядка \(2\). Сольём и их.</p>
+
+<figure>
+        <img src="/post/2018/11/img/meldable-heaps-11.svg" width="400px" }} alt="Слияние биномиальных куч (деревья порядка 2)">
+    
+<figcaption>
+        Рис.&thinsp;11.
+        Слияние биномиальных куч (деревья порядка 2)
+    </figcaption>
+</figure>
+
+
+<p>Наконец, первый лес также содержит дерево порядка \(3\), сольём и их, получив одно дерево как итоговый лес.</p>
+
+<figure>
+        <img src="/post/2018/11/img/meldable-heaps-12.svg" alt="Слияние биномиальных куч (деревья порядка 3)">
+    
+<figcaption>
+        Рис.&thinsp;12.
+        Слияние биномиальных куч (деревья порядка 3)
+    </figcaption>
+</figure>
+
+
+<p>Несложно увидеть, что итоговый набор куч можно получить сложив количества элементов в двоичной записи:
+<div class="equation">
+\[
+\begin{array}{r}
+  + \begin{array}{r}
+        1101\\
+          11
+    \end{array}\\
+    \hline
+    \begin{array}{r}
+       10000
+    \end{array}
+\end{array}
+\]
+</div></p>
+
+<p>Также легко заметить, что количество деревьев в куче, состоящей из \(n\) элементов, будет не больше чем \(\lfloor 1 + \log n \rfloor\). К сожалению, минимум всего леса может быть корнем любого из деревьев. Для оптимизации метода <em>peek</em> лучше хранить номер дерева, содержащего глобальный минимум, обновляя его по мере изменения леса.</p>
+
+<h3 id="вставка-и-извлечение-минимума">Вставка и извлечение минимума</h3>
+
+<p>Операцию вставки можно свести к слиянию текущего леса с лесом, состоящим из одного дерева порядка \(0\). При извлечении же минимума дерево, которое его содержало разделяется на деревья меньших порядков. Для примера извлечём минимум из дерева, получившегося в предыдущем параграфе. После удаления корня получим следующий лес:</p>
+
+<figure>
+        <img src="/post/2018/11/img/meldable-heaps-13.svg" alt="Извлечение минимума из биномиального дерева">
+    
+<figcaption>
+        Рис.&thinsp;13.
+        Извлечение минимума из биномиального дерева
+    </figcaption>
+</figure>
+
+
+<p>Если бы лес содержал другие деревья, то необходимо было бы выполнить операцию слияния оставшихся деревьев с этим новым лесом.</p>
+
+<h3 id="оценка-сложности">Оценка сложности</h3>
+
+<p>Заметим, что слияние двух деревьев операция константной сложности:</p>
+
+<ul>
+<li>выбрать минимум из двух корней;</li>
+<li>назначить меньший корень родителем большего;</li>
+</ul>
+
+<p>С другой стороны сложность слияния двух лесов может вылиться к попарному слиянию деревьев. Так как в лесе из \(n\) элементов не более \(\lfloor 1 + \log n \rfloor\) деревьев, получаем, что сложность слияния лесов, состоящих из \(n\) и \(m\) элементов, будет иметь сложность \(O(\log \max (n, m))\). Таким образом сложность вставки и извлечения минимума будет \(O(\log n)\), однако, несложно доказать, что учётная стоимость вставки будет \(O(1)\) (<a id="qback-3" href="#qlink-3">?</a>).</p>
+
+<h2 id="левацкие-кучи-3">Левацкие кучи<sup class="footnote-ref" id="fnref:3"><a href="#fn:3">3</a></sup></h2>
+
+<p>Левацкие кучи в отличии от биномиальных являются деревьями, причём двоичными, но не полными. Для определения левацких куч нам потребуются дополнительные определения.</p>
+
+<p><em>Рангом вершины</em> будем называть высоту полного двоичного поддерева с корнем в этой вершине. Для большей формальности определим ранг следующим образом:
+<div class="equation">
+\[
+    r(\varnothing) = 0, \qquad r(v) = 1 + \min\{r(v_l), r(v_r)\},
+\]
+</div>
+где \(\varnothing\) это нулевой указатель, то есть отсутствие вершины, а \(v_l\) и \(v_r\) &mdash; левый и правый сыновья вершины \(v\) соответственно. То есть у листа и вершины с отсутствующим одним из сыновей ранг будет равен \(1\).</p>
+
+<p>Дерево будем называть <em>левацким</em>, если в любой его вершине ранг левого сына не меньше ранга правого сына.</p>
+
+<figure>
+        <img src="/post/2018/11/img/meldable-heaps-14.svg" alt="Левацкая куча">
+    
+<figcaption>
+        Рис.&thinsp;14.
+        Левацкая куча
+    </figcaption>
+</figure>
+
+
+<p>Несложно видеть, что для любой непустой вершины \(v\) в левацкой куче выполняется равенство \(r(v) = 1 + r(v_r)\). Также из определения следует, что в дереве, ранг которого равен \(k\) не меньше, чем \(2^k\) элементов. То есть ранг дерева из \(n\) элементов не превосходит \(\log n\). Из этого следует, что длинна правого пути в таком дереве не будет превосходить \(\log n\). Вообще для простоты будем изображать левацкие деревья следующим образом:</p>
+
+<figure>
+        <img src="/post/2018/11/img/meldable-heaps-15.svg" width="300px" }} alt="Левацкая куча со свёрнутыми левыми поддеревьями">
+    
+<figcaption>
+        Рис.&thinsp;15.
+        Левацкая куча со свёрнутыми левыми поддеревьями
+    </figcaption>
+</figure>
+
+
+<p>Потому как нас будет интересовать в них только правый путь. Также будем обозначать через \(x(A, B)\) дерево с корнем в вершине \(x\) с двумя поддеревьями: \(A\) и \(B\), левым и правым соответственно.</p>
+
+<p>Добавим к свойствам левацкости свойство кучи и получим <em>левацкую кучу</em>. Для него определим операцию слияния следующим рекурентным образом:
+<div class="equation">
+\[
+    \def\meld{\operatorname{meld}}
+
+    \begin{gathered}
+        \meld(A, \varnothing) = \meld(\varnothing, A) = A,\\
+
+        \meld(x(A, B), y(C, D)) = \begin{cases}
+            x(A, \meld(B, y(C, D))), &\text{если } x \leqslant y;\\
+            y(C, \meld(D, x(A, B))), &\text{иначе}.
+        \end{cases}
+    \end{gathered}
+\]
+</div></p>
+
+<p>Рассмотрим слияние двух левацких куч:</p>
+
+<figure>
+        <img src="/post/2018/11/img/meldable-heaps-16.svg" alt="Слияние левацких куч (до)">
+    
+<figcaption>
+        Рис.&thinsp;16.
+        Слияние левацких куч (до)
+    </figcaption>
+</figure>
+
+
+<p>В результате рекурсивного применения операции слияния мы получим следующее дерево:</p>
+
+<figure>
+        <img src="/post/2018/11/img/meldable-heaps-17.svg" width="400px" }} alt="Слияние левацких куч (после)">
+    
+<figcaption>
+        Рис.&thinsp;17.
+        Слияние левацких куч (после)
+    </figcaption>
+</figure>
+
+
+<p>Сложность такой операции будет \(O(r(A) + r(B)) = O(\log n)\), но можно оптимизировать, так как по сути это слияние двух отсортированных списков. Но есть одна проблема: получившееся дерево, хоть и является кучей, но скорее всего не левацкое. Для того, чтобы вернуть ему необходимые свойства, надо пройтись по правому пути обратно и для вершин, в которых нарушаются свойства левацкости поменять сыновей местами. Таким образом удобнее всего здесь использовать стек и рекурсивные вызовы, а обмены оставить на выход из рекурсии, что, конечно, сделает невозможным оптимизацию хвостовой рекурсии.</p>
+
+<p>Также операция <code>decrease_key</code> не является эффективной на левацких кучах: левые пути могут быть сколь угодно длинным, вплоть до того, что если взять дерево, в котором есть только левый путь, оно тоже будет левацким. Таким образом сложность операции <code>decrease_key</code> ограничено лишь \(O(n)\).</p>
+
+<h2 id="косые-кучи-4">Косые кучи<sup class="footnote-ref" id="fnref:4"><a href="#fn:4">4</a></sup></h2>
+
+<p>В структуре левацкой кучи всё хорошо, кроме одного момента: дополнительные данные. Рядом с каждой вершиной мы должны хранить её ранг. По факту он нам требуется только для выхода из рекурсии для разворота некоторых вершин, но вычислять его на ходу слишком дорого, так что приходится хранить. Косые (skew) кучи исправляют этот недостаток. Вместо того, чтобы хранить ранги вершин, просто будем разворачивать все вершины правого пути (а заодно можно и хвостовую рекурсию оптимизировать). Несмотря на то, что косая куча не являются левацкой, она также имеет логарифмическую оценку сложности слияния, правда учётную. Давайте докажем эту оценку.</p>
+
+<p>Для оценки будем использовать <a href="http://neerc.ifmo.ru/wiki/index.php?title=Амортизационный_анализ">банковский метод</a>, также известный как метод предоплаты, то есть определим некоторую константу \(c\), такую что, количество базовых операций требуемых для слияния будет ограничено сверху \(c\log n\), где \(n\) — величина результата слияния. Излишек мы будем располагать на нашей структуре как предоплату для будущих операций. Осталось определиться с величиной \(c\) и тем — где хранить предоплату. Для этого введём дополнительные определения.</p>
+
+<p><em>Весом</em> вершины (\(\leftrightharpoons \operatorname{w}(v)\)) будем называть количество вершин в дереве с корнем в этой вершине. Будем говорить, что вершина <em>тяжёлая</em>, если её вес не меньше половины веса её родителя. Заметим, что тяжёлым может быть только один сын, при этом может быть, что обы сына не являются тяжёлыми. Наконец, будем говорить, что вершина <em>плохая</em>, если она тяжёлая и при этом является правым сыном.</p>
+
+<p>Легко понять, что в любой пути от корня до листа дерева не более, чем \(\log n\) не тяжёлых вершин. Действительно, каждый раз при переходе в лёгкую вершину остаток вершин под ней не менее чем уполовинивается. Если же путь превышает по длине \(\log n\), это означает, что в нём есть тяжёлые вершины. Таким образом, правый путь состоит из \(\log n\) хороших вершин, остальные плохие.</p>
+
+<p>Именно в плохих вершинах и будем накапливать предоплату. Так как на плохих вершинах лежат монетки, их слияние и разворот предоплачен. Но после процедуры слияния и разворота необходимо разложить новую предоплату на новые плохие вершины. Собственно плохие вершины могут образоваться в корнях деревьев \(A_i\) и \(B_j\), ведь мы сделали обмен сыновей во всех вершинах правого пути так, что он стал левым.</p>
+
+<figure>
+        <img src="/post/2018/11/img/meldable-heaps-18.svg" width="400px" }} alt="Разворот косой кучи">
+    
+<figcaption>
+        Рис.&thinsp;18.
+        Разворот косой кучи
+    </figcaption>
+</figure>
+
+
+<p>Но, если корень дерева \(A_i\) или \(B_j\) оказывается плохой вершиной, значит это тяжёлый правый сын, а значит левый сын &mdash; лёгкий, а как мы показали выше: в любом пути не более чем \(\log n\) лёгких вершин. Таким образом плохих вершин образуется не более чем \(\log n\). Итого, если брать по 1 монете за операцию слияния и разворота, то на процедуру слияния нам потребуется не более чем \(2 \log n\) монет: \(\log n\) на слияние лёгких вершин правого пути, тяжёлые уже содержат на себе монету предоплаты, и ещё \(\log n\) на предоплату вновь образованных плохих вершин.</p>
+
+<h2 id="рандомизированные-кучи-5">Рандомизированные кучи<sup class="footnote-ref" id="fnref:5"><a href="#fn:5">5</a></sup></h2>
+
+<p>Ещё один вариант куч с эффективным слиянием являются рандомизированные куч. Процедура слияния в них работают также как в косых или левацких, но не по правому пути, а по случайному пути: на каждый раз мы случайным образом выбираем в каком из сыновей продолжить слияние. Математическое ожидание длинны любого пути от корня до листа в таком дереве равно \(\log n\), при этом в большинстве случаев оно не превышает \(2 \log n\). Это называется рандомизированный логарифм и о нём более подробно будет рассказываться в рандомизированных деревьях поиска. Здесь лишь отметим, что в рандомизированных кучах операция <code>decrease_key</code> также является эффективной.</p>
+
+<h2 id="вопросы">Вопросы</h2>
+
+<ol>
+<li><a id="qlink-1" href="#qback-1">^</a> Как определить индекс родителя при хранении биномиального дерева в массиве, описанным способом?</li>
+<li><a id="qlink-2" href="#qback-2">^</a> Какова будет сложность обхода всего LCRS-дерева, например, если необходимо посчитать сумму всех его вершин? Какая максимальная сложность будет при переходе от вершины к вершине?</li>
+<li><a id="qlink-3" href="#qback-3">^</a> Докажите, что учётная стоимость вставки в биномиальную кучу составляет \(O(1)\).</li>
+<li><strong>*</strong> Является ли эффективной операция <code>decrease_key</code> для косых куч? Можно ли получить учётную оценку её стоимости?</li>
+</ol>
+
+<h2 id="дополнительное-чтение">Дополнительное чтение</h2>
+<div class="footnotes">
+
+<hr />
+
+<ol>
+<li id="fn:1">Vuillemin, Jean. &ldquo;A data structure for manipulating priority queues.&rdquo; <em>Communications of the ACM</em>. vol. 21, no. 4, 1978, pp. 309–315. <a href="https://www.cl.cam.ac.uk/teaching/1011/AlgorithII/1978-Vuillemin-queues.pdf">https://www.cl.cam.ac.uk/teaching/1011/AlgorithII/1978-Vuillemin-queues.pdf</a>
+ <a class="footnote-return" href="#fnref:1"><sup>[return]</sup></a></li>
+<li id="fn:2">Fredman, Michael L., and al. &ldquo;The pairing heap: a new form of self-adjusting heap.&rdquo; <em>Algorithmica</em>. vol. 1, no. 1, 1986, pp. 111–129. <a href="http://www.cs.cmu.edu/~sleator/papers/pairing-heaps.pdf">http://www.cs.cmu.edu/~sleator/papers/pairing-heaps.pdf</a>
+ <a class="footnote-return" href="#fnref:2"><sup>[return]</sup></a></li>
+<li id="fn:3">Crane, Clark A. <em>Linear Lists and Priority Queues as Balanced Binary Trees</em> Ph.D. thesis. Department of Computer Science, Stanford University, 1972.
+ <a class="footnote-return" href="#fnref:3"><sup>[return]</sup></a></li>
+<li id="fn:4">Sleator, Daniel Dominic and Tarjan, Robert Endre. &ldquo;Self-Adjusting Heaps.&rdquo; <em>SIAM Journal on Computing</em>. vol. 15, no. 1, 1986, pp. 52–69. <a href="http://www.cs.cmu.edu/~sleator/papers/adjusting-heaps.pdf">http://www.cs.cmu.edu/~sleator/papers/adjusting-heaps.pdf</a>
+ <a class="footnote-return" href="#fnref:4"><sup>[return]</sup></a></li>
+<li id="fn:5">Gambin, A. and Malinowski, A. &ldquo;Randomized Meldable Priority Queues.&rdquo; <em>Proceedings of the 25th Conference on Current Trends in Theory and Practice of Informatics: Theory and Practice of Informatics (SOFSEM &lsquo;98)</em>. Ed. Branislav Rovan, 1998, pp. 344-349. <a href="https://www.researchgate.net/publication/2801527_Randomized_Meldable_Priority_Queues">https://www.researchgate.net/publication/2801527_Randomized_Meldable_Priority_Queues</a>
+ <a class="footnote-return" href="#fnref:5"><sup>[return]</sup></a></li>
+</ol>
+</div>
+
+</div>
+
+  
+<footer class='entry-footer'>
+  <div class='container sep-before'><div class='categories'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <path d="M22,19a2,2,0,0,1-2,2H4a2,2,0,0,1-2-2V5A2,2,0,0,1,4,3H9l2,3h9a2,2,0,0,1,2,2Z"/>
+  
+</svg>
+<span class='screen-reader-text'>category: </span><a class='category' href='/categories/algorithm/'>Алгоритмы</a></div>
+<div class='tags'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <path d="M20.59,13.41l-7.17,7.17a2,2,0,0,1-2.83,0L2,12V2H12l8.59,8.59A2,2,0,0,1,20.59,13.41Z"/>
+  <line x1="7" y1="7" x2="7" y2="7"/>
+  
+</svg>
+<span class='screen-reader-text'>Тэги: </span><a class='tag' href='/tags/data-structure/'>data-structure</a>, <a class='tag' href='/tags/complexity/'>complexity</a></div>
+
+  </div>
+</footer>
+
+
+</article>
+
+<nav class='entry-nav'>
+  <div class='container'><div class='prev-entry sep-before'>
+      <a href='/post/2018/11/merge-sort-2/'>
+        <span aria-hidden='true'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <line x1="20" y1="12" x2="4" y2="12"/>
+  <polyline points="10 18 4 12 10 6"/>
+  
+</svg>
+ Предыдущий</span>
+        <span class='screen-reader-text'>Предыдущая запись: </span>Слияние больших массивов данных</a>
+    </div><div class='next-entry sep-before'>
+      <a href='/post/2018/11/introduction/'>
+        <span class='screen-reader-text'>Следующая запись: </span>Как и для чего изучать алгоритмы<span aria-hidden='true'>Следующий <svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
+  
+  <line x1="4" y1="12" x2="20" y2="12"/>
+  <polyline points="14 6 20 12 14 18"/>
+  
+</svg>
+</span>
+      </a>
+    </div></div>
+</nav>
+
+
+
+
+      </main>
+
+      <footer id='footer' class='footer'>
+        <div class='container sep-before'><div class='copyright'>
+  <p>Материалы распространяются по <a rel="noreferrer" href="https://creativecommons.org/licenses/by/4.0/" target="_blank">лицензии CC BY</a> &copy; 2018-2021 vporoshok <br>Увидели ошибку? Буду рад <a rel="noreferrer" href="https://github.com/vporoshok/vporoshok.github.io" target="_blank">PR&rsquo;у</a></p>
+</div>
+
+        </div>
+      </footer>
+
+    </div>
+  </div><script>window.__assets_js_src="/assets/js/"</script>
+
+<script src='/assets/js/main.67d669ac.js'></script><link rel='stylesheet' href='/assets/katex/katex.min.css'>
+<script src='/assets/katex/katex.min.js'></script>
+<script src='/assets/katex/contrib/auto-render.min.js'></script>
+
+<script type='text/javascript'>
+  renderMathInElement(document.querySelector('.entry-content'),{"throwOnError":true});
+</script>
+
+</body>
+
+</html>
+
