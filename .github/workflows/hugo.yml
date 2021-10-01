@@ -19,7 +19,7 @@ jobs:
       - name: Setup git user email
         run: git config --global user.email "${GITHUB_ACTOR}@users.noreply.github.com"
       - name: Clone target repository
-        run: git clone --depth=1 --single-branch --branch master "https://x-access-token:${INPUT_GITHUBTOKEN}@github.com/${GITHUB_REPOSITORY}.git" /tmp/gh-pages
+        run: ls -al
       - name: Cleanup target repository
         run: rm -rf /tmp/gh-pages/*
       - name: Build site
