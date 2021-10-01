@@ -8,10 +8,27 @@ jobs:
     runs-on: ubuntu-20.04
     env:
       VERSION: '0.88.1'
+      CNAME: vporoshok.me
     steps:
-      - name: download
+      - name: Download hugo
         run: wget "https://github.com/gohugoio/hugo/releases/download/v${VERSION}/hugo_${VERSION}_Linux-64bit.tar.gz"
-      - name: install
+      - name: Unpack hugo
         run: tar xvf hugo_${VERSION}_Linux-64bit.tar.gz
-      - name: build
-        run: ./hugo_${VERSION}_Linux-64bit/hugo
+      - name: Setup git user name
+        run: git config --global user.name "${GITHUB_ACTOR}"
+      - name: Setup git user email
+        run: git config --global user.email "${GITHUB_ACTOR}@users.noreply.github.com"
+      - name: Clone target repository
+        run: git clone --depth=1 --single-branch --branch master "https://x-access-token:${INPUT_GITHUBTOKEN}@github.com/${GITHUB_REPOSITORY}.git" /tmp/gh-pages
+      - name: Cleanup target repository
+        run: rm -rf /tmp/gh-pages/*
+      - name: Build site
+        run: ./hugo -d /tmp/gh-pages/
+      - name: CD to target repository
+        run: cd /tmp/gh-pages
+      - name: Add cname
+        run: echo "${CNAME}" > CNAME
+      - name: Commit
+        run: git add -A && git commit --allow-empty -am "Publishing Site at ${GITHUB_SHA} on $(date -u)"
+      - name: Push
+        run: git push --force
