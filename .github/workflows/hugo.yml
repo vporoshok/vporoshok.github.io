@@ -10,8 +10,8 @@ jobs:
       VERSION: '0.88.1'
     steps:
       - name: download
-        run: wget "https://github.com/gohugoio/hugo/releases/download/v${VERSION}/hugo_${VERSION}_Linux-64bit.deb"
+        run: wget "https://github.com/gohugoio/hugo/releases/download/v${VERSION}/hugo_${VERSION}_Linux-64bit.tar.gz"
       - name: install
-        run: dpkg -i hugo_${VERSION}_Linux-64bit.deb
+        run: tar xvf hugo_${VERSION}_Linux-64bit.tar.gz
       - name: build
-        run: hugo
+        run: ./hugo_${VERSION}_Linux-64bit/hugo
