@@ -11,11 +11,13 @@ jobs:
       CNAME: vporoshok.me
     steps:
       - uses: actions/checkout@v2
+        with:
+          submodules: recursive
       - run: wget "https://github.com/gohugoio/hugo/releases/download/v${VERSION}/hugo_${VERSION}_Linux-64bit.tar.gz"
       - run: tar xvf hugo_${VERSION}_Linux-64bit.tar.gz
       - run: git config --global user.name "${GITHUB_ACTOR}"
       - run: git config --global user.email "${GITHUB_ACTOR}@users.noreply.github.com"
-      - run: git clone --depth=1 --single-branch --branch master --recurse-submodules -j8 "https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" /tmp/gh-pages
+      - run: git clone --depth=1 --single-branch --branch master "https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" /tmp/gh-pages
       - run: rm -rf /tmp/gh-pages/*
       - run: ./hugo -d /tmp/gh-pages/
       - run: cd /tmp/gh-pages
