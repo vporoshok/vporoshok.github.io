@@ -1,0 +1,17 @@
+name: hugo
+on:
+  push:
+    branches:
+      - develop
+jobs:
+  hugo:
+    runs-on: ubuntu-20.04
+    env:
+      VERSION: '0.88.1'
+    steps:
+      - name: download
+        run: wget "https://github.com/gohugoio/hugo/releases/download/v${VERSION}/hugo_${VERSION}_Linux-64bit.deb"
+      - name: install
+        run: dpkg -i hugo_${VERSION}_Linux-64bit.deb
+      - name: build
+        run: hugo
