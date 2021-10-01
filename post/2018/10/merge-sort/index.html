@@ -9,9 +9,9 @@
 <meta property='og:description' content='Эта музыка будет вечной'>
 <meta property='og:url' content='https://vporoshok.me/post/2018/10/merge-sort/'>
 <meta property='og:site_name' content='Где-то на дальнем сервере'>
-<meta property='og:type' content='article'><meta property='article:section' content='post'><meta property='article:tag' content='sorting'><meta property='article:tag' content='memory'><meta property='article:tag' content='complexity'><meta property='article:tag' content='python'><meta property='article:published_time' content='2018-10-27T08:53:31Z'/><meta property='article:modified_time' content='2020-07-04T13:36:24&#43;04:00'/><meta name='twitter:card' content='summary'>
+<meta property='og:type' content='article'><meta property='article:section' content='post'><meta property='article:tag' content='sorting'><meta property='article:tag' content='memory'><meta property='article:tag' content='complexity'><meta property='article:tag' content='python'><meta property='article:published_time' content='2018-10-27T08:53:31Z'/><meta property='article:modified_time' content='2021-10-01T18:45:33&#43;04:00'/><meta name='twitter:card' content='summary'>
 
-<meta name="generator" content="Hugo 0.57.2" />
+<meta name="generator" content="Hugo 0.88.1" />
 
   <title>Сортировка слиянием • Где-то на дальнем сервере</title>
   <link rel='canonical' href='https://vporoshok.me/post/2018/10/merge-sort/'>
@@ -219,8 +219,8 @@ if (!doNotTrack) {
 </svg>
 </span>
 </button>
-    <ul><li class='item'>
-        <a href='/post/'>Блог</a>
+    <ul><li class='item current'>
+        <a aria-current='page' href='/post/'>Блог</a>
       </li><li class='item'>
         <a href='/page/about/'>Обо мне</a>
       </li></ul>
@@ -289,45 +289,41 @@ if (!doNotTrack) {
     <span>Оглавление</span>
   </summary>
   <nav id="TableOfContents">
-<ul>
-<li>
-<ul>
-<li><a href="#базовый-алгоритм">Базовый алгоритм</a>
-<ul>
-<li><a href="#top-down-и-bottom-up">Top-Down и Bottom-Up</a></li>
-</ul></li>
-<li><a href="#экономим-место">Экономим место</a>
-<ul>
-<li><a href="#а-можно-вообще-без-дополнительной-памяти">А можно вообще без дополнительной памяти?</a></li>
-</ul></li>
-<li><a href="#оптимизируем-по-времени">Оптимизируем по времени</a>
-<ul>
-<li><a href="#немного-теории">Немного теории</a></li>
-<li><a href="#а-на-практике-как">А на практике как?</a></li>
-</ul></li>
-<li><a href="#оптимальный-порядок-слияния">Оптимальный порядок слияния</a></li>
-<li><a href="#timsort">TimSort</a></li>
-<li><a href="#вопросы">Вопросы</a></li>
-<li><a href="#задания">Задания</a></li>
-<li><a href="#дополнительное-чтение">Дополнительное чтение</a></li>
-<li><a href="#ссылки">Ссылки</a></li>
-</ul></li>
-</ul>
+  <ul>
+    <li><a href="#базовый-алгоритм">Базовый алгоритм</a>
+      <ul>
+        <li><a href="#top-down-и-bottom-up">Top-Down и Bottom-Up</a></li>
+      </ul>
+    </li>
+    <li><a href="#экономим-место">Экономим место</a>
+      <ul>
+        <li><a href="#а-можно-вообще-без-дополнительной-памяти">А можно вообще без дополнительной памяти?</a></li>
+      </ul>
+    </li>
+    <li><a href="#оптимизируем-по-времени">Оптимизируем по времени</a>
+      <ul>
+        <li><a href="#немного-теории">Немного теории</a></li>
+        <li><a href="#а-на-практике-как">А на практике как?</a></li>
+      </ul>
+    </li>
+    <li><a href="#оптимальный-порядок-слияния">Оптимальный порядок слияния</a></li>
+    <li><a href="#timsort">TimSort</a></li>
+    <li><a href="#вопросы">Вопросы</a></li>
+    <li><a href="#задания">Задания</a></li>
+    <li><a href="#дополнительное-чтение">Дополнительное чтение</a></li>
+    <li><a href="#ссылки">Ссылки</a></li>
+  </ul>
 </nav>
 </details>
 
 
   <div class='container entry-content'>
-  
-
-<p>Сортировка слиянием один из тех редких алгоритмов, которые не устаревают, а напротив год от года развивается, получает новые публикации и исследования. Это действительно чудесный со многих сторон алгоритм, который находит применение в современном мире, а исследования, связанные с ним предлагают решения, применимые далеко за пределами сортировки. Это своего рода жемчужина среди всех алгоритмов сортировки.</p>
-
+  <p>Сортировка слиянием один из тех редких алгоритмов, которые не устаревают, а напротив год от года развивается, получает новые публикации и исследования. Это действительно чудесный со многих сторон алгоритм, который находит применение в современном мире, а исследования, связанные с ним предлагают решения, применимые далеко за пределами сортировки. Это своего рода жемчужина среди всех алгоритмов сортировки.</p>
 <h2 id="базовый-алгоритм">Базовый алгоритм</h2>
-
 <p>Mergesort является двойственным к быстрой сортировке и относится к классу алгоритмов «Разделяй и властвуй». Основной функцией этого алгоритма является функция слияния, которая получает на вход два отсортированных массива и возвращает их отсортированное объединение. В простейшем варианте её можно записать так:</p>
-<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#080;font-weight:bold">def</span> <span style="color:#06b;font-weight:bold">merge</span>(A, B):
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#080;font-weight:bold">def</span> <span style="color:#06b;font-weight:bold">merge</span>(A, B):
     i, j, C <span style="color:#333">=</span> <span style="color:#00d;font-weight:bold">0</span>, <span style="color:#00d;font-weight:bold">0</span>, []
-    <span style="color:#080;font-weight:bold">while</span> True:
+    <span style="color:#080;font-weight:bold">while</span> <span style="color:#080;font-weight:bold">True</span>:
         <span style="color:#080;font-weight:bold">if</span> A[i] <span style="color:#333">&lt;</span> B[j]:
             C<span style="color:#333">.</span>append(A[i])
             i <span style="color:#333">+=</span> <span style="color:#00d;font-weight:bold">1</span>
@@ -342,13 +338,11 @@ if (!doNotTrack) {
                 C<span style="color:#333">.</span>extend(A[i:])
                 <span style="color:#080;font-weight:bold">break</span>
 
-    <span style="color:#080;font-weight:bold">return</span> C</code></pre></div>
-<p>Имея такую функцию можно построить функцию сортировки двумя путями.</p>
-
+    <span style="color:#080;font-weight:bold">return</span> C
+</code></pre></div><p>Имея такую функцию можно построить функцию сортировки двумя путями.</p>
 <h3 id="top-down-и-bottom-up">Top-Down и Bottom-Up</h3>
-
 <p>Например, можно поступить как в быстрой сортировке: делить массив пополам до тех пор, пока не получатся подмассивы длины \(1\). Такие подмассивы всегда отсортированы, поэтому к ним можно применить функцию слияния:</p>
-<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#080;font-weight:bold">def</span> <span style="color:#06b;font-weight:bold">top_down_merge_sort</span>(A):
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#080;font-weight:bold">def</span> <span style="color:#06b;font-weight:bold">top_down_merge_sort</span>(A):
     <span style="color:#080;font-weight:bold">if</span> <span style="color:#007020">len</span>(A) <span style="color:#333">==</span> <span style="color:#00d;font-weight:bold">1</span>:
         <span style="color:#080;font-weight:bold">return</span> A
 
@@ -356,22 +350,19 @@ if (!doNotTrack) {
     left <span style="color:#333">=</span> top_down_merge_sort(A[:d])
     right <span style="color:#333">=</span> top_down_merge_sort(A[d:])
 
-    <span style="color:#080;font-weight:bold">return</span> merge(left, right)</code></pre></div>
-<p>Конечно, в отличии от быстрой сортировки, глубина стека этой рекурсивной реализации гарантированно будет \(\log n\), но можно решить эту задачу вообще не используя рекурсию.</p>
-<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#080;font-weight:bold">def</span> <span style="color:#06b;font-weight:bold">bottom_up_merge_sort</span>(A):
+    <span style="color:#080;font-weight:bold">return</span> merge(left, right)
+</code></pre></div><p>Конечно, в отличии от быстрой сортировки, глубина стека этой рекурсивной реализации гарантированно будет \(\log n\), но можно решить эту задачу вообще не используя рекурсию.</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#080;font-weight:bold">def</span> <span style="color:#06b;font-weight:bold">bottom_up_merge_sort</span>(A):
     k <span style="color:#333">=</span> <span style="color:#00d;font-weight:bold">1</span>
     <span style="color:#080;font-weight:bold">while</span> k <span style="color:#333">&lt;</span> <span style="color:#007020">len</span>(A):
         <span style="color:#080;font-weight:bold">for</span> i <span style="color:#000;font-weight:bold">in</span> <span style="color:#007020">range</span>(<span style="color:#00d;font-weight:bold">0</span>, <span style="color:#007020">len</span>(A)<span style="color:#333">-</span>k, <span style="color:#00d;font-weight:bold">2</span><span style="color:#333">*</span>k):
             A[i:i<span style="color:#333">+</span><span style="color:#00d;font-weight:bold">2</span><span style="color:#333">*</span>k] <span style="color:#333">=</span> merge(A[i:i<span style="color:#333">+</span>k], A[i<span style="color:#333">+</span>k:i<span style="color:#333">+</span><span style="color:#00d;font-weight:bold">2</span><span style="color:#333">*</span>k])
         k <span style="color:#333">*=</span> <span style="color:#00d;font-weight:bold">2</span>
 
-    <span style="color:#080;font-weight:bold">return</span> A</code></pre></div>
-<p>То есть пойти снизу вверх, от одноэлементных массивов через массивы длинны \(k = 2^j\) до тех пор, пока сливаемая часть не будет содержать весь исходный массив.</p>
-
+    <span style="color:#080;font-weight:bold">return</span> A
+</code></pre></div><p>То есть пойти снизу вверх, от одноэлементных массивов через массивы длинны \(k = 2^j\) до тех пор, пока сливаемая часть не будет содержать весь исходный массив.</p>
 <p>Эти два подхода к решению задачи, как не трудно догадаться, носят названия <em>Top-Down</em> (сверху вниз) и <em>Bottom-Up</em> (снизу вверх). Подход сверху вниз обычно является рекурсивным. Но, если для какого-то алгоритма есть решение рекурсивное и нерекурсивное, однозначно никогда не нужно использовать рекурсивное. Собственно и здесь рекурсивное решение приведено исключительно как дань уважения быстрой сортировке.</p>
-
 <p>В текущей реализации получаем следующие оценки сложности:</p>
-
 <table>
 <thead>
 <tr>
@@ -380,7 +371,6 @@ if (!doNotTrack) {
 <th>Reversed</th>
 </tr>
 </thead>
-
 <tbody>
 <tr>
 <td>\(O(n\log n)\)</td>
@@ -389,27 +379,21 @@ if (!doNotTrack) {
 </tr>
 </tbody>
 </table>
-
 <p>И по памяти: \(S(n) = 2n\).</p>
-
 <h2 id="экономим-место">Экономим место</h2>
-
 <p>Вернёмся к функции <code>merge</code>. В текущей реализации эта функция требует \(n\) дополнительной памяти, потому что результат пишется в совершенно новый массив. Впрочем, если обратить внимание на функцию <code>bottom_up_merge_sort</code>, результат хорошо бы получить на месте исходных массивов. Попробуем сократить аппетиты функции <code>merge</code>, при учёте того, что сливаемые массивы идут в памяти друг за другом. Пусть даны два массива \(A\) и \(B\), являющиеся по сути двумя подмассивами одного большего массива, идущие друг за другом. А также дан пустой участок памяти, размером \(|A|\). Тогда несложно видеть, что, скопировав \(A\) в свободный участок памяти, можно записать ответ поверх начального местоположения \(A\) и \(B\). Для этого воспользуемся тремя указателями: <code>*A</code> — текущая голова копии \(A\), <code>*B</code> — текущая голова массива \(B\) и <code>*Res</code> — указатель на конец результата слияния.
-<figure class="no-print">
-    <img src="/post/2018/10/img/half_memory_source.svg"/> <figcaption>
+<figure class="no-print"><img src="/post/2018/10/img/half_memory_source.svg"/><figcaption>
             <h4>Слияние с n/2 дополнительной памяти. Исходное положение</h4>
         </figcaption>
 </figure>
 </p>
-
 <p>При этом очевидно, что указатель <code>*Res</code> «догонит» указатель <code>*B</code> только тогда, когда указатель <code>*A</code> исчерпает весь массив \(A\). Также несложно адоптировать этот алгоритм для переноса в дополнительную память массива \(B\). Что, кстати сказать, будет выгоднее для нашей реализации <em>Bottom-Up</em> (<a id="qback-1" href="#qlink-1">?</a>).</p>
-
 <p>Итак, пусть <code>AB</code> — массив, в котором располагаются элементы массива \(A\), а затем элементы массива \(B\). <code>n</code> — индекс первого элемента массива \(B\). И <code>C</code> — пустой массив, размера \(B\).</p>
-<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#080;font-weight:bold">def</span> <span style="color:#06b;font-weight:bold">merge</span>(AB, n, C):
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#080;font-weight:bold">def</span> <span style="color:#06b;font-weight:bold">merge</span>(AB, n, C):
     C[:] <span style="color:#333">=</span> AB[n:]
 
     a, b, r <span style="color:#333">=</span> n <span style="color:#333">-</span> <span style="color:#00d;font-weight:bold">1</span>, <span style="color:#007020">len</span>(C) <span style="color:#333">-</span> <span style="color:#00d;font-weight:bold">1</span>, <span style="color:#007020">len</span>(AB) <span style="color:#333">-</span> <span style="color:#00d;font-weight:bold">1</span>
-    <span style="color:#080;font-weight:bold">while</span> True:
+    <span style="color:#080;font-weight:bold">while</span> <span style="color:#080;font-weight:bold">True</span>:
         <span style="color:#080;font-weight:bold">if</span> AB[a] <span style="color:#333">&gt;</span> C[b]:
             AB[r] <span style="color:#333">=</span> AB[a]
             a <span style="color:#333">-=</span> <span style="color:#00d;font-weight:bold">1</span>
@@ -421,65 +405,48 @@ if (!doNotTrack) {
             b <span style="color:#333">-=</span> <span style="color:#00d;font-weight:bold">1</span>
             <span style="color:#080;font-weight:bold">if</span> b <span style="color:#333">&lt;</span> <span style="color:#00d;font-weight:bold">0</span>:
                 <span style="color:#080;font-weight:bold">return</span>
-        r <span style="color:#333">-=</span> <span style="color:#00d;font-weight:bold">1</span></code></pre></div>
-<h3 id="а-можно-вообще-без-дополнительной-памяти">А можно вообще без дополнительной памяти?</h3>
-
+        r <span style="color:#333">-=</span> <span style="color:#00d;font-weight:bold">1</span>
+</code></pre></div><h3 id="а-можно-вообще-без-дополнительной-памяти">А можно вообще без дополнительной памяти?</h3>
 <p>Слияние без дополнительной памяти сделать не получится, а вот всю сортировку целиком можно, хотя и не нужно (сложность будет всё также \(O(n\log n)\), вот только откидываемый скалярный коэффициент будет слишком большой). Для начала стоит отметить, что для слияния массивов разной длинны описанным выше способом объём дополнительной памяти требуется соразмерно меньшему из сливаемых массивов. Кроме того, если заменить все операции на обмены, то нетрудно видеть, что можно сохранить данные в дополнительной памяти (потеряв при этом их порядок). То есть, при перемещении \(A\) в дополнительную память данные из дополнительной памяти оказываются на месте \(A\) (\(a_i \leftrightarrow c_i\)). А при слиянии элементы из дополнительной памяти будут обмениваться с элементами \(A\) и \(B\), но в итоге вернутся в дополнительную память. Таким образом мы можем использовать часть оригинального массива как дополнительную память при сортировке другой его части. Не стоит забывать, что порядок всё же теряется, поэтому поступим следующим образом:</p>
-
 <ol>
 <li>отсортируем правую половину массива, воспользовавшись левой как дополнительной памятью;</li>
 <li>отсортируем левую неотсортированной части, воспользовавшись правой половиной неотсортированной части;</li>
 <li>сольём отсортированные части, записывая результат поверх неотсортированной части;</li>
 <li>повторим шаги 2 и 3 до тех пор, пока в неотсортированной части не останется одноэлементный массив, который мы сольём с остатком при помощи алгоритма вставки.</li>
 </ol>
-
-<figure>
-    <img src="/post/2018/10/img/no_memory_source.svg"/> <figcaption>
+<figure><img src="/post/2018/10/img/no_memory_source.svg"/><figcaption>
             <h4>Сортировка слиянием без дополнительной памяти</h4>
         </figcaption>
 </figure>
 
-
 <h2 id="оптимизируем-по-времени">Оптимизируем по времени</h2>
-
 <p>В текущей реализации функция <code>merge</code> для двух списков \(A\) и \(B\) длин \(n\) и \(m\) соответственно имеет линейную сложность, то есть \(O(n+m)\). Это можно оптимизировать несколькими очевидными способами, но прежде чем это делать, давайте определимся с функцией, к которой будем стремиться. Теоретически можно оценить функцию слияния двух отсортированных массивов способом похожим на доказательство минимальной сложности сортировки.</p>
-
 <h3 id="немного-теории">Немного теории</h3>
-
 <p>Итак, пусть у нас есть два отсортированных массива:
 \[
 A = ( a_i \colon i &lt; n ) \quad\text{и}\quad B = ( b_j \colon j &lt; m ).
 \]</p>
-
-<p>Заметим, что в результирующем массиве \(a_i\) будет стоять левее \(a_{i+1}\) и аналогично с элементами \(B\). Таким образом это сводится к <a href="https://ru.wikipedia.org/wiki/Метод_шаров_и_перегородок">задаче Шаров и перегородок</a>. То есть всевозможных результатов слияния будет
+<p>Заметим, что в результирующем массиве \(a_i\) будет стоять левее \(a_{i+1}\) и аналогично с элементами \(B\). Таким образом это сводится к <a href="https://ru.wikipedia.org/wiki/%D0%9C%D0%B5%D1%82%D0%BE%D0%B4_%D1%88%D0%B0%D1%80%D0%BE%D0%B2_%D0%B8_%D0%BF%D0%B5%D1%80%D0%B5%D0%B3%D0%BE%D1%80%D0%BE%D0%B4%D0%BE%D0%BA">задаче Шаров и перегородок</a>. То есть всевозможных результатов слияния будет
 \[
 k = \tbinom{n + m}{m} = \tbinom{n + m}{n}.
 \]</p>
-
 <p>Если на каждом шаге алгоритма мы делаем бинарный выбор и дерево выбора идеально сбалансированно, то его глубина будет \(\log k\). Следовательно минимальное число сравнений необходимое для слияния двух списков:
 \[
 T(n, m) = O\left(\log \tbinom{n + m}{m}\right).
 \]</p>
-
-<p>Применив <a href="https://ru.wikipedia.org/wiki/Формула_Стирлинга">формулу Стирлинга</a> и упростив выражение по \(O\), получим следующую оценку:
+<p>Применив <a href="https://ru.wikipedia.org/wiki/%D0%A4%D0%BE%D1%80%D0%BC%D1%83%D0%BB%D0%B0_%D0%A1%D1%82%D0%B8%D1%80%D0%BB%D0%B8%D0%BD%D0%B3%D0%B0">формулу Стирлинга</a> и упростив выражение по \(O\), получим следующую оценку:
 \[
 T(n, m) = O\left(n \log \frac{m}{n} + n\right).
 \]</p>
-
 <p>При этом без ограничения общности можем считать, что \(n &lt; m\).</p>
-
 <p>Эта оценка совпадает с наивной в крайних случаях:
 \[
 T(1, m) = O(\log m) \quad\text{и}\quad T(n, n) = O(n).
 \]
 То есть при \(n = 1\) это можно свести к бинарному поиску места вставки одного элемента в массив \(B\). А для списков равной длины получаем линейную сложность.</p>
-
 <h3 id="а-на-практике-как">А на практике как?</h3>
-
 <p>Можно ли получить подобную оценку на практике? Можно. Для этого нам понадобится немного видоизменить бинарный поиск. Пусть нам даны отсортированный массив \(B = ( b_i \colon i &lt; m )\) и элемент \(x\). Надо найти \(i &lt; m\) такое, что \(b_i \leqslant x\) и \(x \leqslant b_{i+1}\), если \(i+1 &lt; m\).</p>
-
 <p>Вместо того, чтобы делать 2 указателя и итеративно их сближать, сделаем следующим образом:</p>
-
 <ol>
 <li>\(k = 0\);</li>
 <li>пока \(2^k - 1 &lt; m\) и \(b_{2^k-1} &lt; x\) увеличиваем \(k\) на \(1\);</li>
@@ -487,16 +454,13 @@ T(1, m) = O(\log m) \quad\text{и}\quad T(n, n) = O(n).
 <li>пока \(l \geqslant 0\) и \(b_l &gt; x\) уменьшаем \(l\) на \(1\);</li>
 <li>\(l + 1\) — искомая позиция;</li>
 </ol>
-
 <p>Асимптотически такой поиск будет иметь логарифмическую сложность, при этом нетрудно заметить, что \(T\) будет равно не \(O(\log m)\), а \(O(\log i)\). Ведь мы не рассматриваем элементы правее \(2^{\lceil \log i \rceil}\).</p>
-
 <p>Также надо помнить про то, что мы будем последовательно искать места для вставки элементов монотонной последовательности, так что начинать поиск надо не с начала массива \(B\), а с места предыдущей вставки. Таким образом для вставки \(n\) элементов между \(m\) элементами потребуется:
 \[
 T(n, m) = O(\log i_0 + \log (i_1 - i_0) + \ldots + \log (i_{n-1} - i_{n-2})),
 \]
 где \(i_j\) — места для вставки \(j\)-го элемента.</p>
-
-<p>Теперь поделим всё на \(n\) и вспомним, что функция \(\log\) выпукла вверх, а значит можно применить <a href="https://ru.wikipedia.org/wiki/Неравенство_Йенсена">неравенство Йенсена</a>:
+<p>Теперь поделим всё на \(n\) и вспомним, что функция \(\log\) выпукла вверх, а значит можно применить <a href="https://ru.wikipedia.org/wiki/%D0%9D%D0%B5%D1%80%D0%B0%D0%B2%D0%B5%D0%BD%D1%81%D1%82%D0%B2%D0%BE_%D0%99%D0%B5%D0%BD%D1%81%D0%B5%D0%BD%D0%B0">неравенство Йенсена</a>:
 \[
 \frac{T(n, m)}{n} =
 O\left(\frac{\log i_0 + \log (i_1 - i_0) + \ldots + \log (i_{n-1} - i_{n-2})}{n}\right) \leqslant
@@ -508,14 +472,12 @@ O\left(\frac{\log i_0 + \log (i_1 - i_0) + \ldots + \log (i_{n-1} - i_{n-2})}{n}
 = O\left(\log\left(\frac{i_{n-1}}{n}\right)\right) \leqslant
 O\left(\log\left(\frac{m}{n}\right)\right).
 \]</p>
-
 <p>В получившейся формуле есть один недостаток: при \(n = m\) мы получаем \(\log 1\) равный \(0\). Ноль это несколько излишне оптимистичная оценка, поэтому добавим \(1\) на этот случай (<a id="qback-2" href="#qlink-2">?</a>). Домножим обратно на \(n\) и получим нашу теоретическую оценку:
 \[
 T(n, m) = O(n \log \frac{m}{n} + n).
 \]</p>
-
 <p>Такое слияние называется <em>галопирование</em> (galloping). Но ближе к коду. В данном примере копировать в дополнительную память будем \(A\), а проходить массивы будем слева направо.</p>
-<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#080;font-weight:bold">def</span> <span style="color:#06b;font-weight:bold">galloping</span>(AB, n, C):
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#080;font-weight:bold">def</span> <span style="color:#06b;font-weight:bold">galloping</span>(AB, n, C):
     C[:] <span style="color:#333">=</span> AB[:n]
 
     <span style="color:#888"># r — указатель на конец результата</span>
@@ -538,11 +500,10 @@ T(n, m) = O(n \log \frac{m}{n} + n).
 
         l <span style="color:#333">+=</span> <span style="color:#00d;font-weight:bold">1</span>
         AB[r:r<span style="color:#333">+</span>l], AB[r<span style="color:#333">+</span>l] <span style="color:#333">=</span> AB[j:j<span style="color:#333">+</span>l], C[i]
-        r, j, m <span style="color:#333">=</span> r <span style="color:#333">+</span> l <span style="color:#333">+</span> <span style="color:#00d;font-weight:bold">1</span>, j <span style="color:#333">+</span> l, m <span style="color:#333">-</span> l</code></pre></div>
-<h2 id="оптимальный-порядок-слияния">Оптимальный порядок слияния</h2>
-
+        r, j, m <span style="color:#333">=</span> r <span style="color:#333">+</span> l <span style="color:#333">+</span> <span style="color:#00d;font-weight:bold">1</span>, j <span style="color:#333">+</span> l, m <span style="color:#333">-</span> l
+</code></pre></div><h2 id="оптимальный-порядок-слияния">Оптимальный порядок слияния</h2>
 <p>С отдельными слияниями разобрались, но что с сортировкой в целом? Первое, что стоит сделать, это улучшить случай отсортированного массива. Для этого необходимо не просто разрезать массив на подмассивы одинаковой длинны \(2^j\), а выбирать максимально длинные отсортированные части. Кроме того можно выбирать не только подмассивы, отсортированные в нужном нам порядке, но и обратно отсортированные, меняя для них направление итератора. Таким образом можно получить список подмассивов оригинального массива, для каждого подмассива необходима пара чисел: начало и конец. При этом, если начало больше конца, значит подмассив обратно отсортирован.</p>
-<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#080;font-weight:bold">def</span> <span style="color:#06b;font-weight:bold">chunking</span>(A):
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#080;font-weight:bold">def</span> <span style="color:#06b;font-weight:bold">chunking</span>(A):
     chunks <span style="color:#333">=</span> []
     a, d <span style="color:#333">=</span> <span style="color:#00d;font-weight:bold">0</span>, <span style="color:#00d;font-weight:bold">0</span>
     <span style="color:#080;font-weight:bold">for</span> b <span style="color:#000;font-weight:bold">in</span> <span style="color:#007020">range</span>(<span style="color:#00d;font-weight:bold">1</span>, <span style="color:#007020">len</span>(A)):
@@ -556,9 +517,8 @@ T(n, m) = O(n \log \frac{m}{n} + n).
 
     chunks<span style="color:#333">.</span>append((a, b) <span style="color:#080;font-weight:bold">if</span> d <span style="color:#333">&gt;</span> <span style="color:#00d;font-weight:bold">0</span> <span style="color:#080;font-weight:bold">else</span> (b, a))
 
-    <span style="color:#080;font-weight:bold">return</span> chunks</code></pre></div>
-<p>И тут возникает следующий вопрос: в каком порядке сливать полученные подмассивы? Для того, чтобы более наглядно фиксировать порядок слияния, будем использовать дерево слияния.</p>
-
+    <span style="color:#080;font-weight:bold">return</span> chunks
+</code></pre></div><p>И тут возникает следующий вопрос: в каком порядке сливать полученные подмассивы? Для того, чтобы более наглядно фиксировать порядок слияния, будем использовать дерево слияния.</p>
 <figure>
     <div class="mermaid">
 graph TD
@@ -578,14 +538,12 @@ graph TD
     style ABCD fill:White
 </div>
 <figcaption>
-        Рис.&thinsp;1.
+        Рис. 1.
         
     </figcaption>
 </figure>
 
-
 <p>Ниже в узлах дерева будем записывать только размеры подмассивов.</p>
-
 <figure>
     <div class="mermaid">
 graph TD
@@ -605,14 +563,12 @@ graph TD
     style ABCD fill:White
 </div>
 <figcaption>
-        Рис.&thinsp;2.
+        Рис. 2.
         
     </figcaption>
 </figure>
 
-
 <p>В данном случае это минимальное по глубине дерево. Такое дерево легко получить при обработке подмассивов в порядке расположения. Однако, это не всегда выигрышный подход, как и в этом примере. Надо помнить, что сложность функции слияния зависит от размеров сливаемых частей. И это дерево не является оптимальным, потому что самый большой подмассив, состоящий из \(16\) элементов мы сливали дважды. Более оптимальным в данном случае будет следующее дерево слияния:</p>
-
 <figure>
     <div class="mermaid">
 graph TD
@@ -632,33 +588,26 @@ graph TD
     style ABCD fill:White
 </div>
 <figcaption>
-        Рис.&thinsp;3.
+        Рис. 3.
         
     </figcaption>
 </figure>
 
-
 <p>Лучшим деревом слияния будет то, где каждый раз сливаются массивы минимальной длинны из оставшихся. Для его построения воспользуемся следующей леммой:</p>
-
 <dl class="theorem">
     <dt>Лемма</dt>
     <dd><p>Пусть \(X = ( x_i \colon i &lt; k )\) конечная последовательность натуральных чисел. Будем строить последовательность \(Y\) следующим образом:</p>
-
 <ul>
 <li>выберем и вычеркнем из \(X \cup Y\) два минимальных числа \(a\) и \(b\);</li>
 <li>добавим в \(Y\) число \(a + b\);</li>
 <li>повторяем до тех пор, пока \(|X \cup Y| \geqslant 2\).</li>
 </ul>
-
 <p>Тогда на каждом шаге \(a + b \geqslant \max Y\).</p>
 </dd>
 </dl>
 
-
 <p>Доказательство достаточно тривиально и оставляется на откуп читателю (<a id="qback-3" href="#qlink-3">?</a>).</p>
-
 <p>Куда труднее эту лемму применить. Для оптимального слияния необходимо правильно расположить начальные подмассивы друг относительно друга так, чтобы всегда сливались соседние. Расположить подмассивы просто в порядке возрастания их длин неверное решение, например, если у нас есть подмассивы длин \((1, 2, 2, 2, 3)\), то последний подмассив надо перенести в середину:</p>
-
 <figure>
     <div class="mermaid">
 graph TD
@@ -674,43 +623,32 @@ graph TD
     style E fill:pink
 </div>
 <figcaption>
-        Рис.&thinsp;4.
+        Рис. 4.
         
     </figcaption>
 </figure>
 
-
 <p>Релизация подобной перестановки оставляется читателю.</p>
-
 <h2 id="timsort">TimSort</h2>
-
 <p>Все описанные оптимизации нашли применение в гибридном <a href="https://ru.wikipedia.org/wiki/Timsort">алгоритме TimSort</a>. Помимо этого там применяется сортировка вставками для того, чтобы избежать слишком коротких начальных подмассивов, а также оригинальный способ строить дерево слияния близкое к идеальному без перестановки подмассивов, используя стек. Этот алгоритм является стандартным для языков Python и Java, а также имеет реализации для других языков.</p>
-
 <h2 id="вопросы">Вопросы</h2>
-
 <ol>
 <li><a id="qlink-1" href="#qback-1">^</a> Почему для приведённой Bottom-Up реализации выгоднее копировать в дополнительную память именно массив \(B\)?</li>
 <li><a id="qlink-2" href="#qback-2">^</a> Почему мы вольны добавить \(1\) при оценке сложности, не теряя строгости переходов?</li>
 <li><a id="qlink-3" href="#qback-3">^</a> Докажите Лемму 1.</li>
 </ol>
-
 <h2 id="задания">Задания</h2>
-
 <ol>
 <li>Напишите сортировку слиянием, использующую \(n / 2\) дополнительной памяти.</li>
 <li>Напишите функцию-итератор, возвращающую подмассивы слияния в оптимальном порядке.</li>
 <li><strong>*</strong> Напишите функцию, переставляющую подмассивы так, что в оптимальном дереве слияний всегда будут сливаться соседние подмассивы.</li>
 </ol>
-
 <h2 id="дополнительное-чтение">Дополнительное чтение</h2>
-
 <ol>
 <li>Peters, Tim. &ldquo;Original original explanation of TimSort.&rdquo; <em>Python bug tracker</em>. 2002. <a href="https://bugs.python.org/file4451/timsort.txt">https://bugs.python.org/file4451/timsort.txt</a></li>
 <li>Auger, Nicolas, Nicaud, Cyril, and Pivoteau, Carine. &ldquo;Merge Strategies: from Merge Sort to TimSort.&rdquo; <em>HAL UPEC - UPEM Portal</em>. 2015. <a href="https://hal-upec-upem.archives-ouvertes.fr/hal-01212839v2/document">https://hal-upec-upem.archives-ouvertes.fr/hal-01212839v2/document</a></li>
 </ol>
-
 <h2 id="ссылки">Ссылки</h2>
-
 <ol>
 <li>Максим Александрович Бабенко. <em>Видеолекции курса «Алгоритмы и структуры данных»</em>. <a href="https://yandexdataschool.ru/edu-process/courses/algorithms#item-3">https://yandexdataschool.ru/edu-process/courses/algorithms#item-3</a></li>
 </ol>
@@ -724,7 +662,7 @@ graph TD
   <path d="M22,19a2,2,0,0,1-2,2H4a2,2,0,0,1-2-2V5A2,2,0,0,1,4,3H9l2,3h9a2,2,0,0,1,2,2Z"/>
   
 </svg>
-<span class='screen-reader-text'>category: </span><a class='category' href='/categories/algorithm/'>Алгоритмы</a></div>
+<span class='screen-reader-text'>Категории: </span><a class='category' href='/categories/algorithm/'>Алгоритмы</a></div>
 <div class='tags'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
   
   <path d="M20.59,13.41l-7.17,7.17a2,2,0,0,1-2.83,0L2,12V2H12l8.59,8.59A2,2,0,0,1,20.59,13.41Z"/>
@@ -770,7 +708,7 @@ graph TD
 
       <footer id='footer' class='footer'>
         <div class='container sep-before'><div class='copyright'>
-  <p>Материалы распространяются по <a rel="noreferrer" href="https://creativecommons.org/licenses/by/4.0/" target="_blank">лицензии CC BY</a> &copy; 2018-2021 vporoshok <br>Увидели ошибку? Буду рад <a rel="noreferrer" href="https://github.com/vporoshok/vporoshok.github.io" target="_blank">PR&rsquo;у</a></p>
+  <p>Материалы распространяются по <!-- raw HTML omitted -->лицензии CC BY<!-- raw HTML omitted --> &copy; 2018-2021 vporoshok <!-- raw HTML omitted -->Увидели ошибку? Буду рад <!-- raw HTML omitted -->PR&rsquo;у<!-- raw HTML omitted --></p>
 </div>
 
         </div>

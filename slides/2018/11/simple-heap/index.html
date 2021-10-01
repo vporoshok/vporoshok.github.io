@@ -10,9 +10,9 @@
 <meta property='og:description' content='А я угадаю этот минимум за O(1)'>
 <meta property='og:url' content='https://vporoshok.me/slides/2018/11/simple-heap/'>
 <meta property='og:site_name' content='Где-то на дальнем сервере'>
-<meta property='og:type' content='article'><meta property='article:section' content='slides'><meta property='article:published_time' content='2018-11-02T15:00:00Z'/><meta property='article:modified_time' content='2020-07-04T13:36:24&#43;04:00'/><meta name='twitter:card' content='summary'>
+<meta property='og:type' content='article'><meta property='article:section' content='slides'><meta property='article:published_time' content='2018-11-02T15:00:00Z'/><meta property='article:modified_time' content='2021-10-01T18:45:33&#43;04:00'/><meta name='twitter:card' content='summary'>
 
-<meta name="generator" content="Hugo 0.57.2" />
+<meta name="generator" content="Hugo 0.88.1" />
 
     <title>Простая двоичная куча • Где-то на дальнем сервере</title>
     <link rel='canonical' href='https://vporoshok.me/slides/2018/11/simple-heap/'>
@@ -77,16 +77,11 @@
         <p>А я угадаю этот минимум за O(1) <a href="/post/2018/11/simple-heap/">Назад</a></p>
     </header>
 
-    <style>
-    .red {
-        color: red;
-    }
-</style>
-
+    <!-- raw HTML omitted -->
+<!-- raw HTML omitted -->
 <section class="slide entry clear"><h2 class="shout">
         Двоичная куча
     </h2></section>
-
 
 <section id="toc" class="slide entry toc"><h2>
         План
@@ -98,26 +93,25 @@
 <li><a href="#iterator">другие операции и итераторы</a></li>
 <li><a href="#initialization">эффективное построение кучи</a></li>
 <li><a href="#heap-sort">пирамидальная сортировка</a></li>
-</ol></section>
-
+</ol>
+</section>
 
 <section id="problem" class="slide entry section"><h2>
         Задача и применение
     </h2></section>
-
 
 <section class="slide entry"><h2>
         Задача
     </h2><dl>
 <dt>Очередь с приоритетом</dt>
 <dd>вектор с координатами из линейно упорядоченного множества, на котором определены две операции:
-
 <ul>
 <li>добавление элемента</li>
 <li>извлечение минимума</li>
-</ul></dd>
-</dl></section>
-
+</ul>
+</dd>
+</dl>
+</section>
 
 <section class="slide entry"><h2>
         Применение
@@ -127,47 +121,16 @@
 <li>частичная сортировка данных</li>
 <li>поиск кратчайшего пути</li>
 <li>построение минимального остова графа</li>
-</ul></section>
-
+</ul>
+</section>
 
 <section class="slide entry"><h2>
         Решения?
-    </h2><table>
-    <col-group>
-        <col width="40%">
-        <col>
-        <col>
-        <col width="24%">
-    </col-group>
-    <thead>
-        <tr>
-            <th scope="col">Структура
-            <th scope="col">Построение
-            <th scope="col">Добавление
-            <th scope="col">Извлечение
-    <tbody>
-        <tr>
-            <th scope="row">Массив
-            <td>\(O(1)\)
-            <td>\(O(1)\)
-            <td class="red">\(O(n)\)
-        <tr>
-            <th scope="row">Отсортированный массив
-            <td class="red">\(O(n\log n)\)
-            <td>\(O(\log n)\)
-            <td>\(O(1)\)
-        <tr class="next">
-            <th scope="row">Куча
-            <td>\(O(n)\)*
-            <td>\(O(\log n)\)
-            <td>\(O(\log n)\)
-</table></section>
-
+    </h2><!-- raw HTML omitted --></section>
 
 <section id="definition" class="slide entry section"><h2>
         Куча
     </h2></section>
-
 
 <section class="slide entry"><h2>
         Определение
@@ -175,50 +138,26 @@
 <dt>Куча (heap)</dt>
 <dd>дерево, в котором любой элемент не меньше своего родителя.</dd>
 </dl>
-
-<aside class="admonition">
-    <h4>
-        <span class="admonition-icon">ℹ️</span>Замечание</h4>Аналогично можно определить кучу для получения максимума, но в дальнейшем будем рассматривать неубывающую кучу.</aside></section>
-
+<!-- raw HTML omitted -->
+</section>
 
 <section class="slide entry"><h2>
         Пример
-    </h2><figure>
-    <div class="mermaid">
-graph TD
-    A((1))
-    A---B((3))
-    A---C((2))
-    A---D((4))
-    B---E((4))
-    C---F((8))
-    C---G((8))
-    C---H((5))
-    D---I((5))
-    D---J((4))
-    E---K((9))
-    E---L((17))
-    H---M((9))
-    H---N((21))
-    J---O((10))
-</div>
-<figcaption>
-        Рис.&thinsp;1.
-        
-    </figcaption>
-</figure></section>
-
+    </h2><!-- raw HTML omitted -->
+<pre><code>&lt;/figcaption&gt;
+</code></pre>
+<!-- raw HTML omitted -->
+</section>
 
 <section class="slide entry"><h2>
         Базовые операции
-    </h2>На таком дереве несложно реализовать три основные операции, производимые с куче:</p>
-
+    </h2><p>На таком дереве несложно реализовать три основные операции, производимые с куче:</p>
 <ul>
 <li>получение минимума (peek);</li>
 <li>извлечение минимума (pop);</li>
 <li>добавление элемента (push);</li>
-</ul></section>
-
+</ul>
+</section>
 
 <section class="slide entry"><h2>
         Восстановление свойств кучи
@@ -226,133 +165,59 @@ graph TD
 <dt>Аномалия</dt>
 <dd>нарушение свойства кучи <em>любой элемент не меньше своего родителя</em> в одном из её элементов.</dd>
 </dl>
-
 <p>Аномалии могут возникнуть по двум причинам:</p>
-
 <ul>
 <li>большой элемент оказался слишком высоко в дереве</li>
 <li>маленький элемент оказался слишком низко в дереве</li>
-</ul></section>
-
-
-<section class="slide entry"><h2>
-        Погружение элемента
-    </h2><figure>
-    <div class="mermaid">
-graph TD
-    A((10))
-    A---B((3))
-    A---C((2))
-    A---D((4))
-    B---E((4))
-    C---F((8))
-    C---G((8))
-    C---H((5))
-    D---I((5))
-    D---J((4))
-    E---K((9))
-    E---L((17))
-    H---M((9))
-    H---N((21))
-
-    style A fill:pink
-</div>
-<figcaption>
-        Рис.&thinsp;2.
-        
-    </figcaption>
-</figure></section>
-
+</ul>
+</section>
 
 <section class="slide entry"><h2>
         Погружение элемента
-    </h2><figure>
-    <div class="mermaid">
-graph TD
-    A((2))
-    A---B((3))
-    A---C((10))
-    A---D((4))
-    B---E((4))
-    C---F((8))
-    C---G((8))
-    C---H((5))
-    D---I((5))
-    D---J((4))
-    E---K((9))
-    E---L((17))
-    H---M((9))
-    H---N((21))
-
-    style A fill:lightGreen
-    style C fill:pink
-</div>
-<figcaption>
-        Рис.&thinsp;3.
-        
-    </figcaption>
-</figure></section>
-
+    </h2><!-- raw HTML omitted -->
+<pre><code>style A fill:pink
+</code></pre>
+<!-- raw HTML omitted -->
+<pre><code>&lt;/figcaption&gt;
+</code></pre>
+<!-- raw HTML omitted -->
+</section>
 
 <section class="slide entry"><h2>
         Погружение элемента
-    </h2><figure>
-    <div class="mermaid">
-graph TD
-    A((2))
-    A---B((3))
-    A---C((5))
-    A---D((4))
-    B---E((4))
-    C---F((8))
-    C---G((8))
-    C---H((10))
-    D---I((5))
-    D---J((4))
-    E---K((9))
-    E---L((17))
-    H---M((9))
-    H---N((21))
-
-    style C fill:lightGreen
-    style H fill:pink
-</div>
-<figcaption>
-        Рис.&thinsp;4.
-        
-    </figcaption>
-</figure></section>
-
+    </h2><!-- raw HTML omitted -->
+<pre><code>style A fill:lightGreen
+style C fill:pink
+</code></pre>
+<!-- raw HTML omitted -->
+<pre><code>&lt;/figcaption&gt;
+</code></pre>
+<!-- raw HTML omitted -->
+</section>
 
 <section class="slide entry"><h2>
         Погружение элемента
-    </h2><figure>
-    <div class="mermaid">
-graph TD
-    A((2))
-    A---B((3))
-    A---C((5))
-    A---D((4))
-    B---E((4))
-    C---F((8))
-    C---G((8))
-    C---H((9))
-    D---I((5))
-    D---J((4))
-    E---K((9))
-    E---L((17))
-    H---M((10))
-    H---N((21))
+    </h2><!-- raw HTML omitted -->
+<pre><code>style C fill:lightGreen
+style H fill:pink
+</code></pre>
+<!-- raw HTML omitted -->
+<pre><code>&lt;/figcaption&gt;
+</code></pre>
+<!-- raw HTML omitted -->
+</section>
 
-    style H fill:lightGreen
-    style M fill:pink
-</div>
-<figcaption>
-        Рис.&thinsp;5.
-        
-    </figcaption>
-</figure></section>
-
+<section class="slide entry"><h2>
+        Погружение элемента
+    </h2><!-- raw HTML omitted -->
+<pre><code>style H fill:lightGreen
+style M fill:pink
+</code></pre>
+<!-- raw HTML omitted -->
+<pre><code>&lt;/figcaption&gt;
+</code></pre>
+<!-- raw HTML omitted -->
+</section>
 
 <section class="slide entry"><h2>
         Извлечение минимума (pop)
@@ -362,273 +227,170 @@ graph TD
 <li>удалим этот лист из дерева</li>
 <li>выполним погружение корня</li>
 <li>вернём сохранённое значение корня</li>
-</ol></section>
-
-
-<section class="slide entry"><h2>
-        Всплытие элемента
-    </h2><figure>
-    <div class="mermaid">
-graph TD
-    A((2))
-    A---B((3))
-    A---C((5))
-    A---D((4))
-    B---E((4))
-    C---F((8))
-    C---G((8))
-    C---H((9))
-    D---I((5))
-    D---J((4))
-    E---K((9))
-    E---L((17))
-    H---M((10))
-    H---N((21))
-    J---O((1))
-
-    style O fill:pink
-</div>
-<figcaption>
-        Рис.&thinsp;6.
-        
-    </figcaption>
-</figure></section>
-
+</ol>
+</section>
 
 <section class="slide entry"><h2>
         Всплытие элемента
-    </h2><figure>
-    <div class="mermaid">
-graph TD
-    A((2))
-    A---B((3))
-    A---C((5))
-    A---D((4))
-    B---E((4))
-    C---F((8))
-    C---G((8))
-    C---H((9))
-    D---I((5))
-    D---J((1))
-    E---K((9))
-    E---L((17))
-    H---M((10))
-    H---N((21))
-    J---O((4))
-
-    style J fill:pink
-    style O fill:lightGreen
-</div>
-<figcaption>
-        Рис.&thinsp;7.
-        
-    </figcaption>
-</figure></section>
-
+    </h2><!-- raw HTML omitted -->
+<pre><code>style O fill:pink
+</code></pre>
+<!-- raw HTML omitted -->
+<pre><code>&lt;/figcaption&gt;
+</code></pre>
+<!-- raw HTML omitted -->
+</section>
 
 <section class="slide entry"><h2>
         Всплытие элемента
-    </h2><figure>
-    <div class="mermaid">
-graph TD
-    A((2))
-    A---B((3))
-    A---C((5))
-    A---D((1))
-    B---E((4))
-    C---F((8))
-    C---G((8))
-    C---H((9))
-    D---I((5))
-    D---J((4))
-    E---K((9))
-    E---L((17))
-    H---M((10))
-    H---N((21))
-    J---O((4))
-
-    style D fill:pink
-    style J fill:lightGreen
-</div>
-<figcaption>
-        Рис.&thinsp;8.
-        
-    </figcaption>
-</figure></section>
-
+    </h2><!-- raw HTML omitted -->
+<pre><code>style J fill:pink
+style O fill:lightGreen
+</code></pre>
+<!-- raw HTML omitted -->
+<pre><code>&lt;/figcaption&gt;
+</code></pre>
+<!-- raw HTML omitted -->
+</section>
 
 <section class="slide entry"><h2>
         Всплытие элемента
-    </h2><figure>
-    <div class="mermaid">
-graph TD
-    A((1))
-    A---B((3))
-    A---C((5))
-    A---D((3))
-    B---E((4))
-    C---F((8))
-    C---G((8))
-    C---H((9))
-    D---I((5))
-    D---J((4))
-    E---K((9))
-    E---L((17))
-    H---M((10))
-    H---N((21))
-    J---O((4))
+    </h2><!-- raw HTML omitted -->
+<pre><code>style D fill:pink
+style J fill:lightGreen
+</code></pre>
+<!-- raw HTML omitted -->
+<pre><code>&lt;/figcaption&gt;
+</code></pre>
+<!-- raw HTML omitted -->
+</section>
 
-    style A fill:pink
-    style D fill:lightGreen
-</div>
-<figcaption>
-        Рис.&thinsp;9.
-        
-    </figcaption>
-</figure></section>
-
+<section class="slide entry"><h2>
+        Всплытие элемента
+    </h2><!-- raw HTML omitted -->
+<pre><code>style A fill:pink
+style D fill:lightGreen
+</code></pre>
+<!-- raw HTML omitted -->
+<pre><code>&lt;/figcaption&gt;
+</code></pre>
+<!-- raw HTML omitted -->
+</section>
 
 <section class="slide entry"><h2>
         Добавление элемента (push)
     </h2><ol>
 <li>добавляем новый элемент листом</li>
 <li>выполняем всплытие этого элемента</li>
-</ol></section>
-
+</ol>
+</section>
 
 <section id="binary-heap" class="slide entry section"><h2>
         Двоичная куча
     </h2></section>
 
-
 <section class="slide entry"><h2>
         Двоичная куча
-    </h2>Добавим следующие ограничения:</p>
-
+    </h2><p>Добавим следующие ограничения:</p>
 <ul>
 <li>степень ветвления всех вершин всех вершин не более \(2\)</li>
 <li>глубина всех листьев отличается не более, чем на \(1\)</li>
 <li>последний слой заполняется слева направо без пропусков</li>
-</ul></section>
-
+</ul>
+</section>
 
 <section class="slide entry"><h2>
         Двоичная куча
-    </h2><figure>
-    <div class="mermaid">
-graph TD
-    A((0))
-    A---B((1))
-    A---C((2))
-    B---D((3))
-    B---E((4))
-    C---F((5))
-    C---G((6))
-    D---H((7))
-    D---I((8))
-    E---J((9))
-    E---K((10))
-    F---L((11))
-    F---M((12))
-    G---N((13))
-    G---O((14))
-
-    style M opacity:0.2
-    style N opacity:0.2
-    style O opacity:0.2
-</div>
-<figcaption>
-        Рис.&thinsp;10.
-        
-    </figcaption>
-</figure></section>
-
+    </h2><!-- raw HTML omitted -->
+<pre><code>style M opacity:0.2
+style N opacity:0.2
+style O opacity:0.2
+</code></pre>
+<!-- raw HTML omitted -->
+<pre><code>&lt;/figcaption&gt;
+</code></pre>
+<!-- raw HTML omitted -->
+</section>
 
 <section class="slide entry"><h2>
         Индексация
     </h2><p>Для \(i\)-го узла</p>
-
 <ul>
 <li>родитель: \(\lfloor (i - 1) / 2 \rfloor\)</li>
 <li>левый сын: \(2i + 1\)</li>
 <li>правый сын: \(2i + 2\)</li>
 </ul>
-
 <p>Высота дерева: \(\lceil 1 + \log n \rceil\)</p>
 </section>
-
 
 <section id="implementation" class="slide entry section"><h2>
         Реализация
     </h2></section>
 
-
 <section class="slide entry compact"><h2>
         Реализация
-    </h2><div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#080;font-weight:bold">class</span> <span style="color:#b06;font-weight:bold">BinaryHeap</span>:
+    </h2><div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#080;font-weight:bold">class</span> <span style="color:#b06;font-weight:bold">BinaryHeap</span>:
     _items <span style="color:#333">=</span> []
     <span style="color:#080;font-weight:bold">def</span> <span style="color:#06b;font-weight:bold">peek</span>(self):
         <span style="color:#080;font-weight:bold">if</span> <span style="color:#007020">len</span>(self<span style="color:#333">.</span>_items) <span style="color:#333">&gt;</span> <span style="color:#00d;font-weight:bold">0</span>:
             <span style="color:#080;font-weight:bold">return</span> self<span style="color:#333">.</span>_items[<span style="color:#00d;font-weight:bold">0</span>]
     <span style="color:#080;font-weight:bold">def</span> <span style="color:#06b;font-weight:bold">push</span>(self, x):
         self<span style="color:#333">.</span>_items<span style="color:#333">.</span>append(x)
-        self<span style="color:#333">.</span>_sift_up(<span style="color:#007020">len</span>(self<span style="color:#333">.</span>_items) <span style="color:#333">-</span> <span style="color:#00d;font-weight:bold">1</span>)</code></pre></div></section>
-
+        self<span style="color:#333">.</span>_sift_up(<span style="color:#007020">len</span>(self<span style="color:#333">.</span>_items) <span style="color:#333">-</span> <span style="color:#00d;font-weight:bold">1</span>)
+</code></pre></div></section>
 
 <section class="slide entry"><h2>
         Реализация
-    </h2><div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">    <span style="color:#080;font-weight:bold">def</span> <span style="color:#06b;font-weight:bold">_sift_up</span>(self, i):
+    </h2><div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">    <span style="color:#080;font-weight:bold">def</span> <span style="color:#06b;font-weight:bold">_sift_up</span>(self, i):
         <span style="color:#080;font-weight:bold">while</span> i <span style="color:#333">&gt;</span> <span style="color:#00d;font-weight:bold">0</span>:
             j <span style="color:#333">=</span> (i <span style="color:#333">-</span> <span style="color:#00d;font-weight:bold">1</span>) <span style="color:#333">//</span> <span style="color:#00d;font-weight:bold">2</span>
             <span style="color:#080;font-weight:bold">if</span> self<span style="color:#333">.</span>_items[j] <span style="color:#333">&lt;=</span> self<span style="color:#333">.</span>_items[i]:
                 <span style="color:#080;font-weight:bold">break</span>
             self<span style="color:#333">.</span>_swap(i, j)
-            i <span style="color:#333">=</span> j</code></pre></div></section>
-
+            i <span style="color:#333">=</span> j
+</code></pre></div></section>
 
 <section class="slide entry"><h2>
         Реализация
-    </h2><div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">    <span style="color:#080;font-weight:bold">def</span> <span style="color:#06b;font-weight:bold">pop</span>(self):
+    </h2><div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">    <span style="color:#080;font-weight:bold">def</span> <span style="color:#06b;font-weight:bold">pop</span>(self):
         <span style="color:#080;font-weight:bold">if</span> <span style="color:#007020">len</span>(self<span style="color:#333">.</span>_items) <span style="color:#333">&gt;</span> <span style="color:#00d;font-weight:bold">0</span>:
             x <span style="color:#333">=</span> self<span style="color:#333">.</span>_items[<span style="color:#00d;font-weight:bold">0</span>]
             self<span style="color:#333">.</span>_swap(<span style="color:#00d;font-weight:bold">0</span>, <span style="color:#007020">len</span>(self<span style="color:#333">.</span>_items)<span style="color:#333">-</span><span style="color:#00d;font-weight:bold">1</span>)
             self<span style="color:#333">.</span>_items<span style="color:#333">.</span>pop()
             self<span style="color:#333">.</span>_sift_down(<span style="color:#00d;font-weight:bold">0</span>)
-            <span style="color:#080;font-weight:bold">return</span> x</code></pre></div></section>
-
+            <span style="color:#080;font-weight:bold">return</span> x
+</code></pre></div></section>
 
 <section class="slide entry"><h2>
         Реализация
-    </h2><div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">    <span style="color:#080;font-weight:bold">def</span> <span style="color:#06b;font-weight:bold">_sift_down</span>(self, i):
-        <span style="color:#080;font-weight:bold">while</span> True:
+    </h2><div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">    <span style="color:#080;font-weight:bold">def</span> <span style="color:#06b;font-weight:bold">_sift_down</span>(self, i):
+        <span style="color:#080;font-weight:bold">while</span> <span style="color:#080;font-weight:bold">True</span>:
             j <span style="color:#333">=</span> self<span style="color:#333">.</span>_min_son(i)
             <span style="color:#080;font-weight:bold">if</span> <span style="color:#000;font-weight:bold">not</span> j <span style="color:#000;font-weight:bold">or</span> self<span style="color:#333">.</span>_items[i] <span style="color:#333">&lt;=</span> self<span style="color:#333">.</span>_items[j]:
                 <span style="color:#080;font-weight:bold">break</span>
             self<span style="color:#333">.</span>_swap(i, j)
-            i <span style="color:#333">=</span> j</code></pre></div></section>
-
+            i <span style="color:#333">=</span> j
+</code></pre></div></section>
 
 <section class="slide entry compact"><h2>
         Реализация
-    </h2><div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">    <span style="color:#080;font-weight:bold">def</span> <span style="color:#06b;font-weight:bold">_min_son</span>(self, i):
+    </h2><div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">    <span style="color:#080;font-weight:bold">def</span> <span style="color:#06b;font-weight:bold">_min_son</span>(self, i):
         l_son <span style="color:#333">=</span> i <span style="color:#333">*</span> <span style="color:#00d;font-weight:bold">2</span> <span style="color:#333">+</span> <span style="color:#00d;font-weight:bold">1</span>
         r_son <span style="color:#333">=</span> i <span style="color:#333">*</span> <span style="color:#00d;font-weight:bold">2</span> <span style="color:#333">+</span> <span style="color:#00d;font-weight:bold">2</span>
         <span style="color:#080;font-weight:bold">if</span> <span style="color:#007020">len</span>(self<span style="color:#333">.</span>_items) <span style="color:#333">&lt;=</span> l_son:
-            <span style="color:#080;font-weight:bold">return</span> None
+            <span style="color:#080;font-weight:bold">return</span> <span style="color:#080;font-weight:bold">None</span>
         <span style="color:#080;font-weight:bold">if</span> <span style="color:#007020">len</span>(self<span style="color:#333">.</span>_items) <span style="color:#333">&lt;=</span> r_son <span style="color:#000;font-weight:bold">or</span> self<span style="color:#333">.</span>_items[l_son] <span style="color:#333">&lt;</span> self<span style="color:#333">.</span>_items[r_son]:
             <span style="color:#080;font-weight:bold">return</span> l_son
-        <span style="color:#080;font-weight:bold">return</span> r_son</code></pre></div></section>
-
+        <span style="color:#080;font-weight:bold">return</span> r_son
+</code></pre></div></section>
 
 <section class="slide entry"><h2>
         Оптимизации
     </h2>Метод <code>_min_son</code> возвращает индекс меньшего сына, если хотя бы один из сыновей существует, отдавая предпочтение правому сыну среди равных</section>
 
-
 <section id="iterator" class="slide entry section"><h2>
         Другие операции и итераторы
     </h2></section>
-
 
 <section class="slide entry"><h2>
         Другие операции
@@ -636,73 +398,69 @@ graph TD
 <li>уменьшение ключа (decrease_key)</li>
 <li>удаление (delete)</li>
 <li>слияние (meld)</li>
-</ul></section>
-
+</ul>
+</section>
 
 <section class="slide entry"><h2>
         Итераторы
     </h2><p>Динамические указатели на элементы структуры, поддерживаемые самой структурой.</p>
-
 <p>Можно воспользоваться дополнительным массивом, где каждому элементу при вставке выдавать следующую ячейку массива, возвращая в качестве итератора индекс этой ячейки. В значение ячейки необходимо записывать индекс элемента в основном массиве. А рядом с элементом в основном массиве хранить его итератор.</p>
 </section>
 
-
 <section class="slide entry"><h2>
         Реализация с итераторами
-    </h2><div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#080;font-weight:bold">class</span> <span style="color:#b06;font-weight:bold">BinaryHeapWithIterators</span>:
+    </h2><div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#080;font-weight:bold">class</span> <span style="color:#b06;font-weight:bold">BinaryHeapWithIterators</span>:
     _items <span style="color:#333">=</span> []
     _iterators <span style="color:#333">=</span> []
 
     <span style="color:#080;font-weight:bold">def</span> <span style="color:#06b;font-weight:bold">peek</span>(self):
         <span style="color:#080;font-weight:bold">if</span> <span style="color:#007020">len</span>(self<span style="color:#333">.</span>_items) <span style="color:#333">&gt;</span> <span style="color:#00d;font-weight:bold">0</span>:
-            <span style="color:#080;font-weight:bold">return</span> self<span style="color:#333">.</span>_items[<span style="color:#00d;font-weight:bold">0</span>][<span style="color:#00d;font-weight:bold">0</span>]</code></pre></div></section>
-
+            <span style="color:#080;font-weight:bold">return</span> self<span style="color:#333">.</span>_items[<span style="color:#00d;font-weight:bold">0</span>][<span style="color:#00d;font-weight:bold">0</span>]
+</code></pre></div></section>
 
 <section class="slide entry"><h2>
         Реализация с итераторами
-    </h2><div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">    <span style="color:#080;font-weight:bold">def</span> <span style="color:#06b;font-weight:bold">push</span>(self, x):
+    </h2><div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">    <span style="color:#080;font-weight:bold">def</span> <span style="color:#06b;font-weight:bold">push</span>(self, x):
         p <span style="color:#333">=</span> <span style="color:#007020">len</span>(self<span style="color:#333">.</span>_iterators)
         self<span style="color:#333">.</span>_iterators<span style="color:#333">.</span>append(<span style="color:#007020">len</span>(self<span style="color:#333">.</span>_items))
         self<span style="color:#333">.</span>_items<span style="color:#333">.</span>append((x, p))
         self<span style="color:#333">.</span>_sift_up(<span style="color:#007020">len</span>(self<span style="color:#333">.</span>_items) <span style="color:#333">-</span> <span style="color:#00d;font-weight:bold">1</span>)
-        <span style="color:#080;font-weight:bold">return</span> p</code></pre></div></section>
-
+        <span style="color:#080;font-weight:bold">return</span> p
+</code></pre></div></section>
 
 <section class="slide entry"><h2>
         Реализация с итераторами
-    </h2><div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">    <span style="color:#080;font-weight:bold">def</span> <span style="color:#06b;font-weight:bold">pop</span>(self):
+    </h2><div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">    <span style="color:#080;font-weight:bold">def</span> <span style="color:#06b;font-weight:bold">pop</span>(self):
         <span style="color:#080;font-weight:bold">if</span> <span style="color:#007020">len</span>(self<span style="color:#333">.</span>_items) <span style="color:#333">&gt;</span> <span style="color:#00d;font-weight:bold">0</span>:
             x <span style="color:#333">=</span> self<span style="color:#333">.</span>_items[<span style="color:#00d;font-weight:bold">0</span>]
             self<span style="color:#333">.</span>_swap(<span style="color:#00d;font-weight:bold">0</span>, <span style="color:#007020">len</span>(self<span style="color:#333">.</span>_items)<span style="color:#333">-</span><span style="color:#00d;font-weight:bold">1</span>)
             self<span style="color:#333">.</span>_items<span style="color:#333">.</span>pop()
             self<span style="color:#333">.</span>_sift_down(<span style="color:#00d;font-weight:bold">0</span>)
-            <span style="color:#080;font-weight:bold">return</span> x[<span style="color:#00d;font-weight:bold">0</span>]</code></pre></div></section>
-
+            <span style="color:#080;font-weight:bold">return</span> x[<span style="color:#00d;font-weight:bold">0</span>]
+</code></pre></div></section>
 
 <section class="slide entry"><h2>
         Реализация с итераторами
-    </h2><div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">    <span style="color:#080;font-weight:bold">def</span> <span style="color:#06b;font-weight:bold">decrease</span>(self, p, x):
+    </h2><div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">    <span style="color:#080;font-weight:bold">def</span> <span style="color:#06b;font-weight:bold">decrease</span>(self, p, x):
         i <span style="color:#333">=</span> self<span style="color:#333">.</span>_iterators[p]
         self<span style="color:#333">.</span>_items[i] <span style="color:#333">=</span> (self<span style="color:#333">.</span>_items[i][<span style="color:#00d;font-weight:bold">0</span>] <span style="color:#333">-</span> x, p)
-        self<span style="color:#333">.</span>_sift_up(i)</code></pre></div></section>
-
+        self<span style="color:#333">.</span>_sift_up(i)
+</code></pre></div></section>
 
 <section class="slide entry"><h2>
         Реализация с итераторами
-    </h2><div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">    <span style="color:#080;font-weight:bold">def</span> <span style="color:#06b;font-weight:bold">_swap</span>(self, i, j):
+    </h2><div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">    <span style="color:#080;font-weight:bold">def</span> <span style="color:#06b;font-weight:bold">_swap</span>(self, i, j):
         self<span style="color:#333">.</span>_iterators[self<span style="color:#333">.</span>_items[i][<span style="color:#00d;font-weight:bold">1</span>]] <span style="color:#333">=</span> j
         self<span style="color:#333">.</span>_iterators[self<span style="color:#333">.</span>_items[j][<span style="color:#00d;font-weight:bold">1</span>]] <span style="color:#333">=</span> i
-        self<span style="color:#333">.</span>_items[i], self<span style="color:#333">.</span>_items[j] <span style="color:#333">=</span> self<span style="color:#333">.</span>_items[j], self<span style="color:#333">.</span>_items[i]</code></pre></div></section>
-
+        self<span style="color:#333">.</span>_items[i], self<span style="color:#333">.</span>_items[j] <span style="color:#333">=</span> self<span style="color:#333">.</span>_items[j], self<span style="color:#333">.</span>_items[i]
+</code></pre></div></section>
 
 <section class="slide entry"><h2>
         Слияние
     </h2><p>\[
 T(n, m) = O(n \log m)
 \]</p>
-
 <p>Эффективные реализации:</p>
-
 <ul>
 <li>биномиальная куча</li>
 <li>левацкая или косая куча</li>
@@ -710,11 +468,9 @@ T(n, m) = O(n \log m)
 </ul>
 </section>
 
-
 <section id="initialization" class="slide entry section"><h2>
         Эффективное построение кучи
     </h2></section>
-
 
 <section class="slide entry"><h2>
         Добавление элементов в пустую кучу
@@ -730,354 +486,170 @@ T(n) = O\left(\log 1 + \log 2 + \ldots + \log(n - 1)\right) =
 = O\left(n \log\left(\frac{n - 1}{2}\right)\right) = O(n \log n).
 \]</section>
 
-
 <section class="slide entry"><h2>
         Эффективное построение кучи
     </h2><p>Будем перестраивать входной массив так, чтобы он начал удовлетворять условиям кучи.</p>
-
 <p>Пусть дан массив начальных элементов \((4, 2, 12, 83, 45, 3, 21, 67, 11, 32, 37, 9, 1, 15, 7)\)</p>
 </section>
 
+<section class="slide entry"><h2>
+        Эффективное построение кучи
+    </h2><!-- raw HTML omitted -->
+<pre><code>&lt;/figcaption&gt;
+</code></pre>
+<!-- raw HTML omitted -->
+</section>
 
 <section class="slide entry"><h2>
         Эффективное построение кучи
-    </h2><figure>
-    <div class="mermaid">
-graph TD
-    A((4))
-    A---B((2))
-    A---C((12))
-    B---D((83))
-    B---E((45))
-    C---F((3))
-    C---G((21))
-    D---H((67))
-    D---I((11))
-    E---J((32))
-    E---K((37))
-    F---L((9))
-    F---M((1))
-    G---N((15))
-    G---O((7))
-</div>
-<figcaption>
-        Рис.&thinsp;11.
-        
-    </figcaption>
-</figure></section>
-
+    </h2><!-- raw HTML omitted -->
+<pre><code>style G fill:lightGreen
+style O fill:pink
+</code></pre>
+<!-- raw HTML omitted -->
+<pre><code>&lt;/figcaption&gt;
+</code></pre>
+<!-- raw HTML omitted -->
+</section>
 
 <section class="slide entry"><h2>
         Эффективное построение кучи
-    </h2><figure>
-    <div class="mermaid">
-graph TD
-    A((4))
-    A---B((2))
-    A---C((12))
-    B---D((83))
-    B---E((45))
-    C---F((3))
-    C---G((7))
-    D---H((67))
-    D---I((11))
-    E---J((32))
-    E---K((37))
-    F---L((9))
-    F---M((1))
-    G---N((15))
-    G---O((21))
-
-    style G fill:lightGreen
-    style O fill:pink
-</div>
-<figcaption>
-        Рис.&thinsp;12.
-        
-    </figcaption>
-</figure></section>
-
+    </h2><!-- raw HTML omitted -->
+<pre><code>style F fill:lightGreen
+style M fill:pink
+</code></pre>
+<!-- raw HTML omitted -->
+<pre><code>&lt;/figcaption&gt;
+</code></pre>
+<!-- raw HTML omitted -->
+</section>
 
 <section class="slide entry"><h2>
         Эффективное построение кучи
-    </h2><figure>
-    <div class="mermaid">
-graph TD
-    A((4))
-    A---B((2))
-    A---C((12))
-    B---D((83))
-    B---E((45))
-    C---F((1))
-    C---G((7))
-    D---H((67))
-    D---I((11))
-    E---J((32))
-    E---K((37))
-    F---L((9))
-    F---M((3))
-    G---N((15))
-    G---O((21))
-
-    style F fill:lightGreen
-    style M fill:pink
-</div>
-<figcaption>
-        Рис.&thinsp;13.
-        
-    </figcaption>
-</figure></section>
-
+    </h2><!-- raw HTML omitted -->
+<pre><code>style E fill:lightGreen
+style J fill:pink
+</code></pre>
+<!-- raw HTML omitted -->
+<pre><code>&lt;/figcaption&gt;
+</code></pre>
+<!-- raw HTML omitted -->
+</section>
 
 <section class="slide entry"><h2>
         Эффективное построение кучи
-    </h2><figure>
-    <div class="mermaid">
-graph TD
-    A((4))
-    A---B((2))
-    A---C((12))
-    B---D((83))
-    B---E((32))
-    C---F((1))
-    C---G((7))
-    D---H((67))
-    D---I((11))
-    E---J((45))
-    E---K((37))
-    F---L((9))
-    F---M((3))
-    G---N((15))
-    G---O((21))
-
-    style E fill:lightGreen
-    style J fill:pink
-</div>
-<figcaption>
-        Рис.&thinsp;14.
-        
-    </figcaption>
-</figure></section>
-
+    </h2><!-- raw HTML omitted -->
+<pre><code>style D fill:lightGreen
+style I fill:pink
+</code></pre>
+<!-- raw HTML omitted -->
+<pre><code>&lt;/figcaption&gt;
+</code></pre>
+<!-- raw HTML omitted -->
+</section>
 
 <section class="slide entry"><h2>
         Эффективное построение кучи
-    </h2><figure>
-    <div class="mermaid">
-graph TD
-    A((4))
-    A---B((2))
-    A---C((12))
-    B---D((11))
-    B---E((32))
-    C---F((1))
-    C---G((7))
-    D---H((67))
-    D---I((83))
-    E---J((45))
-    E---K((37))
-    F---L((9))
-    F---M((3))
-    G---N((15))
-    G---O((21))
-
-    style D fill:lightGreen
-    style I fill:pink
-</div>
-<figcaption>
-        Рис.&thinsp;15.
-        
-    </figcaption>
-</figure></section>
-
+    </h2><!-- raw HTML omitted -->
+<pre><code>style D fill:lightGreen
+style E fill:lightGreen
+style F fill:lightGreen
+style G fill:lightGreen
+style H fill:lightGreen
+style I fill:lightGreen
+style J fill:lightGreen
+style K fill:lightGreen
+style L fill:lightGreen
+style M fill:lightGreen
+style N fill:lightGreen
+style O fill:lightGreen
+</code></pre>
+<!-- raw HTML omitted -->
+<pre><code>&lt;/figcaption&gt;
+</code></pre>
+<!-- raw HTML omitted -->
+</section>
 
 <section class="slide entry"><h2>
         Эффективное построение кучи
-    </h2><figure>
-    <div class="mermaid">
-graph TD
-    A((4))
-    A---B((2))
-    A---C((12))
-    B---D((11))
-    B---E((32))
-    C---F((1))
-    C---G((7))
-    D---H((67))
-    D---I((83))
-    E---J((45))
-    E---K((37))
-    F---L((9))
-    F---M((3))
-    G---N((15))
-    G---O((21))
-
-    style D fill:lightGreen
-    style E fill:lightGreen
-    style F fill:lightGreen
-    style G fill:lightGreen
-    style H fill:lightGreen
-    style I fill:lightGreen
-    style J fill:lightGreen
-    style K fill:lightGreen
-    style L fill:lightGreen
-    style M fill:lightGreen
-    style N fill:lightGreen
-    style O fill:lightGreen
-</div>
-<figcaption>
-        Рис.&thinsp;16.
-        
-    </figcaption>
-</figure></section>
-
+    </h2><!-- raw HTML omitted -->
+<pre><code>style C fill:lightGreen
+style D fill:lightGreen
+style E fill:lightGreen
+style F fill:lightGreen
+style G fill:lightGreen
+style H fill:lightGreen
+style I fill:lightGreen
+style J fill:lightGreen
+style K fill:lightGreen
+style L fill:lightGreen
+style M fill:lightGreen
+style N fill:lightGreen
+style O fill:lightGreen
+</code></pre>
+<!-- raw HTML omitted -->
+<pre><code>&lt;/figcaption&gt;
+</code></pre>
+<!-- raw HTML omitted -->
+</section>
 
 <section class="slide entry"><h2>
         Эффективное построение кучи
-    </h2><figure>
-    <div class="mermaid">
-graph TD
-    A((4))
-    A---B((2))
-    A---C((1))
-    B---D((11))
-    B---E((32))
-    C---F((3))
-    C---G((7))
-    D---H((67))
-    D---I((83))
-    E---J((45))
-    E---K((37))
-    F---L((9))
-    F---M((12))
-    G---N((15))
-    G---O((21))
-
-    style C fill:lightGreen
-    style D fill:lightGreen
-    style E fill:lightGreen
-    style F fill:lightGreen
-    style G fill:lightGreen
-    style H fill:lightGreen
-    style I fill:lightGreen
-    style J fill:lightGreen
-    style K fill:lightGreen
-    style L fill:lightGreen
-    style M fill:lightGreen
-    style N fill:lightGreen
-    style O fill:lightGreen
-</div>
-<figcaption>
-        Рис.&thinsp;17.
-        
-    </figcaption>
-</figure></section>
-
+    </h2><!-- raw HTML omitted -->
+<pre><code>style B fill:lightGreen
+style C fill:lightGreen
+style D fill:lightGreen
+style E fill:lightGreen
+style F fill:lightGreen
+style G fill:lightGreen
+style H fill:lightGreen
+style I fill:lightGreen
+style J fill:lightGreen
+style K fill:lightGreen
+style L fill:lightGreen
+style M fill:lightGreen
+style N fill:lightGreen
+style O fill:lightGreen
+</code></pre>
+<!-- raw HTML omitted -->
+<pre><code>&lt;/figcaption&gt;
+</code></pre>
+<!-- raw HTML omitted -->
+</section>
 
 <section class="slide entry"><h2>
         Эффективное построение кучи
-    </h2><figure>
-    <div class="mermaid">
-graph TD
-    A((4))
-    A---B((2))
-    A---C((1))
-    B---D((11))
-    B---E((32))
-    C---F((3))
-    C---G((7))
-    D---H((67))
-    D---I((83))
-    E---J((45))
-    E---K((37))
-    F---L((9))
-    F---M((12))
-    G---N((15))
-    G---O((21))
-
-    style B fill:lightGreen
-    style C fill:lightGreen
-    style D fill:lightGreen
-    style E fill:lightGreen
-    style F fill:lightGreen
-    style G fill:lightGreen
-    style H fill:lightGreen
-    style I fill:lightGreen
-    style J fill:lightGreen
-    style K fill:lightGreen
-    style L fill:lightGreen
-    style M fill:lightGreen
-    style N fill:lightGreen
-    style O fill:lightGreen
-</div>
-<figcaption>
-        Рис.&thinsp;18.
-        
-    </figcaption>
-</figure></section>
-
+    </h2><!-- raw HTML omitted -->
+<pre><code>style A fill:lightGreen
+style B fill:lightGreen
+style C fill:lightGreen
+style D fill:lightGreen
+style E fill:lightGreen
+style F fill:lightGreen
+style G fill:lightGreen
+style H fill:lightGreen
+style I fill:lightGreen
+style J fill:lightGreen
+style K fill:lightGreen
+style L fill:lightGreen
+style M fill:lightGreen
+style N fill:lightGreen
+style O fill:lightGreen
+</code></pre>
+<!-- raw HTML omitted -->
+<pre><code>&lt;/figcaption&gt;
+</code></pre>
+<!-- raw HTML omitted -->
+</section>
 
 <section class="slide entry"><h2>
         Эффективное построение кучи
-    </h2><figure>
-    <div class="mermaid">
-graph TD
-    A((1))
-    A---B((2))
-    A---C((3))
-    B---D((11))
-    B---E((32))
-    C---F((4))
-    C---G((7))
-    D---H((67))
-    D---I((83))
-    E---J((45))
-    E---K((37))
-    F---L((9))
-    F---M((12))
-    G---N((15))
-    G---O((21))
-
-    style A fill:lightGreen
-    style B fill:lightGreen
-    style C fill:lightGreen
-    style D fill:lightGreen
-    style E fill:lightGreen
-    style F fill:lightGreen
-    style G fill:lightGreen
-    style H fill:lightGreen
-    style I fill:lightGreen
-    style J fill:lightGreen
-    style K fill:lightGreen
-    style L fill:lightGreen
-    style M fill:lightGreen
-    style N fill:lightGreen
-    style O fill:lightGreen
-</div>
-<figcaption>
-        Рис.&thinsp;19.
-        
-    </figcaption>
-</figure></section>
-
-
-<section class="slide entry"><h2>
-        Эффективное построение кучи
-    </h2><figure>
-    <div class="mermaid">
-graph TD
-    A((x))
-    A---B{α}
-    A---C{β}
-</div>
-<figcaption>
-        Рис.&thinsp;20.
-        
-    </figcaption>
-</figure>
-
-<p>\(\alpha\) и \(\beta\) являются кучами</section>
-
+    </h2><!-- raw HTML omitted -->
+<pre><code>&lt;/figcaption&gt;
+</code></pre>
+<!-- raw HTML omitted -->
+<p>\(\alpha\) и \(\beta\) являются кучами</p>
+</section>
 
 <section class="slide entry"><h2>
         Эффективное построение кучи
@@ -1090,7 +662,6 @@ T(n) = \sum_{k = 0}^{\log n} \frac{n}{2^k} O(k) = O\left(\sum_{k = 0}^{\log n} \
 \leqslant O\left(n \sum_{k = 0}^{\infty} \frac{k}{2^k} \right) = O(nc) = O(n)
 \]</section>
 
-
 <section class="slide entry"><h2>
         Рекурентная формула
     </h2>\[
@@ -1101,210 +672,94 @@ T(1) = 1 \quad\text{и}\quad T(h) \leqslant O(2T(h - 1) + ch),
 T(h) \leqslant O(c(2^{h + 1} - h - 2)) \leqslant O(c2^{h + 1}) \leqslant O(2cn).
 \]</section>
 
-
 <section id="heap-sort" class="slide entry section"><h2>
         Пирамидальная сортировка
     </h2></section>
 
+<section class="slide entry"><h2>
+        Пирамидальная сортировка
+    </h2><!-- raw HTML omitted -->
+<pre><code>style O fill:lightGreen, opacity:0.5
+style A fill:pink
+</code></pre>
+<!-- raw HTML omitted -->
+<pre><code>&lt;/figcaption&gt;
+</code></pre>
+<!-- raw HTML omitted -->
+</section>
 
 <section class="slide entry"><h2>
         Пирамидальная сортировка
-    </h2><figure>
-    <div class="mermaid">
-graph TD
-    A((21))
-    A---B((2))
-    A---C((3))
-    B---D((11))
-    B---E((32))
-    C---F((4))
-    C---G((7))
-    D---H((67))
-    D---I((83))
-    E---J((45))
-    E---K((37))
-    F---L((9))
-    F---M((12))
-    G---N((15))
-    G---O((1))
-
-    style O fill:lightGreen, opacity:0.5
-    style A fill:pink
-</div>
-<figcaption>
-        Рис.&thinsp;21.
-        
-    </figcaption>
-</figure></section>
-
+    </h2><!-- raw HTML omitted -->
+<pre><code>style O fill:lightGreen, opacity:0.5
+style A fill:yellow
+style B fill:yellow
+style D fill:pink
+</code></pre>
+<!-- raw HTML omitted -->
+<pre><code>&lt;/figcaption&gt;
+</code></pre>
+<!-- raw HTML omitted -->
+</section>
 
 <section class="slide entry"><h2>
         Пирамидальная сортировка
-    </h2><figure>
-    <div class="mermaid">
-graph TD
-    A((2))
-    A---B((11))
-    A---C((3))
-    B---D((21))
-    B---E((32))
-    C---F((4))
-    C---G((7))
-    D---H((67))
-    D---I((83))
-    E---J((45))
-    E---K((37))
-    F---L((9))
-    F---M((12))
-    G---N((15))
-    G---O((1))
-
-    style O fill:lightGreen, opacity:0.5
-    style A fill:yellow
-    style B fill:yellow
-    style D fill:pink
-</div>
-<figcaption>
-        Рис.&thinsp;22.
-        
-    </figcaption>
-</figure></section>
-
+    </h2><!-- raw HTML omitted -->
+<pre><code>style O fill:lightGreen, opacity:0.5
+style N fill:lightGreen, opacity:0.5
+style A fill:pink
+</code></pre>
+<!-- raw HTML omitted -->
+<pre><code>&lt;/figcaption&gt;
+</code></pre>
+<!-- raw HTML omitted -->
+</section>
 
 <section class="slide entry"><h2>
         Пирамидальная сортировка
-    </h2><figure>
-    <div class="mermaid">
-graph TD
-    A((15))
-    A---B((11))
-    A---C((3))
-    B---D((21))
-    B---E((32))
-    C---F((4))
-    C---G((7))
-    D---H((67))
-    D---I((83))
-    E---J((45))
-    E---K((37))
-    F---L((9))
-    F---M((12))
-    G---N((2))
-    G---O((1))
-
-    style O fill:lightGreen, opacity:0.5
-    style N fill:lightGreen, opacity:0.5
-    style A fill:pink
-</div>
-<figcaption>
-        Рис.&thinsp;23.
-        
-    </figcaption>
-</figure></section>
-
+    </h2><!-- raw HTML omitted -->
+<pre><code>style O fill:lightGreen, opacity:0.5
+style N fill:lightGreen, opacity:0.5
+style A fill:yellow
+style C fill:yellow
+style F fill:yellow
+style L fill:pink
+</code></pre>
+<!-- raw HTML omitted -->
+<pre><code>&lt;/figcaption&gt;
+</code></pre>
+<!-- raw HTML omitted -->
+</section>
 
 <section class="slide entry"><h2>
         Пирамидальная сортировка
-    </h2><figure>
-    <div class="mermaid">
-graph TD
-    A((3))
-    A---B((11))
-    A---C((4))
-    B---D((21))
-    B---E((32))
-    C---F((9))
-    C---G((7))
-    D---H((67))
-    D---I((83))
-    E---J((45))
-    E---K((37))
-    F---L((15))
-    F---M((12))
-    G---N((2))
-    G---O((1))
-
-    style O fill:lightGreen, opacity:0.5
-    style N fill:lightGreen, opacity:0.5
-    style A fill:yellow
-    style C fill:yellow
-    style F fill:yellow
-    style L fill:pink
-</div>
-<figcaption>
-        Рис.&thinsp;24.
-        
-    </figcaption>
-</figure></section>
-
+    </h2><!-- raw HTML omitted -->
+<pre><code>style O fill:lightGreen, opacity:0.5
+style N fill:lightGreen, opacity:0.5
+style M fill:lightGreen, opacity:0.5
+style A fill:pink
+</code></pre>
+<!-- raw HTML omitted -->
+<pre><code>&lt;/figcaption&gt;
+</code></pre>
+<!-- raw HTML omitted -->
+</section>
 
 <section class="slide entry"><h2>
         Пирамидальная сортировка
-    </h2><figure>
-    <div class="mermaid">
-graph TD
-    A((12))
-    A---B((11))
-    A---C((4))
-    B---D((21))
-    B---E((32))
-    C---F((9))
-    C---G((7))
-    D---H((67))
-    D---I((83))
-    E---J((45))
-    E---K((37))
-    F---L((15))
-    F---M((3))
-    G---N((2))
-    G---O((1))
-
-    style O fill:lightGreen, opacity:0.5
-    style N fill:lightGreen, opacity:0.5
-    style M fill:lightGreen, opacity:0.5
-    style A fill:pink
-</div>
-<figcaption>
-        Рис.&thinsp;25.
-        
-    </figcaption>
-</figure></section>
-
-
-<section class="slide entry"><h2>
-        Пирамидальная сортировка
-    </h2><figure>
-    <div class="mermaid">
-graph TD
-    A((4))
-    A---B((11))
-    A---C((7))
-    B---D((21))
-    B---E((32))
-    C---F((9))
-    C---G((12))
-    D---H((67))
-    D---I((83))
-    E---J((45))
-    E---K((37))
-    F---L((15))
-    F---M((3))
-    G---N((2))
-    G---O((1))
-
-    style O fill:lightGreen, opacity:0.5
-    style N fill:lightGreen, opacity:0.5
-    style M fill:lightGreen, opacity:0.5
-    style A fill:yellow
-    style C fill:yellow
-    style G fill:pink
-</div>
-<figcaption>
-        Рис.&thinsp;26.
-        
-    </figcaption>
-</figure></section>
-
+    </h2><!-- raw HTML omitted -->
+<pre><code>style O fill:lightGreen, opacity:0.5
+style N fill:lightGreen, opacity:0.5
+style M fill:lightGreen, opacity:0.5
+style A fill:yellow
+style C fill:yellow
+style G fill:pink
+</code></pre>
+<!-- raw HTML omitted -->
+<pre><code>&lt;/figcaption&gt;
+</code></pre>
+<!-- raw HTML omitted -->
+</section>
 
 <section id="exercises" class="slide entry"><h2>
         Задания
@@ -1312,8 +767,8 @@ graph TD
 <li>Реализуйте кучу с итераторами, переиспользующую свободные ячейки массива итераторов. Напишите тест, позволяющий проверить, что при многократном цикле push-pop память структуры не растёт.</li>
 <li>Реализуйте конструктор, принимающий массив данных и преобразующий их в кучу за линейное время.</li>
 <li>Реализуйте пирамидальную сортировку.</li>
-</ol></section>
-
+</ol>
+</section>
 
 <section id="further" class="slide entry"><h2>
         Дополнительное чтение
@@ -1321,16 +776,16 @@ graph TD
 <li>Ryan Hayward, Ryan, and McDiarmid, Colin. &ldquo;Average Case Analysis of Heap Building.&rdquo; <em>Journal of algorithms</em>, vol. 12, no. 1, 1991, pp. 126–153.</li>
 <li>Atkinson, M.D., Sack, J.-R., Santoro, N., and Strothotte, T. &ldquo;Min-max heaps and generalized priority queues.&rdquo; <em>Programming techniques and Data structures. Comm. ACM</em>, vol. 29, no. 10, 1986, pp. 996–1000.</li>
 <li>Brodal, Gerth S. &ldquo;Worst-Case Efficient Priority Queues.&rdquo; <em>Proc. 7th Annual ACM-SIAM Symposium on Discrete Algorithms</em>, 1996, pp. 52–58.</li>
-</ol></section>
-
+</ol>
+</section>
 
 <section id="bibliography" class="slide entry"><h2>
         Ссылки
     </h2><ol>
 <li>Вирт, Никлаус. <em>Алгоритмы и структуры данных. Новая версия для Оберона</em>. Перевод Ткачев, Ф. В., М.: ДМК Пресс, 2016.</li>
 <li>Асанов, М. О., Баранский, В. А., и Расин, В. В. <em>Дискретная математика: графы, матроиды, алгоритмы</em>. 2-е издание, СПб.: Издательство «Лань», 2010.</li>
-</ol></section>
-
+</ol>
+</section>
 
 <section class="slide entry clear section"><h2>
         Спасибо за внимание

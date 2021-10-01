@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>work on Где-то на дальнем сервере</title>
@@ -6,11 +6,7 @@
     <description>Recent content in work on Где-то на дальнем сервере</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>ru</language>
-    <lastBuildDate>Fri, 09 Apr 2021 12:34:13 +0000</lastBuildDate>
-    
-	<atom:link href="https://vporoshok.me/tags/work/index.xml" rel="self" type="application/rss+xml" />
-    
-    
+    <lastBuildDate>Fri, 09 Apr 2021 12:34:13 +0000</lastBuildDate><atom:link href="https://vporoshok.me/tags/work/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Работа над задачей</title>
       <link>https://vporoshok.me/post/2021/04/work/</link>
@@ -18,7 +14,7 @@
       
       <guid>https://vporoshok.me/post/2021/04/work/</guid>
       <description>Каждый день по работе я сталкиваюсь с разными задачами. Принципы работы с ними складывались как-то спонтанно, местами ценой набитых шишек. В этой статье хочу собрать всё и структурировать. В основном для себя, но вдруг окажется полезным ещё кому-нибудь.
-Что важно Задачи можно решать разными способами, это как с сортировкой. В конце концов можно писать код до тех пор, пока задача не решится (возможно через пару лет усердного труда отдела программистов).</description>
+Что важно Задачи можно решать разными способами, это как с сортировкой. В конце концов можно писать код до тех пор, пока задача не решится (возможно через пару лет усердного труда отдела программистов). Но программист не сферический конь в вакууме.</description>
     </item>
     
   </channel>

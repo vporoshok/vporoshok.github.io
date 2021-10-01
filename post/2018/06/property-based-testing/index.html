@@ -9,9 +9,9 @@
 <meta property='og:description' content='Тестируй не вход и выход, а свойства'>
 <meta property='og:url' content='https://vporoshok.me/post/2018/06/property-based-testing/'>
 <meta property='og:site_name' content='Где-то на дальнем сервере'>
-<meta property='og:type' content='article'><meta property='og:image' content='https://vporoshok.me/post/2018/06/img/properties.jpg'><meta property='article:section' content='post'><meta property='article:tag' content='testing'><meta property='article:tag' content='go'><meta property='article:published_time' content='2018-06-12T16:09:44Z'/><meta property='article:modified_time' content='2018-11-10T12:14:22&#43;04:00'/><meta name='twitter:card' content='summary_large_image'><meta property='twitter:image' content='https://vporoshok.me/post/2018/06/img/properties.jpg'><meta property='twitter:image:alt' content='“The symmetrical apartment units with orange doors in Osaka“ by Tim Easley on Unsplash'>
+<meta property='og:type' content='article'><meta property='og:image' content='https://vporoshok.me/post/2018/06/img/properties.jpg'><meta property='article:section' content='post'><meta property='article:tag' content='testing'><meta property='article:tag' content='go'><meta property='article:published_time' content='2018-06-12T16:09:44Z'/><meta property='article:modified_time' content='2021-10-01T18:45:33&#43;04:00'/><meta name='twitter:card' content='summary_large_image'><meta property='twitter:image' content='https://vporoshok.me/post/2018/06/img/properties.jpg'><meta property='twitter:image:alt' content='“The symmetrical apartment units with orange doors in Osaka“ by Tim Easley on Unsplash'>
 
-<meta name="generator" content="Hugo 0.57.2" />
+<meta name="generator" content="Hugo 0.88.1" />
 
   <title>Property-based testing • Где-то на дальнем сервере</title>
   <link rel='canonical' href='https://vporoshok.me/post/2018/06/property-based-testing/'>
@@ -219,8 +219,8 @@ if (!doNotTrack) {
 </svg>
 </span>
 </button>
-    <ul><li class='item'>
-        <a href='/post/'>Блог</a>
+    <ul><li class='item current'>
+        <a aria-current='page' href='/post/'>Блог</a>
       </li><li class='item'>
         <a href='/page/about/'>Обо мне</a>
       </li></ul>
@@ -300,28 +300,21 @@ if (!doNotTrack) {
     <span>Оглавление</span>
   </summary>
   <nav id="TableOfContents">
-<ul>
-<li>
-<ul>
-<li><a href="#простой-пример">Простой пример</a></li>
-<li><a href="#генератор">Генератор</a></li>
-<li><a href="#что-почитать-посмотреть">Что почитать (посмотреть)</a></li>
-</ul></li>
-</ul>
+  <ul>
+    <li><a href="#простой-пример">Простой пример</a></li>
+    <li><a href="#генератор">Генератор</a></li>
+    <li><a href="#что-почитать-посмотреть">Что почитать (посмотреть)</a></li>
+  </ul>
 </nav>
 </details>
 
 
   <div class='container entry-content'>
-  
-
-<p>Сегодня хотелось бы рассмотреть такой подход к тестированию как property-based тесты, или, по-русски говоря, тесты основанные на свойствах. Раньше, когда я слышал это название, то думал, что это способы тестирования свойств классов, в смысле <a href="https://docs.python.org/3/library/functions.html?property">property</a>. А при учёте того, что я <a href="https://devzen.ru/episode-0049/">слышал</a> <a href="https://devzen.ru/episode-0099/">об этом</a> <a href="https://devzen.ru/episode-0134/">исключительно</a> <a href="https://devzen.ru/episode-0150/">в подкасте</a> <a href="https://devzen.ru/episode-0166/">DevZen</a>, где за этими словами следовали слова: haskell, scala и erlang, то не особо вдавался в подробности. Однако, на <a href="https://devzen.ru/episode-0190/">выпуске</a> про <a href="http://lamport.azurewebsites.net/tla/tla.html">TLA+</a> эта тема меня всё же зацепила, так что я пошёл гуглить и читать. И вот теперь окончательно дозрев, готов поделиться тем, что сумел найти и понять.</p>
-
+  <p>Сегодня хотелось бы рассмотреть такой подход к тестированию как property-based тесты, или, по-русски говоря, тесты основанные на свойствах. Раньше, когда я слышал это название, то думал, что это способы тестирования свойств классов, в смысле <a href="https://docs.python.org/3/library/functions.html?property">property</a>. А при учёте того, что я <a href="https://devzen.ru/episode-0049/">слышал</a> <a href="https://devzen.ru/episode-0099/">об этом</a> <a href="https://devzen.ru/episode-0134/">исключительно</a> <a href="https://devzen.ru/episode-0150/">в подкасте</a> <a href="https://devzen.ru/episode-0166/">DevZen</a>, где за этими словами следовали слова: haskell, scala и erlang, то не особо вдавался в подробности. Однако, на <a href="https://devzen.ru/episode-0190/">выпуске</a> про <a href="http://lamport.azurewebsites.net/tla/tla.html">TLA+</a> эта тема меня всё же зацепила, так что я пошёл гуглить и читать. И вот теперь окончательно дозрев, готов поделиться тем, что сумел найти и понять.</p>
 <h2 id="простой-пример">Простой пример</h2>
-
 <p>Итак, первое, что нужно понимать, property-based тесты используют подход чёрного ящика. При этом они запускаются в достаточно больших количествах и должны быть воспроизводимы, так что будет хорошо тестировать чистую функцию. Таким образом самое подходящее место для их применения это модульные тесты.
 Для начала соорудим наш чёрный ящик. Пусть это будет банальный <a href="https://habr.com/post/278867/">FizzBuzz</a></p>
-<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#080;font-weight:bold">package</span> fizzbuzz
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#080;font-weight:bold">package</span> fizzbuzz
 
 <span style="color:#080;font-weight:bold">import</span> (
 	<span style="background-color:#fff0f0">&#34;strconv&#34;</span>
@@ -343,9 +336,9 @@ if (!doNotTrack) {
 	}
 
 	<span style="color:#080;font-weight:bold">return</span> res.<span style="color:#06b;font-weight:bold">String</span>()
-}</code></pre></div>
-<p>Теперь попробуем его потестировать. Собственно первое, что приходит на ум, это использовать <a href="https://www.youtube.com/watch?v=ndmB0bj7eyw&amp;t=2497s">Table-driven tests</a>, например:</p>
-<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#080;font-weight:bold">package</span> fizzbuzz
+}
+</code></pre></div><p>Теперь попробуем его потестировать. Собственно первое, что приходит на ум, это использовать <a href="https://www.youtube.com/watch?v=ndmB0bj7eyw&amp;t=2497s">Table-driven tests</a>, например:</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#080;font-weight:bold">package</span> fizzbuzz
 
 <span style="color:#080;font-weight:bold">import</span> (
 	<span style="background-color:#fff0f0">&#34;strconv&#34;</span>
@@ -385,19 +378,16 @@ if (!doNotTrack) {
 			}
 		})
 	}
-}</code></pre></div>
-<p>Но очевидно, что подобный тест, это некоторое лукавство, ведь по факту мы не проверили правильность поведения нашего кода, мы просто сопоставили 4 пары входов и выходов. То есть этот тест лишь показывает, что наш код корректно обрабатывает 4 случая. Что будет с другими входными данными, мы предсказать не можем. Вот тут-то к нам на помощь и приходят тесты, основанные на свойствах. На свойствах нашего чёрного ящика. Давайте попробуем сформулировать эти свойства:</p>
-
+}
+</code></pre></div><p>Но очевидно, что подобный тест, это некоторое лукавство, ведь по факту мы не проверили правильность поведения нашего кода, мы просто сопоставили 4 пары входов и выходов. То есть этот тест лишь показывает, что наш код корректно обрабатывает 4 случая. Что будет с другими входными данными, мы предсказать не можем. Вот тут-то к нам на помощь и приходят тесты, основанные на свойствах. На свойствах нашего чёрного ящика. Давайте попробуем сформулировать эти свойства:</p>
 <ol>
 <li>Если на вход нашей коробке подать любое число, кратное 3, то ответ должен начинаться со слова <strong>Fizz</strong>;</li>
 <li>Если на вход подать число, кратное 5, то ответ должен заканчиваться на слово <strong>Buzz</strong>;</li>
 <li>Если на вход подать число не кратное ни 3, ни 5, то коробка должна вернуть это же число в виде строки;</li>
 </ol>
-
 <p>«Но ведь это же и есть условия задачи!» - воскликните вы и будете правы. По сути мы хотим проверить то, что наша коробочка удовлетворяет поставленным перед ней условиям. По сути, формализация этих требований в код и будет тестом, основанным на свойствах, правда для того, чтобы правильно этот тест запустить, надо будет перебрать все возможные входные данные (в нашем случае это int64, то есть каких-то 19 с половиной квинтиллионов) и для каждого из них проверить выполнение перечисленных свойств. С одной стороны это будет вполне исчерпывающее доказательство того, что чёрный ящик работает как надо, с другой - а не слишком ли высокая цена за доказательство? Конечно, компьютеры очень мощны, чтобы перемолотить это за каких-нибудь 20 минут, но что делать с чёрными ящиками от нескольких переменных?</p>
-
 <p>Выход был предложен создателями библиотеки для тестирования кода на Haskell: <a href="https://begriffs.com/posts/2017-01-14-design-use-quickcheck.html">QuickCheck</a>. Можно запускать не всё, но много. Случайным образом. То есть, если рандомизированно выбирать входные параметры и проверять свойства, да к тому же сделать это достаточно много раз, то тоже будет хорошо. Этот подход снискал своих поклонников да так, что эта библиотека была портирована практически на все живые языки программирования. Например, в том же go <a href="https://godoc.org/testing/quick">порт входит в стандартную библиотеку тестирования</a>. Однако, в отличии от всего остального языка этот порт уж слишком магический и неочевидный, поэтому воспользуемся более многословной библиотекой: <a href="https://github.com/leanovate/gopter">https://github.com/leanovate/gopter</a></p>
-<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#080;font-weight:bold">package</span> fizzbuzz
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#080;font-weight:bold">package</span> fizzbuzz
 
 <span style="color:#080;font-weight:bold">import</span> (
 	<span style="background-color:#fff0f0">&#34;math&#34;</span>
@@ -441,29 +431,22 @@ if (!doNotTrack) {
 	))
 
 	properties.<span style="color:#06b;font-weight:bold">TestingRun</span>(t)
-}</code></pre></div>
-<p>Для каждого свойства будет запущено 100 случайных тестов и, если свойство не выполнится, тест будет провален.</p>
-
+}
+</code></pre></div><p>Для каждого свойства будет запущено 100 случайных тестов и, если свойство не выполнится, тест будет провален.</p>
 <h2 id="генератор">Генератор</h2>
-
 <p>Но это, конечно, детский пример, давайте рассмотрим что-то посложнее, что-то, что будет принимать на вход не примитивные типы. Например, функция выделения минимального подпокрытия.</p>
-
 <blockquote>
 <p>На вход подаётся семейство множеств, из него надо выделить минимальное подсемейство такое, что объединение множеств оригинального семейства совпадало с объединением множеств результата.</p>
 </blockquote>
-
 <p>Эта задача относится к классу NP-полных задач и решается чаще всего методом линейного программирования, либо можно решить задачу приближённо, используя жадный алгоритм. Поэтому само решение я не буду приводить, потому как пост совсем не о том.</p>
-
 <p>Итак, у нас есть чёрный ящик, который на вход принимает семейство множеств и на выходе отдаёт семейство множеств. Давайте начнём со свойств, которые мы хотим проверить:</p>
-
 <ol>
 <li>Результат должен покрывать то же множество, что и исходное семейство;</li>
 <li>Мощность результата не должна превышать мощность входного семейства;</li>
 <li>Результат должен быть подсемейством входного семейства, то есть каждое множество результата должно содержаться во входном семействе;</li>
 </ol>
-
 <p>Можно придумать ещё свойства, но проблема не в этом. Проблема в том, что входным параметром является сложная структура. Как же нам выбрать случайным образом 100 покрытий? Для этого надо написать собственный генератор. По сути генератор это функция, которая по заданным параметрам генерирует некоторую случайную структуру. Среди параметров передаётся генератор случайных чисел, инициированный специальным образом, так что используя этот генератор мы можем получить случайную, но воспроизводимую структуру данных. Что ж, давайте напишем генератор:</p>
-<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#080;font-weight:bold">package</span> coverage
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#080;font-weight:bold">package</span> coverage
 
 <span style="color:#080;font-weight:bold">import</span> (
 	<span style="background-color:#fff0f0">&#34;github.com/leanovate/gopter&#34;</span>
@@ -509,11 +492,10 @@ if (!doNotTrack) {
 	}
 
 	<span style="color:#080;font-weight:bold">return</span> cs.coverage, <span style="color:#080;font-weight:bold">true</span>
-}</code></pre></div>
-<p>Для удобства параметризуем наш генератор модулем кольца, ограничевающим универсальное множество, а также числом множеств генерируемого семейства.</p>
-
+}
+</code></pre></div><p>Для удобства параметризуем наш генератор модулем кольца, ограничевающим универсальное множество, а также числом множеств генерируемого семейства.</p>
 <p>Всё бы ничего, но разбираться в том что пошло не так в случае покрытия, состоящего из сотен, а то и тысяч множеств, занятие не сильно воодушевляющее, так что на помощь нам приходит механизм сужения входных данных, так называемый shrinking. Если на каком-то сгенерированном наборе мы получим невыполнение свойства, то фреймворк попытается с помощью переданного shrinker&rsquo;а уменьшить входные данные до тех пор, пока ошибка повторяется. Для простоты я написал шринкер, который просто обрезает множества в конце оригинального списка. Итоговый тест выглядит следующим образом:</p>
-<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#080;font-weight:bold">package</span> coverage
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#080;font-weight:bold">package</span> coverage
 
 <span style="color:#080;font-weight:bold">import</span> (
 	<span style="background-color:#fff0f0">&#34;bytes&#34;</span>
@@ -654,11 +636,9 @@ if (!doNotTrack) {
 	}
 
 	<span style="color:#080;font-weight:bold">return</span> cs.coverage, <span style="color:#080;font-weight:bold">true</span>
-}</code></pre></div>
-<p>Вот собственно и вся магия.</p>
-
+}
+</code></pre></div><p>Вот собственно и вся магия.</p>
 <h2 id="что-почитать-посмотреть">Что почитать (посмотреть)</h2>
-
 <ul>
 <li>Очень крутой доклад, где на пальцах объясняется весь подход: <a href="https://www.youtube.com/watch?v=shngiiBfD80&amp;t=446s">https://www.youtube.com/watch?v=shngiiBfD80&amp;t=446s</a></li>
 <li>Отличная статья, откуда я спёр пример про минимальное подпокрытие: <a href="http://blog.jessitron.com/2013/04/property-based-testing-what-is-it.html">http://blog.jessitron.com/2013/04/property-based-testing-what-is-it.html</a></li>
@@ -675,7 +655,7 @@ if (!doNotTrack) {
   <path d="M22,19a2,2,0,0,1-2,2H4a2,2,0,0,1-2-2V5A2,2,0,0,1,4,3H9l2,3h9a2,2,0,0,1,2,2Z"/>
   
 </svg>
-<span class='screen-reader-text'>category: </span><a class='category' href='/categories/develop/'>Разработка</a></div>
+<span class='screen-reader-text'>Категории: </span><a class='category' href='/categories/develop/'>Разработка</a></div>
 <div class='tags'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
   
   <path d="M20.59,13.41l-7.17,7.17a2,2,0,0,1-2.83,0L2,12V2H12l8.59,8.59A2,2,0,0,1,20.59,13.41Z"/>
@@ -721,7 +701,7 @@ if (!doNotTrack) {
 
       <footer id='footer' class='footer'>
         <div class='container sep-before'><div class='copyright'>
-  <p>Материалы распространяются по <a rel="noreferrer" href="https://creativecommons.org/licenses/by/4.0/" target="_blank">лицензии CC BY</a> &copy; 2018-2021 vporoshok <br>Увидели ошибку? Буду рад <a rel="noreferrer" href="https://github.com/vporoshok/vporoshok.github.io" target="_blank">PR&rsquo;у</a></p>
+  <p>Материалы распространяются по <!-- raw HTML omitted -->лицензии CC BY<!-- raw HTML omitted --> &copy; 2018-2021 vporoshok <!-- raw HTML omitted -->Увидели ошибку? Буду рад <!-- raw HTML omitted -->PR&rsquo;у<!-- raw HTML omitted --></p>
 </div>
 
         </div>

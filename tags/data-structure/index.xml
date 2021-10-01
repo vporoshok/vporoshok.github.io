@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>data-structure on Где-то на дальнем сервере</title>
@@ -6,11 +6,7 @@
     <description>Recent content in data-structure on Где-то на дальнем сервере</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>ru</language>
-    <lastBuildDate>Thu, 20 Dec 2018 14:00:00 +0000</lastBuildDate>
-    
-	<atom:link href="https://vporoshok.me/tags/data-structure/index.xml" rel="self" type="application/rss+xml" />
-    
-    
+    <lastBuildDate>Thu, 20 Dec 2018 14:00:00 +0000</lastBuildDate><atom:link href="https://vporoshok.me/tags/data-structure/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Деревья поиска. АВЛ-деревья</title>
       <link>https://vporoshok.me/post/2018/12/search-tree/</link>
@@ -45,7 +41,8 @@
       <pubDate>Fri, 02 Nov 2018 15:00:00 +0000</pubDate>
       
       <guid>https://vporoshok.me/post/2018/11/simple-heap/</guid>
-      <description>Часто возникает необходимость «сортировать» динамический набор данных. Самым ярким примером такой задачи является очередь с приоритетом. По сути задача сводится к последовательному выбору минимумов из множества, при этом допускающего добавление к множеству новых элементов. Конечно, эту задачу можно решить с помощью сортировки начального множества, а новые элементы можно включать с помощью бинарной вставки. Однако, есть структуры данных, позволяющие реализовать необходимые операции за меньшую стоимость. Такая структура называется куча (heap).</description>
+      <description>Часто возникает необходимость «сортировать» динамический набор данных. Самым ярким примером такой задачи является очередь с приоритетом. По сути задача сводится к последовательному выбору минимумов из множества, при этом допускающего добавление к множеству новых элементов. Конечно, эту задачу можно решить с помощью сортировки начального множества, а новые элементы можно включать с помощью бинарной вставки. Однако, есть структуры данных, позволяющие реализовать необходимые операции за меньшую стоимость. Такая структура называется куча (heap).
+Определение и базовые операции Кучей называется дерево, в котором любой элемент не меньше своего родителя.</description>
     </item>
     
   </channel>

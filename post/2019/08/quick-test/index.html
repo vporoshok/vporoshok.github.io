@@ -9,9 +9,9 @@
 <meta property='og:description' content='Как используя golden-файлы, моки и щепотку рефлексии быстро протестировать сложную логику'>
 <meta property='og:url' content='https://vporoshok.me/post/2019/08/quick-test/'>
 <meta property='og:site_name' content='Где-то на дальнем сервере'>
-<meta property='og:type' content='article'><meta property='article:section' content='post'><meta property='article:tag' content='go'><meta property='article:tag' content='testing'><meta property='article:published_time' content='2019-08-25T15:44:33Z'/><meta property='article:modified_time' content='2020-07-04T13:36:24&#43;04:00'/><meta name='twitter:card' content='summary'>
+<meta property='og:type' content='article'><meta property='article:section' content='post'><meta property='article:tag' content='go'><meta property='article:tag' content='testing'><meta property='article:published_time' content='2019-08-25T15:44:33Z'/><meta property='article:modified_time' content='2021-10-01T18:45:33&#43;04:00'/><meta name='twitter:card' content='summary'>
 
-<meta name="generator" content="Hugo 0.57.2" />
+<meta name="generator" content="Hugo 0.88.1" />
 
   <title>Быстро пишем функциональные тесты • Где-то на дальнем сервере</title>
   <link rel='canonical' href='https://vporoshok.me/post/2019/08/quick-test/'>
@@ -219,8 +219,8 @@ if (!doNotTrack) {
 </svg>
 </span>
 </button>
-    <ul><li class='item'>
-        <a href='/post/'>Блог</a>
+    <ul><li class='item current'>
+        <a aria-current='page' href='/post/'>Блог</a>
       </li><li class='item'>
         <a href='/page/about/'>Обо мне</a>
       </li></ul>
@@ -289,55 +289,40 @@ if (!doNotTrack) {
     <span>Оглавление</span>
   </summary>
   <nav id="TableOfContents">
-<ul>
-<li>
-<ul>
-<li><a href="#пара-слов-о-классификации-тестов">Пара слов о классификации тестов</a></li>
-<li><a href="#где-располагаются-функциональные-тесты">Где располагаются функциональные тесты?</a></li>
-<li><a href="#di-зависимости-и-моки">DI. Зависимости и моки</a></li>
-<li><a href="#golden-файлы">Golden-файлы</a></li>
-<li><a href="#сюита-собираем-всё-вместе">Сюита. Собираем всё вместе</a></li>
-<li><a href="#вспомогательные-методы-и-базовая-сюита">Вспомогательные методы и базовая сюита</a></li>
-<li><a href="#выводы">Выводы</a></li>
-</ul></li>
-</ul>
+  <ul>
+    <li><a href="#пара-слов-о-классификации-тестов">Пара слов о классификации тестов</a></li>
+    <li><a href="#где-располагаются-функциональные-тесты">Где располагаются функциональные тесты?</a></li>
+    <li><a href="#di-зависимости-и-моки">DI. Зависимости и моки</a></li>
+    <li><a href="#golden-файлы">Golden-файлы</a></li>
+    <li><a href="#сюита-собираем-всё-вместе">Сюита. Собираем всё вместе</a></li>
+    <li><a href="#вспомогательные-методы-и-базовая-сюита">Вспомогательные методы и базовая сюита</a></li>
+    <li><a href="#выводы">Выводы</a></li>
+  </ul>
 </nav>
 </details>
 
 
   <div class='container entry-content'>
-  
-
-<h2 id="пара-слов-о-классификации-тестов">Пара слов о классификации тестов</h2>
-
+  <h2 id="пара-слов-о-классификации-тестов">Пара слов о классификации тестов</h2>
 <p>Напомню, что традиционно выделяют следующие виды тестов:</p>
-
 <ul>
 <li><strong>Модульные</strong> &mdash; они же юнит-тесты. Это тесты изолированные внутри пакета/модуля, которые тестируют отдельные методы классов и помогают при разработке.</li>
 <li><strong>Функциональные</strong> &mdash; тесты, обращающиеся к пакету/модулю как к чёрному ящику, вызывая только публичные методы.</li>
 <li><strong>Интеграционные</strong> &mdash; (и их подвиды: end-to-end и сценарные тесты) проводятся в среде приближенной к рабочей, с реальными бд и другими сервисами.</li>
 </ul>
-
 <p>Не вдаваясь в холивары, будем придерживаюсь той точки зрения, что модульные тесты это инструмент для разработки, когда есть сложная логика, которую легко протестировать. Для них редко нужны моки. В них можно и нужно тестировать приватные методы и функции. Они близки к реализации и при рефакторинге их часто приходится переписывать или просто выкидывать. Ориентироваться на них в приёмке кода нужно с той же степенью как на название локальных переменных.</p>
-
 <p>Функциональные же тесты фиксируют внешний интерфейс пакета/модуля, таким образом при рефакторинге они не должны меняться. И при приёмке кода изменения в них должны тщательно проверяться. В таких тестах всё окружение заменяется моками, чтобы проверить краевые сценарии. Именно о них в контексте Go и пойдёт речь.</p>
-
 <p>Интеграционные тесты вообще выделяются в отдельный пакет или даже проект. О них мы поговорим как-нибудь в другой раз.</p>
-
 <h2 id="где-располагаются-функциональные-тесты">Где располагаются функциональные тесты?</h2>
-
 <p>Если опираться на архитектуру, описанную в статье <a href="/post/2018/04/clean-architect/">Чистая архитектура на Go</a>, то основная бизнес-логика сервиса должна располагаться в действиях, в пакете <code>action</code>. (Подробнее о написании самих действий можно почитать в статье <a href="/post/2019/08/actions-in-action/">Действия в действии</a>.) Каждая команда, предоставляемая сервисом должна по сути 1 к 1 соотносится с действием.</p>
-
 <p>У сервиса могут быть разные интерфейсы, может быть одновременно несколько интерфейсов, например, HTTP и gRPC, или SOA поверх AMQP. Может быть несколько точек входа, например, проект может одновременно выступать и как HTTP-сервис, и собираться в виде утилиты командной строки. За интерфейсы отвечает слой сервисов, в котором происходит обработка параметров запроса с приведением к типам, моделям и интерфейсам проекта (разбор тела HTTP-запроса или преобразование protobuf-модели к внутренней), а также сериализацией ответа. Сама же логика работы сервиса должна оставаться в действиях.</p>
-
 <p>Таким образом, действие не должно знать откуда его вызвали и как были получены аргументы этого вызова (пришли ли они через RabbitMQ или были переданы флагами командной строки). Соответственно функциональность сервиса собрана в пакете <code>action</code> и именно в нём и будем располагать функциональные тесты.</p>
-
 <p>Одной из ключевых особенностей функциональных тестов является то, что они должны относится к действиям как чёрным ящикам. Для того, чтобы избежать соблазна обратиться к приватным функциям или методам, отделим тесты в отдельный пакет. В Go для этого не нужно создавать отдельную папку, достаточно в заголовке файла теста прописать другое имя пакета:</p>
-<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#080;font-weight:bold">package</span> action_test</code></pre></div>
-<p>Кроме того, можно одновременно в пакете держать и юнит-тесты, которые будут относится к пакету <code>action</code> и иметь доступ к приватным полям и методам. Например, пусть у нас есть действие <code>Login</code>, расположенное в файле <code>login.go</code>, тогда юнит тесты можно расположить в файле <code>login_unit_test.go</code>, оставив заголовком</p>
-<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#080;font-weight:bold">package</span> action</code></pre></div>
-<p>а функциональные тесты положить в файл <code>login_func_test.go</code>, назвав пакет с суффиксом <code>_test</code>. Тогда пакет действий будет внешним по отношению к функциональным тестам и его надо импортировать аналогично тому, как это делается в сервисах:</p>
-<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#080;font-weight:bold">import</span> (
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#080;font-weight:bold">package</span> action_test
+</code></pre></div><p>Кроме того, можно одновременно в пакете держать и юнит-тесты, которые будут относится к пакету <code>action</code> и иметь доступ к приватным полям и методам. Например, пусть у нас есть действие <code>Login</code>, расположенное в файле <code>login.go</code>, тогда юнит тесты можно расположить в файле <code>login_unit_test.go</code>, оставив заголовком</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#080;font-weight:bold">package</span> action
+</code></pre></div><p>а функциональные тесты положить в файл <code>login_func_test.go</code>, назвав пакет с суффиксом <code>_test</code>. Тогда пакет действий будет внешним по отношению к функциональным тестам и его надо импортировать аналогично тому, как это делается в сервисах:</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#080;font-weight:bold">import</span> (
     <span style="background-color:#fff0f0">&#34;testing&#34;</span>
 
     <span style="background-color:#fff0f0">&#34;path/to/project/internal/action&#34;</span>
@@ -345,11 +330,10 @@ if (!doNotTrack) {
 
 <span style="color:#080;font-weight:bold">func</span> <span style="color:#06b;font-weight:bold">TestLogin</span>(t <span style="color:#333">*</span>testing.T) {
     action.<span style="color:#06b;font-weight:bold">Login</span>(<span style="color:#333">...</span>)
-}</code></pre></div>
-<h2 id="di-зависимости-и-моки">DI. Зависимости и моки</h2>
-
+}
+</code></pre></div><h2 id="di-зависимости-и-моки">DI. Зависимости и моки</h2>
 <p>Как упоминалось в предыдущих статьях, все внешние зависимости и побочные эффекты действий должны передаваться с помощью контейнера зависимостей <code>DIContainer</code>, интерфейс которого описывается в пакете <code>action</code>. Например,</p>
-<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#888">// di_container.go
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#888">// di_container.go
 </span><span style="color:#888"></span><span style="color:#080;font-weight:bold">package</span> action
 
 <span style="color:#080;font-weight:bold">import</span> (
@@ -380,18 +364,16 @@ if (!doNotTrack) {
     <span style="color:#06b;font-weight:bold">GetByID</span>(ctx context.Context, id <span style="color:#339;font-weight:bold">string</span>) (model.User, <span style="color:#339;font-weight:bold">error</span>)
     <span style="color:#06b;font-weight:bold">GetByEmail</span>(ctx context.Context, email <span style="color:#339;font-weight:bold">string</span>) (model.User, <span style="color:#339;font-weight:bold">error</span>)
     <span style="color:#888">// ...
-</span><span style="color:#888"></span>}</code></pre></div>
-<p>Добавим комментарии для автоматической генерации моков:</p>
-<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#888">//go:generate mkdir -p mock
-</span><span style="color:#888"></span><span style="color:#333">//</span><span style="color:#080;font-weight:bold">go</span>:generate minimock <span style="color:#333">-</span>o .<span style="color:#333">/</span>mock<span style="color:#333">/</span> <span style="color:#333">-</span>s .<span style="color:#080;font-weight:bold">go</span> <span style="color:#333">-</span>g</code></pre></div>
-<p>В большинстве рабочих проектов я использовал <a href="https://github.com/golang/mock">gomock</a> для генерации моков, но последнее время стал переходить на <a href="https://github.com/gojuno/minimock">minimock</a> в связи с тем, что код для работы с моками оказывается куда лаконичнее.</p>
-
+</span><span style="color:#888"></span>}
+</code></pre></div><p>Добавим комментарии для автоматической генерации моков:</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#888">//go:generate mkdir -p mock
+</span><span style="color:#888">//go:generate minimock -o ./mock/ -s .go -g
+</span></code></pre></div><p>В большинстве рабочих проектов я использовал <a href="https://github.com/golang/mock">gomock</a> для генерации моков, но последнее время стал переходить на <a href="https://github.com/gojuno/minimock">minimock</a> в связи с тем, что код для работы с моками оказывается куда лаконичнее.</p>
 <p>После этого выполним команду генерации</p>
-<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ go generate path/to/project/internal/action</code></pre></div>
-<p>что должно создать подпакет <code>mock</code> в пакете действий, где будут расположены моки для всех интерфейсов пакета действий.</p>
-
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ go generate path/to/project/internal/action
+</code></pre></div><p>что должно создать подпакет <code>mock</code> в пакете действий, где будут расположены моки для всех интерфейсов пакета действий.</p>
 <p>Далее в тестах моки можно использовать очень просто:</p>
-<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#080;font-weight:bold">import</span> (
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#080;font-weight:bold">import</span> (
     <span style="color:#888">//...
 </span><span style="color:#888"></span>    <span style="background-color:#fff0f0">&#34;path/to/project/internal/action/mock&#34;</span>
 
@@ -433,30 +415,21 @@ if (!doNotTrack) {
     di.GetTxManagerMock.<span style="color:#06b;font-weight:bold">Return</span>(txManager)
 
     <span style="color:#080;font-weight:bold">return</span> di
-}</code></pre></div>
-<p>Подробнее в документации к проекту <a href="https://github.com/gojuno/minimock">minimock</a>.</p>
-
+}
+</code></pre></div><p>Подробнее в документации к проекту <a href="https://github.com/gojuno/minimock">minimock</a>.</p>
 <h2 id="golden-файлы">Golden-файлы</h2>
-
 <p>Частой оказывается ситуация, когда результат действия достаточно большой или действие имеет множество побочных эффектов: изменения в бд, отправленные сообщения в очереди, изменения в кеше и так далее. На каждое изменение можно написать проверку в коде теста. Однако, код самого теста при этом сильно разрастается и его становится тяжело читать. Если в модульных тестах это говорит о проблеме архитектуры, ведь каждый отдельный метод должен иметь очень ограниченный набор изменений, то говоря о функциональных тестах, набор изменений производимый действием в большей степени определяется бизнес-задачей и не может быть изменён (хотя, если действие влияет на слишком большой набор внешних систем, то возможно стоит пересмотреть архитектуру системы).</p>
-
 <p>Рассмотрим действие, которое составляет отчёт по покупкам в интернет магазине. Пусть, к примеру, в отчёте должны выводиться товары, купленные за указанный период в порядке уменьшения доходности. Возможны различные краевые условия, которые могут повлиять на этот отчёт: размер скидки, цена доставки и многое другое. Если мы захотим протестировать все возможные варианты небольшими тестами, разбирающими, конкретный случай, количество тест-кейсов будет расти комбинаторно новым требованиям. Например, надо сделать тест, в котором будет товар со скидкой, а также товар со скидкой и дорогой доставкой. С другой стороны, можно написать тест, который покроет сразу все комбинации, то есть в отчётном периоде будет и товар со скидкой, и с дорогой доставкой, и товар со скидкой и доставкой враз. Но получившийся отчёт будет сложно проверить программно. По сути программа для проверки корректности отчёта будет дублировать логику его составления.</p>
-
 <p>Для решения этой задачи есть подход, называемый golden-файлы. Это текстовые файлы (могут быть и бинарные, но для бэкенда это редкость), в которых содержится референсный результат выполнения тестируемой функции. Тесты, использующие golden-файлы имеют 2 режима:</p>
-
 <ul>
 <li>создание/обновление golden-файлов;</li>
 <li>сравнение с golden-файлами.</li>
 </ul>
-
 <p>Можно просто положить рядом с тестом текстовый файл, содержащий отчёт, например, в формате json. А в коде теста сравнить результат выполнения действия с данными из файла. Код такого теста будет достаточно короткий и понятный. А корректность отчёта нужно будет проверить вручную один раз, зато потом тест будет выполняться автоматически вплоть до того момента, пока не изменятся бизнес-требования к тестируемому действию. А в тот момент, когда изменятся требования, например, нам надо будет убрать из отчёта возвращённые товары. В этот момент нам надо будет переделать код составления отчёта, после чего запустить тест в режиме обновления golden-файлов, и вручную проверить получившийся результат.</p>
-
 <p>Также изменения в golden-файлах будут видны на код-ревью, ведь эти файлы сохраняются в репозиторий также как код самих тестов, а соответственно при их изменении ревьювер увидит что и как в них изменилось.</p>
-
 <p>Для облегчения работы с golden-файлами в Go есть библиотека <a href="https://godoc.org/gotest.tools/golden">gotest.tools/golden</a>, с помощью которой легко сравнивать и обновлять содержимое golden-файлов.</p>
-
 <p>Большой головной болью при тестировании с помощью golden-файлов являются сайд-эффекты, например, если бы наш отчёт содержал дату и время своего формирования, то они бы изменялись при каждом запуске. Именно поэтому все сайд-эффекты должны быть вынесены из действий как зависимости. Например, удобно использовать библиотеку для подмены часов <a href="https://github.com/jonboulle/clockwork">github.com/jonboulle/clockwork</a>, а также не использовать глобальные генераторы случайных чисел. Например, если отчёт должен иметь уникальный идентификатор (UUID), то лучше добавить в контейнер зависимостей генератор идентификаторов:</p>
-<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#080;font-weight:bold">import</span> (
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#080;font-weight:bold">import</span> (
     <span style="color:#888">// ...
 </span><span style="color:#888"></span>    <span style="background-color:#fff0f0">&#34;github.com/gofrs/uuid&#34;</span>
 )
@@ -464,11 +437,10 @@ if (!doNotTrack) {
 <span style="color:#080;font-weight:bold">type</span> DIContainer <span style="color:#080;font-weight:bold">interface</span> {
     <span style="color:#888">// ...
 </span><span style="color:#888"></span>    <span style="color:#06b;font-weight:bold">GetUUIDGenerator</span>() <span style="color:#333">*</span>uuid.Generator
-}</code></pre></div>
-<h2 id="сюита-собираем-всё-вместе">Сюита. Собираем всё вместе</h2>
-
+}
+</code></pre></div><h2 id="сюита-собираем-всё-вместе">Сюита. Собираем всё вместе</h2>
 <p>Итак, функциональный тест обрастает вспомогательным кодом по подготовке моков, по сравнению с референсным выводом. В рамках одной функции всё это будет читаться достаточно тяжело. Кроме того, возможно для некоторых тестов подойдут одни и те же моки, так что хорошо бы их сделать переиспользуемыми. В этом случае оказывается удобно объединить несколько тестов и вспомогательные методы в один класс, так называемую тестовую сюиту. Для этого отлично подходит пакет <a href="https://godoc.org/github.com/stretchr/testify/suite">github.com/stretchr/testify/suite</a>, предоставляющий базовый объект сюиты, который можно расширять под собственные нужды. Тогда тест может выглядеть примерно следующим образом:</p>
-<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#080;font-weight:bold">package</span> action_test
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#080;font-weight:bold">package</span> action_test
 
 <span style="color:#080;font-weight:bold">import</span> (
     <span style="background-color:#fff0f0">&#34;context&#34;</span>
@@ -522,13 +494,11 @@ if (!doNotTrack) {
 </span><span style="color:#888"></span>    di.GetUserRepositoryMock.<span style="color:#06b;font-weight:bold">Return</span>(userRepository)
 
     <span style="color:#080;font-weight:bold">return</span> di
-}</code></pre></div>
-<h2 id="вспомогательные-методы-и-базовая-сюита">Вспомогательные методы и базовая сюита</h2>
-
+}
+</code></pre></div><h2 id="вспомогательные-методы-и-базовая-сюита">Вспомогательные методы и базовая сюита</h2>
 <p>Многие вспомогательные методы повторяются из теста в тест, например, подготовка логера. С одной стороны можно просто возвращать NopLogger, который просто не пишет логи никуда, с другой стороны может оказаться полезным увидеть логи упавшего сервиса, так что обычно я создаю логер, который пишет в буфер, а в функции <code>TearDownTest</code> я добавляю проверку прошёл тест или нет и, если не прошёл, вывожу буфер на экран.</p>
-
 <p>Также удобно строить моки различных репозиториев сущностей поверх json-файлов со списком этих самых сущностей. Так что метод десериализовать данные из файла на входной объект также используется в подавляющем большинстве тестов. Такие методы можно вынести в базовый класс сюиты, а сюиты тестов наследовать уже от неё:</p>
-<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#888">// base_suite_test.go
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#888">// base_suite_test.go
 </span><span style="color:#888"></span><span style="color:#080;font-weight:bold">package</span> action_test
 
 
@@ -580,9 +550,8 @@ if (!doNotTrack) {
 <span style="color:#080;font-weight:bold">func</span> (s <span style="color:#333">*</span>BaseSuite) <span style="color:#06b;font-weight:bold">UnmarshalFile</span>(v <span style="color:#080;font-weight:bold">interface</span>{}, path <span style="color:#333">...</span><span style="color:#339;font-weight:bold">string</span>) {
     buf <span style="color:#333">:=</span> golden.<span style="color:#06b;font-weight:bold">Get</span>(s.<span style="color:#06b;font-weight:bold">T</span>(), filepath.<span style="color:#06b;font-weight:bold">Join</span>(path<span style="color:#333">...</span>))
     s.<span style="color:#06b;font-weight:bold">Require</span>().<span style="color:#06b;font-weight:bold">NoError</span>(json.<span style="color:#06b;font-weight:bold">Unmarshal</span>(data, v))
-}</code></pre></div>
-<h2 id="выводы">Выводы</h2>
-
+}
+</code></pre></div><h2 id="выводы">Выводы</h2>
 <p>Разобравшись в предложенных инструментах и подходах, а также подготовив базовую сюиту, написание функционального теста на написанное действие займёт всего несколько минут, но повысит уверенность в собственном коде, а также даст поддержку при внесении изменений в будущем.</p>
 
 </div>
@@ -594,7 +563,7 @@ if (!doNotTrack) {
   <path d="M22,19a2,2,0,0,1-2,2H4a2,2,0,0,1-2-2V5A2,2,0,0,1,4,3H9l2,3h9a2,2,0,0,1,2,2Z"/>
   
 </svg>
-<span class='screen-reader-text'>category: </span><a class='category' href='/categories/develop/'>Разработка</a></div>
+<span class='screen-reader-text'>Категории: </span><a class='category' href='/categories/develop/'>Разработка</a></div>
 <div class='tags'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
   
   <path d="M20.59,13.41l-7.17,7.17a2,2,0,0,1-2.83,0L2,12V2H12l8.59,8.59A2,2,0,0,1,20.59,13.41Z"/>
@@ -640,7 +609,7 @@ if (!doNotTrack) {
 
       <footer id='footer' class='footer'>
         <div class='container sep-before'><div class='copyright'>
-  <p>Материалы распространяются по <a rel="noreferrer" href="https://creativecommons.org/licenses/by/4.0/" target="_blank">лицензии CC BY</a> &copy; 2018-2021 vporoshok <br>Увидели ошибку? Буду рад <a rel="noreferrer" href="https://github.com/vporoshok/vporoshok.github.io" target="_blank">PR&rsquo;у</a></p>
+  <p>Материалы распространяются по <!-- raw HTML omitted -->лицензии CC BY<!-- raw HTML omitted --> &copy; 2018-2021 vporoshok <!-- raw HTML omitted -->Увидели ошибку? Буду рад <!-- raw HTML omitted -->PR&rsquo;у<!-- raw HTML omitted --></p>
 </div>
 
         </div>

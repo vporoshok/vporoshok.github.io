@@ -11,9 +11,9 @@
  ⚠️Внимание!Всё описанное является сугубо моим мнением, основанным на некотором количестве боли, испытываемой в работе, особенно с циклическими импортами.'>
 <meta property='og:url' content='https://vporoshok.me/post/2018/04/clean-architect/'>
 <meta property='og:site_name' content='Где-то на дальнем сервере'>
-<meta property='og:type' content='article'><meta property='og:image' content='https://vporoshok.me/post/2018/04/img/architect.jpg'><meta property='article:section' content='post'><meta property='article:tag' content='go'><meta property='article:tag' content='architect'><meta property='article:tag' content='microservices'><meta property='article:published_time' content='2018-04-15T14:14:40Z'/><meta property='article:modified_time' content='2020-07-04T13:36:24&#43;04:00'/><meta name='twitter:card' content='summary_large_image'><meta property='twitter:image' content='https://vporoshok.me/post/2018/04/img/architect.jpg'><meta property='twitter:image:alt' content='“Set squares and a protractor on an architectural drawing” by Sergey Zolkin on Unsplash'>
+<meta property='og:type' content='article'><meta property='og:image' content='https://vporoshok.me/post/2018/04/img/architect.jpg'><meta property='article:section' content='post'><meta property='article:tag' content='go'><meta property='article:tag' content='architect'><meta property='article:tag' content='microservices'><meta property='article:published_time' content='2018-04-15T14:14:40Z'/><meta property='article:modified_time' content='2021-10-01T18:45:33&#43;04:00'/><meta name='twitter:card' content='summary_large_image'><meta property='twitter:image' content='https://vporoshok.me/post/2018/04/img/architect.jpg'><meta property='twitter:image:alt' content='“Set squares and a protractor on an architectural drawing” by Sergey Zolkin on Unsplash'>
 
-<meta name="generator" content="Hugo 0.57.2" />
+<meta name="generator" content="Hugo 0.88.1" />
 
   <title>Чистая архитектура на Go • Где-то на дальнем сервере</title>
   <link rel='canonical' href='https://vporoshok.me/post/2018/04/clean-architect/'>
@@ -221,8 +221,8 @@ if (!doNotTrack) {
 </svg>
 </span>
 </button>
-    <ul><li class='item'>
-        <a href='/post/'>Блог</a>
+    <ul><li class='item current'>
+        <a aria-current='page' href='/post/'>Блог</a>
       </li><li class='item'>
         <a href='/page/about/'>Обо мне</a>
       </li></ul>
@@ -300,81 +300,56 @@ if (!doNotTrack) {
     <span>Оглавление</span>
   </summary>
   <nav id="TableOfContents">
-<ul>
-<li>
-<ul>
-<li><a href="#tl-dr">TL;DR</a></li>
-<li><a href="#что-же-такое-чистая-архитектура">Что же такое чистая архитектура?</a></li>
-<li><a href="#терминология">Терминология</a></li>
-<li><a href="#модель">Модель</a></li>
-<li><a href="#подключение">Подключение</a></li>
-<li><a href="#адаптер">Адаптер</a></li>
-<li><a href="#действие">Действие</a></li>
-<li><a href="#сервисы">Сервисы</a></li>
-<li><a href="#протомонолит">Протомонолит</a></li>
-<li><a href="#на-почитать">На почитать</a></li>
-<li><a href="#update-19-05-18">Update 19.05.18</a></li>
-</ul></li>
-</ul>
+  <ul>
+    <li><a href="#tldr">TL;DR</a></li>
+    <li><a href="#что-же-такое-чистая-архитектура">Что же такое чистая архитектура?</a></li>
+    <li><a href="#терминология">Терминология</a></li>
+    <li><a href="#модель">Модель</a></li>
+    <li><a href="#подключение">Подключение</a></li>
+    <li><a href="#адаптер">Адаптер</a></li>
+    <li><a href="#действие">Действие</a></li>
+    <li><a href="#сервисы">Сервисы</a></li>
+    <li><a href="#протомонолит">Протомонолит</a></li>
+    <li><a href="#на-почитать">На почитать</a></li>
+    <li><a href="#update-190518">Update 19.05.18</a></li>
+  </ul>
 </nav>
 </details>
 
 
   <div class='container entry-content'>
-  
-
-<p>О том, что такое чистая архитектура можно почитать в <a href="https://8thlight.com/blog/uncle-bob/2012/08/13/the-clean-architecture.html">оригинале</a>, а также в <a href="https://habrahabr.ru/post/269589/">переводе</a>. Кроме того на том же хабре есть переводы статей о переложении этого подхода на Go: <a href="https://habrahabr.ru/post/269893/">раз</a>, <a href="https://habrahabr.ru/post/270351/">два</a> и <a href="https://habrahabr.ru/post/271157/">три</a>. Но все это разбивается о реальную жизнь, транзакции, переиспользование кода, протомонолит и прочие проблемы. Но обо всём по порядку.</p>
-
+  <p>О том, что такое чистая архитектура можно почитать в <a href="https://8thlight.com/blog/uncle-bob/2012/08/13/the-clean-architecture.html">оригинале</a>, а также в <a href="https://habrahabr.ru/post/269589/">переводе</a>. Кроме того на том же хабре есть переводы статей о переложении этого подхода на Go: <a href="https://habrahabr.ru/post/269893/">раз</a>, <a href="https://habrahabr.ru/post/270351/">два</a> и <a href="https://habrahabr.ru/post/271157/">три</a>. Но все это разбивается о реальную жизнь, транзакции, переиспользование кода, протомонолит и прочие проблемы. Но обо всём по порядку.</p>
 <aside class="admonition">
     <h4>
         <span class="admonition-icon">⚠️</span>Внимание!</h4>Всё описанное является сугубо моим мнением, основанным на некотором количестве боли, испытываемой в работе, особенно с циклическими импортами. При использовании этого подхода придётся писать очень много шаблонного кода, который особо даже и не сгенерируешь.</aside>
 
-
-<h2 id="tl-dr">TL;DR</h2>
-
-<figure>
-    <img src="/post/2018/04/img/clean_architect.svg"/> <figcaption>
+<h2 id="tldr">TL;DR</h2>
+<figure><img src="/post/2018/04/img/clean_architect.svg"/><figcaption>
             <h4>Вся статья в одной картинке</h4>
         </figcaption>
 </figure>
 
-
 <h2 id="что-же-такое-чистая-архитектура">Что же такое чистая архитектура?</h2>
-
 <p>Роберт Мартин предлагает ввести 4 круга абстракций, что иллюстрирует следующая картинка:
-<figure>
-    <img src="/post/2018/04/img/clean_architect_orig.jpeg"/> <figcaption>
+<figure><img src="/post/2018/04/img/clean_architect_orig.jpeg"/><figcaption>
             <h4>Оригинальная архитектура, предложенная Р. Мартином</h4>
         </figcaption>
 </figure>
 </p>
-
 <p>Здесь <strong>сущности</strong> это непосредственно объекты системы, причём это те объекты и та их логика, которая не специфична для данного сервиса. Это базовые бизнес-объекты, логика которых совершенно никак не зависит от используемой базы данных или того в каком виде они попали к нам от клиентов.</p>
-
 <p><strong>Сценарии</strong> (в оригинале Use cases) это самая интересная часть. Бизнес-логика сервиса. Любое взаимодействие с сервисом это сценарий.</p>
-
 <p><strong>Интерфейсы-адапторы</strong> — вот тут отчего-то «всё смешалось в доме Облонских». В один слой попадают как внешние зависимости нашего сервиса, так и его собственный интерфейс.</p>
-
 <p>И последний неожиданный слой это <strong>Драйвера</strong>. Почему они заслужили целого слоя вопрос отдельный, почему это самый внешний слой и эти драйвера должны знать про все внутренности нашего приложения тоже совершенно непонятно.</p>
-
 <h2 id="терминология">Терминология</h2>
-
 <p>Сущности будут появляться практически на всех слоях нашего приложения, поэтому для самого внутреннего слоя будем использовать более привычное слово <strong>Модель</strong>. Сценарии назовём <strong>Действиями</strong>. Также давайте сразу узаконим название <strong>Адаптер</strong> не в смысле шаблона проектирования, а в виде обёртки над внешней системой. То есть по факту адаптер скорее является фасадом с точки зрения шаблонов проектирования. Ну, и, конечно, адаптер это своего рода прокси, не хранящее состояние или подключение. Для хранения подключения будем использовать собственно слово <strong>Подключение</strong>. Наконец добавим новую абстракцию: <strong>Сервис</strong>, которая и будет связывать все эти подключения, адаптеры, модели и действия, а заодно реализовывать некий внешний интерфейс. Ну, а теперь подробнее про каждую абстракцию.</p>
-
 <h2 id="модель">Модель</h2>
-
 <p>Как уже было сказано выше, модели это абстрактные объекты нашей системы. Они не имеют знаний о том откуда и каким образом их создали, а также куда и каким образом отправят. Здесь должны устанавливаться связи между ними, а также те методы, которые не зависят от внешних систем. Например, модель пользователя может иметь метод формирования ФИО, но с одной оговоркой, формат должен прийти извне, ведь настройки формирования ФИО зависят от настроек системы, а модель пользователя о них не имеет ни малешйего представления.</p>
-
 <p>У модели может быть метод валидации или аннотации, связанные с этим, однако, если часть валидации требует внешних сервисов, то это уже будет действие.</p>
-
 <p>У модели не должно быть никаких методов или аннотаций, относящихся к её хранению в базе данных или (де-)сериализации. Я ведь предупреждал, что придётся писать много кода? Так вот, модели надо будет сериализовать, используя промежуточные объекты. Используя другие промежуточные объекты, модели надо будет класть в базу данных. И так далее. По сути, использование самой модели для этих целей делает систему менее гибкой, ведь при формировании промежуточного объекта, мы можем воспользоваться методами (геттерами и сеттерами) модели наравне со свойствами, а также определять ту часть модели, которую нужно сериализовать.</p>
-
 <h2 id="подключение">Подключение</h2>
-
 <p>Подключения ещё одна абстракция, независящая от других уровней нашей системы. По сути и чаще всего это просто открытый TCP-socket. Подключение может содержать логику переподключения или балансировки, но знаний о бизнес-логике приложения оно не имеет.</p>
-
 <p>Иногда необходимо обернуть часть логики транзакцией, при этом не хочется выставлять наружу кишки реализации, ведь если мы изменим базу данных, нам придётся менять все места с транзакциями. Для изоляции транзакции воспользуемся контекстом вызова. По сути нам необходимо реализовать 2 метода:</p>
-<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#080;font-weight:bold">package</span> connection
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#080;font-weight:bold">package</span> connection
 
 <span style="color:#080;font-weight:bold">import</span> (
 	<span style="background-color:#fff0f0">&#34;context&#34;</span>
@@ -426,37 +401,25 @@ if (!doNotTrack) {
 
 		<span style="color:#080;font-weight:bold">return</span> errors.<span style="color:#06b;font-weight:bold">WithStack</span>(<span style="color:#06b;font-weight:bold">fn</span>(ctx, tx))
 	})
-}</code></pre></div>
-<p>Два метода для двух разных уровней абстракций: <code>WithTx</code> для действия и <code>ExtractTx</code> для адаптера. Таким образом действие не знает ничего о том, что за транзакция используется под капотом, а адаптер получает транзакцию вне зависимости от того, инициализирована ли она в контроллере или нет.</p>
-
+}
+</code></pre></div><p>Два метода для двух разных уровней абстракций: <code>WithTx</code> для действия и <code>ExtractTx</code> для адаптера. Таким образом действие не знает ничего о том, что за транзакция используется под капотом, а адаптер получает транзакцию вне зависимости от того, инициализирована ли она в контроллере или нет.</p>
 <h2 id="адаптер">Адаптер</h2>
-
 <p>Адаптер это следующий уровень абстракции, который знает всё про модели (они являются частью его интерфейса) и про подключение. При этом подключение можно подключать по интерфейсу, если вдруг захочется тестировать с моками, но, если уж дело дошло до тестирования адаптера, то лучше делать интеграционное тестирование без всяких подмен, а на реальной базе данных. А при учёте того, что подключения ничего не импортируют из остальной части нашего приложения, проблем с циклическими импортами не будет.</p>
-
 <p>На уровне адаптеров появляются промежуточные сущности для сохранения и извлечения моделей из баз данных, очередей или других сервисов. Ну, и соответственно перекладывание туда-обратно. Зато отсутствие нагромождений структурных тэгов, а также методов <code>Marshal…</code>, <code>Unmarshal…</code>, <code>Scan</code> и <code>Value</code>.</p>
-
 <p>Адаптеры удобно группировать по сущностям и обязанностям, например, репозитории сущностей (<code>UserRepository</code>) или подписчик на очередь событий (<code>EventNotifier</code>). По сути это должны быть обёртки над подключениями, такие, что имея подключение, можно легко сконструировать новый адаптер.</p>
-
 <h2 id="действие">Действие</h2>
-
 <p>Действие это самая сложная часть нашей системы. Это средоточие бизнес-логики нашего сервиса. Всё что делает наш сервис должно проходить через действие.</p>
-
 <p>Действие, конечно, знает всё про модели, ведь оно оперирует именно ими. А вот адаптеры оно знает только по интерфейсам. Конечно, знание непосредственно адаптеров не приведёт к циклическим импортам, однако, сделает невозможным юнит-тестирование, а также это ненужное повышение связности.</p>
-
 <p>Первое правило, которого необходимо придерживаться:</p>
-
 <blockquote>
 <p>1 действие = 1 задача</p>
 </blockquote>
-
 <p>То есть у действия должен быть только один публичный метод: <code>Do</code>. Как бы ни хотелось объединить несколько действий в одно, это не приведёт ни к чему хорошему и явно нарушит второе правило:</p>
-
 <blockquote>
 <p>Каждому по потребностям</p>
 </blockquote>
-
 <p>Действие должно требовать на уровне своего конструктора все необходимые ему адаптеры и сервисы по интерфейсу. При этом интерфейсы адаптеров должны лежать рядом с действиями, а имплементации в пакете адаптеров. Это не обязательно, но для гарантии того, что действие создаётся через конструктор, я предпочитаю объявлять действие тоже как интерфейс, а имплементацию делать приватной.</p>
-<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#080;font-weight:bold">package</span> action
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#080;font-weight:bold">package</span> action
 
 <span style="color:#080;font-weight:bold">import</span> (
 	<span style="background-color:#fff0f0">&#34;context&#34;</span>
@@ -484,9 +447,9 @@ if (!doNotTrack) {
 <span style="color:#888">// EventBus provide methods to event mediator bus
 </span><span style="color:#888"></span><span style="color:#080;font-weight:bold">type</span> EventBus <span style="color:#080;font-weight:bold">interface</span> {
 	<span style="color:#06b;font-weight:bold">Send</span>(context.Context, <span style="color:#333">*</span>model.Event) <span style="color:#339;font-weight:bold">error</span>
-}</code></pre></div>
-<hr />
-<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#080;font-weight:bold">package</span> action
+}
+</code></pre></div><hr>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#080;font-weight:bold">package</span> action
 
 <span style="color:#080;font-weight:bold">import</span> (
 	<span style="background-color:#fff0f0">&#34;context&#34;</span>
@@ -519,47 +482,30 @@ if (!doNotTrack) {
 
 <span style="color:#080;font-weight:bold">func</span> (cu <span style="color:#333">*</span>createUser) <span style="color:#06b;font-weight:bold">Do</span>(ctx context.Context, email <span style="color:#339;font-weight:bold">string</span>, password <span style="color:#339;font-weight:bold">string</span>) (<span style="color:#333">*</span>model.User, <span style="color:#339;font-weight:bold">error</span>) {
 	<span style="color:#888">// Тут собственно вся логика создания
-</span><span style="color:#888"></span>}</code></pre></div>
-<p>На первый взгляд может показаться монструозно, зато такое действие легко тестировать и переиспользовать. Действия могут использовать друг друга.</p>
-
+</span><span style="color:#888"></span>}
+</code></pre></div><p>На первый взгляд может показаться монструозно, зато такое действие легко тестировать и переиспользовать. Действия могут использовать друг друга.</p>
 <h2 id="сервисы">Сервисы</h2>
-
 <p>На этом уровне у меня тоже происходит смешение понятий, однако, не таких уж и далёких.</p>
-
 <p>Итак, в первую очередь сервисы это объекты, оркестрирующие подключения, адаптеры, действия и модели. То есть именно сервис на своём уровне хранит указатели на подключения. На основе этих подключений создаёт адаптеры, на основе адаптеров создаёт действия и выполняет. Также сервис предоставляет внешний интерфейс, например, HTTP или gRPC. Кроме того, сервис имеет сущности запросов и ответов, преобразовывает их в модели и обратно, сериализуя и десериализуя, а также валидируя. По факту это самая рутинная часть кода.</p>
-
 <p>Наше приложение может содержать несколько сервисов, предоставляя, например, gRPC интерфейс для бизнес-логики, а также HTTP интерфейс для сбора метрик и мониторинга состояния. Конечно, это должны быть два отдельных сервиса. Они могут использовать один и тот же пул подключений к общим сервисам сервису и разный набор других подключений.</p>
-
 <p>— Но подожди, — воскликните вы, — а как же общее состояние? Кеш, локи и прочее?</p>
-
 <p>Ваша правда, порой приходится иметь общее состояние между различными интерфейсами в рамках одного приложения. Ок, тут у нас появляется новая сущность: <em>Состояние</em>. По всем характеристикам состояние ведёт себя как подключение, вплоть до того, что возможно над ним нужно писать адаптер. Таким образом это общее состояние превращается в некий абстрактный сервис со своим интерфейсом. Например, сервис открытых клиентских подключений или сервис запланированных задач.</p>
-
 <h2 id="протомонолит">Протомонолит</h2>
-
 <p>Когда только начинаешь писать приложение боишься слишком сильно дробить его на микросервисы, потому что чаще всего не понимаешь какие его части окажутся сильно связные, а какие вообще не будут пересекаться. Тогда начинаешь писать изначальный монолит. Конечно, в надежде потом разделить его на несколько микросервисов. Поэтому хочется сразу выделить слабосвязанные контексты хотя бы на уровне подпакетов. И весь этот монолит живёт вполне хорошо, пока вдруг не появляется необходимость обратиться из одного контекста в другой. И тут надо ответить себе на 1 вопрос:</p>
-
 <blockquote>
 <p>Могут ли быть эти два контекста разнесены в разные сервисы или нет?</p>
 </blockquote>
-
 <p>Если не могут, например, ни жить ни быть нужна сквозная транзакция (может быть всё-таки не нужна?), то делать нечего, надо объединять эти контексты в один или дублировать часть функционала между ними.</p>
-
 <p>Если же контексты можно оставить слабосвязанными, тогда делаем над нашим пакетом ещё один сервис. Внутренний сервис, который может быть подключен как зависимость другого контекста. То есть не должно быть никаких перекрёстных импортов между контекстами. Контекст отдаёт наружу 2 сервиса: для внешнего API и для внутреннего использования. На уровне объединяющего в монолит сервиса внутренний сервис передаётся в инициализацию другим сервисам по интерфейсу, на манер подключения. Таким образом в дальнейшем мы сможем отделить любой из контекстов в микросервис, оставив на его месте только клиент, и всё продолжить работать.</p>
-
 <h2 id="на-почитать">На почитать</h2>
-
 <ul>
 <li><a href="https://www.piter.com/collection/all/product/chistaya-arhitektura-iskusstvo-razrabotki-programmnogo-obespecheniya">https://www.piter.com/collection/all/product/chistaya-arhitektura-iskusstvo-razrabotki-programmnogo-obespecheniya</a></li>
 <li><a href="https://habrahabr.ru/post/269589/">https://habrahabr.ru/post/269589/</a></li>
 <li><a href="https://github.com/golang-standards/project-layout">https://github.com/golang-standards/project-layout</a></li>
 </ul>
-
 <p><strong>PS.</strong> Так уж получилось, что сегодня не про ангуляр, но накопилось.</p>
-
-<h2 id="update-19-05-18">Update 19.05.18</h2>
-
+<h2 id="update-190518">Update 19.05.18</h2>
 <p>В первоначальной версии статьи я предлагал называть действия <em>контроллерами</em>, что не очень стыковалось с тем фактом, что они должны имплементировать только один метод <code>Do</code>. Так что переименовал их в действия.</p>
-
 <p>Также я предлагал создавать интерфейсы адаптеров для каждого действия (отсюда и <em>Каждому по потребностям</em>). Однако, это хорошо работает не во всех языках, в том же Python такой фокус не пройдёт. Так что это требование ослабилось до объявления интерфейсов в пакете действий (нагло взято из <a href="https://habr.com/post/344164/">луковой архитектуры</a>)</p>
 
 </div>
@@ -571,7 +517,7 @@ if (!doNotTrack) {
   <path d="M22,19a2,2,0,0,1-2,2H4a2,2,0,0,1-2-2V5A2,2,0,0,1,4,3H9l2,3h9a2,2,0,0,1,2,2Z"/>
   
 </svg>
-<span class='screen-reader-text'>category: </span><a class='category' href='/categories/develop/'>Разработка</a></div>
+<span class='screen-reader-text'>Категории: </span><a class='category' href='/categories/develop/'>Разработка</a></div>
 <div class='tags'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
   
   <path d="M20.59,13.41l-7.17,7.17a2,2,0,0,1-2.83,0L2,12V2H12l8.59,8.59A2,2,0,0,1,20.59,13.41Z"/>
@@ -617,7 +563,7 @@ if (!doNotTrack) {
 
       <footer id='footer' class='footer'>
         <div class='container sep-before'><div class='copyright'>
-  <p>Материалы распространяются по <a rel="noreferrer" href="https://creativecommons.org/licenses/by/4.0/" target="_blank">лицензии CC BY</a> &copy; 2018-2021 vporoshok <br>Увидели ошибку? Буду рад <a rel="noreferrer" href="https://github.com/vporoshok/vporoshok.github.io" target="_blank">PR&rsquo;у</a></p>
+  <p>Материалы распространяются по <!-- raw HTML omitted -->лицензии CC BY<!-- raw HTML omitted --> &copy; 2018-2021 vporoshok <!-- raw HTML omitted -->Увидели ошибку? Буду рад <!-- raw HTML omitted -->PR&rsquo;у<!-- raw HTML omitted --></p>
 </div>
 
         </div>

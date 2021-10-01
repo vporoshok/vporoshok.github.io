@@ -1,16 +1,11 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Образ жизни on Где-то на дальнем сервере</title>
     <link>https://vporoshok.me/categories/life-style/</link>
     <description>Recent content in Образ жизни on Где-то на дальнем сервере</description>
     <generator>Hugo -- gohugo.io</generator>
-    <language>ru</language>
-    <lastBuildDate>Sun, 13 Oct 2019 10:21:26 +0000</lastBuildDate>
-    
-	<atom:link href="https://vporoshok.me/categories/life-style/index.xml" rel="self" type="application/rss+xml" />
-    
-    
+    <language>ru</language><atom:link href="https://vporoshok.me/categories/life-style/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Readme Driven Development</title>
       <link>https://vporoshok.me/post/2019/10/rdd/</link>

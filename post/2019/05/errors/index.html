@@ -9,9 +9,9 @@
 <meta property='og:description' content='Я стою у моря и ищу ответа, вижу исчезает призрачный твой след'>
 <meta property='og:url' content='https://vporoshok.me/post/2019/05/errors/'>
 <meta property='og:site_name' content='Где-то на дальнем сервере'>
-<meta property='og:type' content='article'><meta property='article:section' content='post'><meta property='article:tag' content='go'><meta property='article:tag' content='architect'><meta property='article:tag' content='tips and tricks'><meta property='article:published_time' content='2019-05-04T19:12:14Z'/><meta property='article:modified_time' content='2020-07-04T13:36:24&#43;04:00'/><meta name='twitter:card' content='summary'>
+<meta property='og:type' content='article'><meta property='article:section' content='post'><meta property='article:tag' content='go'><meta property='article:tag' content='architect'><meta property='article:tag' content='tips and tricks'><meta property='article:published_time' content='2019-05-04T19:12:14Z'/><meta property='article:modified_time' content='2021-10-01T18:45:33&#43;04:00'/><meta name='twitter:card' content='summary'>
 
-<meta name="generator" content="Hugo 0.57.2" />
+<meta name="generator" content="Hugo 0.88.1" />
 
   <title>Полезные приёмы по работе с ошибками в Go • Где-то на дальнем сервере</title>
   <link rel='canonical' href='https://vporoshok.me/post/2019/05/errors/'>
@@ -219,8 +219,8 @@ if (!doNotTrack) {
 </svg>
 </span>
 </button>
-    <ul><li class='item'>
-        <a href='/post/'>Блог</a>
+    <ul><li class='item current'>
+        <a aria-current='page' href='/post/'>Блог</a>
       </li><li class='item'>
         <a href='/page/about/'>Обо мне</a>
       </li></ul>
@@ -289,39 +289,31 @@ if (!doNotTrack) {
     <span>Оглавление</span>
   </summary>
   <nav id="TableOfContents">
-<ul>
-<li>
-<ul>
-<li><a href="#pkg-errors">pkg/errors</a>
-<ul>
-<li><a href="#разворачивание-ошибки">Разворачивание ошибки</a></li>
-</ul></li>
-<li><a href="#константные-ошибки">Константные ошибки</a></li>
-<li><a href="#передача-ошибок">Передача ошибок</a></li>
-<li><a href="#ошибка-с-данными">Ошибка с данными</a></li>
-<li><a href="#panic-recover">panic / recover</a></li>
-<li><a href="#ошибка-на-классе">Ошибка на классе</a></li>
-</ul></li>
-</ul>
+  <ul>
+    <li><a href="#pkgerrors">pkg/errors</a>
+      <ul>
+        <li><a href="#разворачивание-ошибки">Разворачивание ошибки</a></li>
+      </ul>
+    </li>
+    <li><a href="#константные-ошибки">Константные ошибки</a></li>
+    <li><a href="#передача-ошибок">Передача ошибок</a></li>
+    <li><a href="#ошибка-с-данными">Ошибка с данными</a></li>
+    <li><a href="#panic--recover">panic / recover</a></li>
+    <li><a href="#ошибка-на-классе">Ошибка на классе</a></li>
+  </ul>
 </nav>
 </details>
 
 
   <div class='container entry-content'>
-  
-
-<p>Язык Go поощряет использование возвращаемых ошибок, при этом не накладывая больших ограничений на то, что скрывается внутри самой ошибки. Несмотря на многословность, подобную практику можно выгодно использовать. Давайте посмотрим какие удобные способы работы есть с ошибками.</p>
-
-<h2 id="pkg-errors">pkg/errors</h2>
-
+  <p>Язык Go поощряет использование возвращаемых ошибок, при этом не накладывая больших ограничений на то, что скрывается внутри самой ошибки. Несмотря на многословность, подобную практику можно выгодно использовать. Давайте посмотрим какие удобные способы работы есть с ошибками.</p>
+<h2 id="pkgerrors">pkg/errors</h2>
 <p>Первое, что необходимо включить в свой проект, это библиотеку <a href="https://github.com/pkg/errors">github.com/pkg/errors</a>, которая позволяет быстро конструировать ошибки, а также добавлять контекст и, конечно, стек вызова. Лично у меня пальцы уже автоматом набирают</p>
-<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#080;font-weight:bold">return</span> errors.<span style="color:#06b;font-weight:bold">WithStack</span>(err)</code></pre></div>
-<p>Одной из ключевых особенностей ошибок, созданных с помощью пакета, является то, что у них есть метод <a href="https://godoc.org/github.com/pkg/errors#Cause"><code>Cause</code></a>, позволяющий получить первоначальную ошибку. Так что ниже по тексту будем также имплементировать необходимый интерфейс.</p>
-
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#080;font-weight:bold">return</span> errors.<span style="color:#06b;font-weight:bold">WithStack</span>(err)
+</code></pre></div><p>Одной из ключевых особенностей ошибок, созданных с помощью пакета, является то, что у них есть метод <a href="https://godoc.org/github.com/pkg/errors#Cause"><code>Cause</code></a>, позволяющий получить первоначальную ошибку. Так что ниже по тексту будем также имплементировать необходимый интерфейс.</p>
 <h3 id="разворачивание-ошибки">Разворачивание ошибки</h3>
-
 <p>Оборачивание ошибки удобно для получения контекста, но могут возникнуть сложности с получением промежуточного результата. В этом случае поможет небольшой хелпер:</p>
-<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#888">// Cast something from errors in stack
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#888">// Cast something from errors in stack
 </span><span style="color:#888"></span><span style="color:#080;font-weight:bold">func</span> <span style="color:#06b;font-weight:bold">Cast</span>(err <span style="color:#339;font-weight:bold">error</span>, cast <span style="color:#080;font-weight:bold">func</span>(<span style="color:#339;font-weight:bold">error</span>) <span style="color:#339;font-weight:bold">bool</span>) <span style="color:#339;font-weight:bold">bool</span> {
 	<span style="color:#080;font-weight:bold">type</span> causer <span style="color:#080;font-weight:bold">interface</span> {
 		<span style="color:#06b;font-weight:bold">Cause</span>() <span style="color:#339;font-weight:bold">error</span>
@@ -337,13 +329,11 @@ if (!doNotTrack) {
 		}
 		<span style="color:#080;font-weight:bold">return</span> <span style="color:#080;font-weight:bold">false</span>
 	}
-}</code></pre></div>
-<p>Этот хелпер является стандартным способом при работе с пакетом <code>github.com/pkg/errors</code>. Он последовательно снимает обёртки с ошибки.</p>
-
+}
+</code></pre></div><p>Этот хелпер является стандартным способом при работе с пакетом <code>github.com/pkg/errors</code>. Он последовательно снимает обёртки с ошибки.</p>
 <h2 id="константные-ошибки">Константные ошибки</h2>
-
 <p>Когда речь заходит о библиотеке, оказывается удобным иметь список всех возможных ошибок, которые могут вернуть библиотечные функции. С другой стороны константные ошибки оказываются полезными для универсализации ошибок сторонних библиотек. Так, например, можно абстрагироваться от ошибок драйверов баз данных, введя собственную ошибку <code>NotFound</code>. Нет ничего проще чем создать константную ошибку:</p>
-<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#888">// ConstantError is a string with method Error
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#888">// ConstantError is a string with method Error
 </span><span style="color:#888"></span><span style="color:#080;font-weight:bold">type</span> ConstantError <span style="color:#339;font-weight:bold">string</span>
 
 <span style="color:#888">// Error implements error interface
@@ -354,9 +344,9 @@ if (!doNotTrack) {
 <span style="color:#080;font-weight:bold">const</span> (
     <span style="color:#888">// NotFound means that requested resource is not found
 </span><span style="color:#888"></span>    NotFound ConstantError = <span style="background-color:#fff0f0">&#34;not found&#34;</span>
-)</code></pre></div>
-<p>Чаще всего рядом с ошибкой нужно хранить дополнительную информацию, ведь нужно понимать что именно не найдено. Это легко сделать с помощью пакета <code>github.com/pkg/errors</code>, но ещё удобнее сделать для этого несколько шорткатов:</p>
-<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#888">// New wrapped constant error with message and stacktrace
+)
+</code></pre></div><p>Чаще всего рядом с ошибкой нужно хранить дополнительную информацию, ведь нужно понимать что именно не найдено. Это легко сделать с помощью пакета <code>github.com/pkg/errors</code>, но ещё удобнее сделать для этого несколько шорткатов:</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#888">// New wrapped constant error with message and stacktrace
 </span><span style="color:#888"></span><span style="color:#080;font-weight:bold">func</span> (ce ConstantError) <span style="color:#06b;font-weight:bold">New</span>(msg <span style="color:#339;font-weight:bold">string</span>) <span style="color:#339;font-weight:bold">error</span> {
     <span style="color:#080;font-weight:bold">return</span> errors.<span style="color:#06b;font-weight:bold">Wrap</span>(ce, msg)
 }
@@ -364,9 +354,9 @@ if (!doNotTrack) {
 <span style="color:#888">// New wrapped constant error with formated message and stacktrace
 </span><span style="color:#888"></span><span style="color:#080;font-weight:bold">func</span> (ce ConstantError) <span style="color:#06b;font-weight:bold">Newf</span>(format <span style="color:#339;font-weight:bold">string</span>, args <span style="color:#333">...</span><span style="color:#080;font-weight:bold">interface</span>{}) <span style="color:#339;font-weight:bold">error</span> {
     <span style="color:#080;font-weight:bold">return</span> errors.<span style="color:#06b;font-weight:bold">Wrapf</span>(ce, format, args<span style="color:#333">...</span>)
-}</code></pre></div>
-<p>Также можно сделать небольшую обёртку для других ошибок:</p>
-<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#080;font-weight:bold">type</span> constantErrorWrapper <span style="color:#080;font-weight:bold">struct</span> {
+}
+</code></pre></div><p>Также можно сделать небольшую обёртку для других ошибок:</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#080;font-weight:bold">type</span> constantErrorWrapper <span style="color:#080;font-weight:bold">struct</span> {
     ConstantError
     origin <span style="color:#339;font-weight:bold">error</span>
 }
@@ -385,9 +375,9 @@ if (!doNotTrack) {
 
 <span style="color:#080;font-weight:bold">func</span> (wrap constantErrorWrapper) <span style="color:#06b;font-weight:bold">Cause</span>() <span style="color:#339;font-weight:bold">error</span> {
     <span style="color:#080;font-weight:bold">return</span> wrap.ConstantError
-}</code></pre></div>
-<p>Благодаря реализованному методу <code>Cause</code> соответствующая функция пакета <code>github.com/pkg/errors</code> вернёт именно константную ошибку, а не оригинальную, так что обработка ошибки не измениться. К тексту ошибки припишется текст оригинальной ошибки. Кроме того, если понадобится извлечь оригинальную ошибку, можно реализовать следующий хелпер:</p>
-<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#080;font-weight:bold">func</span> <span style="color:#06b;font-weight:bold">OriginalError</span>(err <span style="color:#339;font-weight:bold">error</span>) <span style="color:#339;font-weight:bold">error</span> {
+}
+</code></pre></div><p>Благодаря реализованному методу <code>Cause</code> соответствующая функция пакета <code>github.com/pkg/errors</code> вернёт именно константную ошибку, а не оригинальную, так что обработка ошибки не измениться. К тексту ошибки припишется текст оригинальной ошибки. Кроме того, если понадобится извлечь оригинальную ошибку, можно реализовать следующий хелпер:</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#080;font-weight:bold">func</span> <span style="color:#06b;font-weight:bold">OriginalError</span>(err <span style="color:#339;font-weight:bold">error</span>) <span style="color:#339;font-weight:bold">error</span> {
     <span style="color:#080;font-weight:bold">var</span> orig <span style="color:#339;font-weight:bold">error</span>
     ok <span style="color:#333">:=</span> <span style="color:#06b;font-weight:bold">Cast</span>(err, <span style="color:#080;font-weight:bold">func</span>(err <span style="color:#339;font-weight:bold">error</span>) <span style="color:#339;font-weight:bold">bool</span> {
         wrap, ok <span style="color:#333">:=</span> err.(<span style="color:#333">*</span>constantErrorWrapper)
@@ -400,11 +390,10 @@ if (!doNotTrack) {
         orig = err
     }
     <span style="color:#080;font-weight:bold">return</span> orig
-}</code></pre></div>
-<h2 id="передача-ошибок">Передача ошибок</h2>
-
+}
+</code></pre></div><h2 id="передача-ошибок">Передача ошибок</h2>
 <p>Константные ошибки легко обрабатывать, а также конвертировать в ошибки протокола интерфейса сервиса. Для этого можно написать небольшие хелперы:</p>
-<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#080;font-weight:bold">func</span> <span style="color:#06b;font-weight:bold">HandleHTTPError</span>(w http.ResponseWriter, err <span style="color:#339;font-weight:bold">error</span>) {
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#080;font-weight:bold">func</span> <span style="color:#06b;font-weight:bold">HandleHTTPError</span>(w http.ResponseWriter, err <span style="color:#339;font-weight:bold">error</span>) {
     <span style="color:#080;font-weight:bold">switch</span> errors.<span style="color:#06b;font-weight:bold">Cause</span>(err) {
     <span style="color:#080;font-weight:bold">case</span> NotFound:
         http.<span style="color:#06b;font-weight:bold">Error</span>(w, err.<span style="color:#06b;font-weight:bold">Error</span>(), http.StatusNotFound)
@@ -412,9 +401,9 @@ if (!doNotTrack) {
 </span><span style="color:#888"></span>    <span style="color:#080;font-weight:bold">default</span>:
         http.<span style="color:#06b;font-weight:bold">Error</span>(w, err.<span style="color:#06b;font-weight:bold">Error</span>(), http.StatusInternalServerError)
     }
-}</code></pre></div>
-<p>А для протокола gRPC вообще можно реализовать удобные <a href="https://vporoshok.me/post/2019/01/decorators/#перехватчики">перехватчики</a>:</p>
-<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#080;font-weight:bold">func</span> <span style="color:#06b;font-weight:bold">UnaryServerInterceptor</span>(
+}
+</code></pre></div><p>А для протокола gRPC вообще можно реализовать удобные <a href="https://vporoshok.me/post/2019/01/decorators/#%D0%BF%D0%B5%D1%80%D0%B5%D1%85%D0%B2%D0%B0%D1%82%D1%87%D0%B8%D0%BA%D0%B8">перехватчики</a>:</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#080;font-weight:bold">func</span> <span style="color:#06b;font-weight:bold">UnaryServerInterceptor</span>(
     ctx context.Context, req <span style="color:#080;font-weight:bold">interface</span>{},
     info <span style="color:#333">*</span>grpc.UnaryServerInfo, handler grpc.UnaryHandler,
 ) (<span style="color:#080;font-weight:bold">interface</span>{}, <span style="color:#339;font-weight:bold">error</span>) {
@@ -443,11 +432,10 @@ err <span style="color:#333">:=</span> <span style="color:#06b;font-weight:bold"
 </span><span style="color:#888"></span>        }
     }
     <span style="color:#080;font-weight:bold">return</span> err
-}</code></pre></div>
-<h2 id="ошибка-с-данными">Ошибка с данными</h2>
-
+}
+</code></pre></div><h2 id="ошибка-с-данными">Ошибка с данными</h2>
 <p>Часто для сложных ошибок необходимо также передать какие-то дополнительные данные, например, если ошибка произошла при валидации каких-то входных данных, полезно передать вызывающей стороне: какое поле входных данных содержит ошибку. Тогда можно сделать обёртку над ошибкой:</p>
-<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#080;font-weight:bold">type</span> errorWithData <span style="color:#080;font-weight:bold">struct</span> {
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#080;font-weight:bold">type</span> errorWithData <span style="color:#080;font-weight:bold">struct</span> {
     cause <span style="color:#339;font-weight:bold">error</span>
     data  <span style="color:#080;font-weight:bold">interface</span>{}
 }
@@ -477,22 +465,17 @@ err <span style="color:#333">:=</span> <span style="color:#06b;font-weight:bold"
     })
 
     <span style="color:#080;font-weight:bold">return</span> data
-}</code></pre></div>
-<p>Кроме того можно имплементировать методы сериализации (например, <code>MarshalJSON</code>), тогда с помощью хелпера можно передавать ошибку в ответе в сериализованном виде.</p>
-
-<h2 id="panic-recover">panic / recover</h2>
-
+}
+</code></pre></div><p>Кроме того можно имплементировать методы сериализации (например, <code>MarshalJSON</code>), тогда с помощью хелпера можно передавать ошибку в ответе в сериализованном виде.</p>
+<h2 id="panic--recover">panic / recover</h2>
 <p>Считается, что это не очень хорошая практика, однако, при должной осторожности она позволяет уменьшать количество рутинного кода. Основная идея в том, чтобы не возвращать ошибку, а выкидывать панику с ней, а на верхнем уровне её ловить и возвращать уже в виде ошибки. Важно здесь соблюдать 2 правила:</p>
-
 <ol>
 <li>публичные функции не должны паниковать, если это обрабатываемая ошибка;</li>
 <li>не надо превращать системные паники в ошибки;</li>
 </ol>
-
 <p>Первое правило необходимо для согласованности интерфейсов. Хотя, в нём могут быть исключения, но такие функции надо называть с приставкой <code>Must</code>. Второе правило необходимо для того, чтобы сохранить стек вызовов, иначе отладка может превратиться в ад.</p>
-
 <p>И здесь нам тоже поможет пакет <code>github.com/pkg/errors</code>. Собственно будем все ошибки перед тем как передавать в панику оборачивать <code>errors.WithStack</code>, а на верхнем уровне создадим следующую обёртку:</p>
-<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#080;font-weight:bold">func</span> <span style="color:#06b;font-weight:bold">DoSomething</span>() (err <span style="color:#339;font-weight:bold">error</span>) {
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#080;font-weight:bold">func</span> <span style="color:#06b;font-weight:bold">DoSomething</span>() (err <span style="color:#339;font-weight:bold">error</span>) {
     <span style="color:#080;font-weight:bold">defer</span> <span style="color:#080;font-weight:bold">func</span>() {
         <span style="color:#080;font-weight:bold">type</span> causer <span style="color:#080;font-weight:bold">interface</span> {
             <span style="color:#339;font-weight:bold">error</span>
@@ -507,11 +490,9 @@ err <span style="color:#333">:=</span> <span style="color:#06b;font-weight:bold"
     }()
 
     <span style="color:#06b;font-weight:bold">mustDoSomething</span>()
-}</code></pre></div>
-<p>Таким образом паники, которые выкинуты нами будут превращены в ошибки, а остальные прокинуты выше. Ярким примером использования такого подхода является стандартный пакет <a href="https://golang.org/src/encoding/json/encode.go#L296">encoding/json</a>.</p>
-
+}
+</code></pre></div><p>Таким образом паники, которые выкинуты нами будут превращены в ошибки, а остальные прокинуты выше. Ярким примером использования такого подхода является стандартный пакет <a href="https://golang.org/src/encoding/json/encode.go#L296">encoding/json</a>.</p>
 <h2 id="ошибка-на-классе">Ошибка на классе</h2>
-
 <p>Иногда бывает необходимо сохранить интерфейс определённого метода без возвращаемой ошибки, например, для создания итератора удобно иметь метод <code>Next</code>, который возвращает <code>true</code> или <code>false</code>. Если же логика этого метода подразумевает возникновение ошибки, то необходимо сохранить её на уровне класса, так чтобы позже можно было её проверить и обработать. Хороший пример такого подхода можно посмотреть в стандартной библиотеке <a href="https://godoc.org/bufio#Scanner">bufio</a>. Конечно, эту ошибку необходимо будет учитывать в других методах класса, заранее их прерывая.</p>
 
 </div>
@@ -523,7 +504,7 @@ err <span style="color:#333">:=</span> <span style="color:#06b;font-weight:bold"
   <path d="M22,19a2,2,0,0,1-2,2H4a2,2,0,0,1-2-2V5A2,2,0,0,1,4,3H9l2,3h9a2,2,0,0,1,2,2Z"/>
   
 </svg>
-<span class='screen-reader-text'>category: </span><a class='category' href='/categories/develop/'>Разработка</a></div>
+<span class='screen-reader-text'>Категории: </span><a class='category' href='/categories/develop/'>Разработка</a></div>
 <div class='tags'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
   
   <path d="M20.59,13.41l-7.17,7.17a2,2,0,0,1-2.83,0L2,12V2H12l8.59,8.59A2,2,0,0,1,20.59,13.41Z"/>
@@ -569,7 +550,7 @@ err <span style="color:#333">:=</span> <span style="color:#06b;font-weight:bold"
 
       <footer id='footer' class='footer'>
         <div class='container sep-before'><div class='copyright'>
-  <p>Материалы распространяются по <a rel="noreferrer" href="https://creativecommons.org/licenses/by/4.0/" target="_blank">лицензии CC BY</a> &copy; 2018-2021 vporoshok <br>Увидели ошибку? Буду рад <a rel="noreferrer" href="https://github.com/vporoshok/vporoshok.github.io" target="_blank">PR&rsquo;у</a></p>
+  <p>Материалы распространяются по <!-- raw HTML omitted -->лицензии CC BY<!-- raw HTML omitted --> &copy; 2018-2021 vporoshok <!-- raw HTML omitted -->Увидели ошибку? Буду рад <!-- raw HTML omitted -->PR&rsquo;у<!-- raw HTML omitted --></p>
 </div>
 
         </div>

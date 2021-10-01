@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>microservices on Где-то на дальнем сервере</title>
@@ -6,11 +6,7 @@
     <description>Recent content in microservices on Где-то на дальнем сервере</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>ru</language>
-    <lastBuildDate>Wed, 21 Aug 2019 03:25:57 +0000</lastBuildDate>
-    
-	<atom:link href="https://vporoshok.me/tags/microservices/index.xml" rel="self" type="application/rss+xml" />
-    
-    
+    <lastBuildDate>Wed, 21 Aug 2019 03:25:57 +0000</lastBuildDate><atom:link href="https://vporoshok.me/tags/microservices/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Действия в действии</title>
       <link>https://vporoshok.me/post/2019/08/actions-in-action/</link>

@@ -9,9 +9,9 @@
 <meta property='og:description' content='И если стало светлей, то, видимо, он уже здесь'>
 <meta property='og:url' content='https://vporoshok.me/post/2019/07/sicp-intro/'>
 <meta property='og:site_name' content='Где-то на дальнем сервере'>
-<meta property='og:type' content='article'><meta property='article:section' content='post'><meta property='article:tag' content='sicp'><meta property='article:tag' content='scheme'><meta property='article:published_time' content='2019-07-30T09:16:26Z'/><meta property='article:modified_time' content='2019-08-20T17:35:28&#43;04:00'/><meta name='twitter:card' content='summary'>
+<meta property='og:type' content='article'><meta property='article:section' content='post'><meta property='article:tag' content='sicp'><meta property='article:tag' content='scheme'><meta property='article:published_time' content='2019-07-30T09:16:26Z'/><meta property='article:modified_time' content='2021-10-01T18:45:33&#43;04:00'/><meta name='twitter:card' content='summary'>
 
-<meta name="generator" content="Hugo 0.57.2" />
+<meta name="generator" content="Hugo 0.88.1" />
 
   <title>SICP: Введение • Где-то на дальнем сервере</title>
   <link rel='canonical' href='https://vporoshok.me/post/2019/07/sicp-intro/'>
@@ -219,8 +219,8 @@ if (!doNotTrack) {
 </svg>
 </span>
 </button>
-    <ul><li class='item'>
-        <a href='/post/'>Блог</a>
+    <ul><li class='item current'>
+        <a aria-current='page' href='/post/'>Блог</a>
       </li><li class='item'>
         <a href='/page/about/'>Обо мне</a>
       </li></ul>
@@ -288,21 +288,16 @@ if (!doNotTrack) {
   <summary class='title'>
     <span>Оглавление</span>
   </summary>
-  
+  <nav id="TableOfContents"></nav>
 </details>
 
 
   <div class='container entry-content'>
   <p>В очередной раз взялся за эту книгу, признанную фундаментальной для изучения программирования, основу для многих курсов и по сей день актуальную. Итак, знаменитая СИКП или книга Структура и интерпретация компьютерных программ. Эта книга, написанная в MIT, является классическим учебником программирования, используемым во многих университетах по всему миру.</p>
-
 <p>Эта книга проводит читателя от азов программирования до сложных конструкций, вплоть до построения собственного интерпретатора языка. В ней разбирается то, как работает с кодом программ компьютер, а также то, как удобнее работать с ним человеку. Это книга про взаимодействие компьютера и человека. Конечно, она достаточно высокоуровневая, не затрагивающая микрокод процессора или протоколы взаимодействия с памятью. Однако для обучения программированию эта та книга, которая открывает тот первый уровень магии, когда человек пишет какие-то команды, а компьютер их «понимает».</p>
-
-<p>В качестве языка программирования в книге используется язык <a href="https://ru.wikipedia.org/wiki/Лисп">Lisp</a>, точнее его диалект <a href="https://ru.wikipedia.org/wiki/Scheme">Scheme</a>, также разработанный в MIT, в лаборатории искусственного интеллекта в 1975 году Гаем Льюисом Стилом мл. и Джеральдом Джеем Сассманом. Этот диалект является основой диалекта Common Lisp, ставшего промыщленным стандартом Лиспа (ANSI 1994). Реализация этого языка есть во многих интерпретаторах и компиляторах. Например, он доступен как диалект в пакете <a href="https://ru.wikipedia.org/wiki/Racket_(язык_программирования)">Racket</a>, а также язык <a href="https://ru.wikipedia.org/wiki/Clojure">Clojure</a> имеет очень близкий синтаксис к Scheme.</p>
-
+<p>В качестве языка программирования в книге используется язык <a href="https://ru.wikipedia.org/wiki/%D0%9B%D0%B8%D1%81%D0%BF">Lisp</a>, точнее его диалект <a href="https://ru.wikipedia.org/wiki/Scheme">Scheme</a>, также разработанный в MIT, в лаборатории искусственного интеллекта в 1975 году Гаем Льюисом Стилом мл. и Джеральдом Джеем Сассманом. Этот диалект является основой диалекта Common Lisp, ставшего промыщленным стандартом Лиспа (ANSI 1994). Реализация этого языка есть во многих интерпретаторах и компиляторах. Например, он доступен как диалект в пакете <a href="https://ru.wikipedia.org/wiki/Racket_(%D1%8F%D0%B7%D1%8B%D0%BA_%D0%BF%D1%80%D0%BE%D0%B3%D1%80%D0%B0%D0%BC%D0%BC%D0%B8%D1%80%D0%BE%D0%B2%D0%B0%D0%BD%D0%B8%D1%8F)">Racket</a>, а также язык <a href="https://ru.wikipedia.org/wiki/Clojure">Clojure</a> имеет очень близкий синтаксис к Scheme.</p>
 <p>Подход к изучению программирования, предлагаемый СИКП, может быть применён и к другим языкам программирования. Так, например, сейчас многие курсы в университетах (в том же MIT) используют Python, оставляя структуру курса такой же как и раньше. А портал для обучения программированию <a href="https://hexlet.io">https://hexlet.io</a> использует СИКП как основу своим курсам по PHP, JS и Python. С другой стороны императивные и объектно ориентированные языки программирования и так достаточно широко представлены в обучающих материалах. А изучить хотя бы один функциональный язык, каким является Scheme, будет куда полезнее, чем ещё один C-подобный, если один вы уже знаете. Конечно, самым лучшим подходом будет решать упражнения данной книги и на Scheme, и на более привычном, уже известном языке (если он есть).</p>
-
 <p>Лисп является одновременно очень простым и одновременно мощным языком. Лисп стал третьим языком высокого уровня, после Фортрана и Алгола. При этом именно Лисп ввёл в программирование такое понятие как список. Также Лисп разрабатывался для задач искусственного интеллекта, для написания сложных, комплексных программ, совместной разработки группой программистов. Переиспользование кода и структурирование исходного кода являются сильными сторонами этого языка. С другой стороны, Лисп является очень близким к модели вычисления, к самому компьютеру. Поэтому написать реализацию этого языка является достаточно простой задачей (в отличии от таких языков как C или более высокоуровневых Python, Java и так далее). Это также дало толчок в развитии Лиспа в качестве встраиваемого языка программирования, позволяющего описывать логику поверх «движка» программы, написанного на другом языке.</p>
-
 <p>Я буду делать конспекты книги в виде отдельных заметок, а также поддерживать набор задач на <a href="https://repl.it">https://repl.it</a>. Для изучения этой книги желательно поставить на копьютер один из интерпретаторов языка Scheme, чтобы можно было проверять примеры и экспериментировать по ходу чтения. Я рекомендую использовать <a href="https://racket-lang.io">racket</a> как совместимый, лёгкий и быстрый. После установки запустить REPL (Read-Evaluate-Print-Loop) можно командой <code>racket -I scheme</code>. Задачи данного курса представлены здесь: <a href="https://repl.it/classroom/invite/cTpCI6u">repl.it</a>.</p>
 
 </div>
@@ -314,7 +309,7 @@ if (!doNotTrack) {
   <path d="M22,19a2,2,0,0,1-2,2H4a2,2,0,0,1-2-2V5A2,2,0,0,1,4,3H9l2,3h9a2,2,0,0,1,2,2Z"/>
   
 </svg>
-<span class='screen-reader-text'>category: </span><a class='category' href='/categories/algorithm/'>Алгоритмы</a></div>
+<span class='screen-reader-text'>Категории: </span><a class='category' href='/categories/algorithm/'>Алгоритмы</a></div>
 <div class='tags'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
   
   <path d="M20.59,13.41l-7.17,7.17a2,2,0,0,1-2.83,0L2,12V2H12l8.59,8.59A2,2,0,0,1,20.59,13.41Z"/>
@@ -360,7 +355,7 @@ if (!doNotTrack) {
 
       <footer id='footer' class='footer'>
         <div class='container sep-before'><div class='copyright'>
-  <p>Материалы распространяются по <a rel="noreferrer" href="https://creativecommons.org/licenses/by/4.0/" target="_blank">лицензии CC BY</a> &copy; 2018-2021 vporoshok <br>Увидели ошибку? Буду рад <a rel="noreferrer" href="https://github.com/vporoshok/vporoshok.github.io" target="_blank">PR&rsquo;у</a></p>
+  <p>Материалы распространяются по <!-- raw HTML omitted -->лицензии CC BY<!-- raw HTML omitted --> &copy; 2018-2021 vporoshok <!-- raw HTML omitted -->Увидели ошибку? Буду рад <!-- raw HTML omitted -->PR&rsquo;у<!-- raw HTML omitted --></p>
 </div>
 
         </div>

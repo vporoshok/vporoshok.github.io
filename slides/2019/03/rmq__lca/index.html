@@ -10,9 +10,9 @@
 <meta property='og:description' content='Катастрофически западает солнце'>
 <meta property='og:url' content='https://vporoshok.me/slides/2019/03/rmq__lca/'>
 <meta property='og:site_name' content='Где-то на дальнем сервере'>
-<meta property='og:type' content='article'><meta property='article:section' content='slides'><meta property='article:published_time' content='2019-03-09T04:07:12Z'/><meta property='article:modified_time' content='2019-03-09T11:38:46&#43;04:00'/><meta name='twitter:card' content='summary'>
+<meta property='og:type' content='article'><meta property='article:section' content='slides'><meta property='article:published_time' content='2019-03-09T04:07:12Z'/><meta property='article:modified_time' content='2021-10-01T18:45:33&#43;04:00'/><meta name='twitter:card' content='summary'>
 
-<meta name="generator" content="Hugo 0.57.2" />
+<meta name="generator" content="Hugo 0.88.1" />
 
     <title>Задачи RMQ и LCA • Где-то на дальнем сервере</title>
     <link rel='canonical' href='https://vporoshok.me/slides/2019/03/rmq__lca/'>
@@ -77,14 +77,8 @@
         <p>Катастрофически западает солнце</p>
     </header>
 
-    <style>
-    .w-25 {
-        width: 25%;
-        margin-left: auto;
-        margin-right: auto;
-    }
-</style>
-
+    <!-- raw HTML omitted -->
+<!-- raw HTML omitted -->
 <div class="equation hidden">
 \[
     \gdef\rmq{\mathop{\mathrm{rmq}}}
@@ -92,11 +86,9 @@
     \gdef\new{\mathop{\mathrm{new}}}
 \]
 </div>
-
 <section class="slide entry clear"><h2 class="shout">
         Задачи RMQ и LCA
     </h2></section>
-
 
 <section id="toc" class="slide entry toc"><h2>
         План
@@ -107,143 +99,84 @@
 <li><a href="#online_rmq">online RMQ</a></li>
 <li><a href="#pm_one_rmq">±1 RMQ</a></li>
 <li><a href="#lca_to_pm_one_rmq">LCA -&gt; ±1 RMQ</a></li>
-</ol></section>
-
+</ol>
+</section>
 
 <section id="problem" class="slide entry section"><h2>
         Задача и применение
     </h2></section>
 
-
 <section class="slide entry"><h2>
         Задача и применение
     </h2><p>RMQ (range minimum query) Выбор наименьшего элемента в отрезке индексов.</p>
-
 <p><strong>Дано:</strong> \(A = \{a_k \colon k &lt; n \}\).</p>
-
 <p><strong>Операции:</strong></p>
-
 <ul>
 <li>\(\rmq(i, j) = \min\{a_k \colon i \leqslant k \leqslant j\}\).</li>
 </ul>
 </section>
 
-
 <section class="slide entry"><h2>
         Задача и применение
     </h2><p>LCA (less common ancestor) Выбор ближайшего общего предка.</p>
-
 <p><strong>Дано:</strong> дерево.</p>
-
 <p><strong>Операции:</strong></p>
-
 <ul>
 <li>\(\lca(u, v) = w\) такое, что \(u \ll w\), \(v \ll w\) и для любого \(t \ll w\) следует, что либо \(u \not\ll t\), либо \(v \not\ll t\).</li>
 </ul>
 </section>
 
+<section class="slide entry"><h2>
+        Задача и применение
+    </h2><!-- raw HTML omitted -->
+<pre><code>&lt;/figcaption&gt;
+</code></pre>
+<!-- raw HTML omitted -->
+</section>
 
 <section class="slide entry"><h2>
         Задача и применение
-    </h2><figure>
-    <div class="mermaid">
-graph TD
-    A(( ))
-    A --- B(( ))
-    A --- C((w))
-    A --- D(( ))
-    B --- E(( ))
-    C --- F(( ))
-    C --- G(( ))
-    C --- H(( ))
-    D --- I(( ))
-    F --- J((u))
-    F --- K(( ))
-    H --- L((v))
-</div>
-<figcaption>
-        Рис.&thinsp;1.
-        
-    </figcaption>
-</figure></section>
-
-
-<section class="slide entry"><h2>
-        Задача и применение
-    </h2>Применение:</p>
-
+    </h2><p>Применение:</p>
 <ul>
 <li>суффиксное дерево;</li>
 <li>суффиксный массив;</li>
 <li>поиск по образцу;</li>
 <li>поисковые индексы;</li>
-</ul></section>
-
+</ul>
+</section>
 
 <section id="rmq_to_lca" class="slide entry section"><h2>
         RMQ -&gt; LCA
     </h2></section>
 
-
 <section class="slide entry"><h2>
         RMQ -&gt; LCA
     </h2><p>Для элементов массива \(A\) определим</p>
-
 <ul>
 <li>ключ: \(k(a_k) = k\);</li>
 <li>приоритет: \(p(a_k) = a_k\);</li>
 </ul>
-
 <p>Построим декартово дерево (\(O(n)\)):</p>
-
 <ul>
 <li>дерево поиска по ключам;</li>
 <li>куча по приоритету;</li>
 </ul>
 </section>
 
-
 <section class="slide entry"><h2>
         RMQ -&gt; LCA
-    </h2><div class="equation">
-\[
-    \{9, 8, 12, 3, 5, 7, 17\}
-\]
-</div>
-
-<figure>
-    <div class="mermaid next">
-graph TD
-    A((3))
-    A --- B((8))
-    A --- C((5))
-    B --- D((9))
-    B --- E((12))
-    C --- F(( ))
-    C --- G((7))
-    G --- H(( ))
-    G --- I((17))
-</div>
-</figure></section>
-
+    </h2><!-- raw HTML omitted -->
+<!-- raw HTML omitted --></section>
 
 <section id="offline_lca" class="slide entry section"><h2>
         Offline LCA
     </h2></section>
 
-
 <section class="slide entry"><h2>
         Offline LCA
     </h2><p>Пусть все запросы известны заранее</p>
-
-<div class="equation">
-\[
-    (x_1, y_1), (x_2, y_2), \ldots, (x_m, y_m)
-\]
-</div>
-
+<!-- raw HTML omitted -->
 <p>Найдём все ответы за один проход по дереву (Tarjan).</p>
-
 <ol>
 <li>Для каждой вершины выпишем все пары, с её участием.</li>
 <li>Будем использовать post-order обход.</li>
@@ -251,346 +184,152 @@ graph TD
 </ol>
 </section>
 
-
 <section class="slide entry"><h2>
         Offline LCA
-    </h2><figure>
-    <div class="mermaid">
-graph TD
-    A(( ))
-    A --- B{ }
-    A --- C(( ))
-    A --- D{ }
-    C --- E{ }
-    C --- F{ }
-    C --- G(( ))
-    C --- H{ }
-    G --- I{ }
-    G --- J{x}
-    G --- K{ }
-    G --- L{ }
+    </h2><!-- raw HTML omitted -->
+<pre><code>classDef zero  fill:tomato
+classDef one   fill:darkorange
+classDef two   fill:gold
+classDef three fill:chartreuse
 
-    classDef zero  fill:tomato
-    classDef one   fill:darkorange
-    classDef two   fill:gold
-    classDef three fill:chartreuse
-
-    class A,B zero
-    class C,E,F one
-    class G,I two
-    class J three
-</div>
-<figcaption>
-        Рис.&thinsp;2.
-        
-    </figcaption>
-</figure></section>
-
+class A,B zero
+class C,E,F one
+class G,I two
+class J three
+</code></pre>
+<!-- raw HTML omitted -->
+<pre><code>&lt;/figcaption&gt;
+</code></pre>
+<!-- raw HTML omitted -->
+</section>
 
 <section class="slide entry"><h2>
         Offline LCA
     </h2><p>При рассмотрении вершины \(x\) пройдёмся по всем парам с её участием.</p>
-
 <p>Рассмотрим только те пары, где вторая вершина \(y\) уже просмотрена.</p>
-
 <p>Решением этой пары будет корень дерева, содержащего \(y\).</p>
 </section>
-
 
 <section class="slide entry"><h2>
         Offline LCA
     </h2>Сложность предпросчёта будет</p>
-
-<div class="equation">
-\[
-    O(nm\log^\star n) \approx O(nm)
-\]
-</div></section>
-
+<!-- raw HTML omitted --></section>
 
 <section id="online_rmq" class="slide entry section"><h2>
         Online RMQ
     </h2></section>
 
-
 <section class="slide entry"><h2>
         Online RMQ
     </h2><p>Можно подсчитать результат для всех возможных запросов</p>
-
-<div class="equation">
-\[
-    T(\new) = O(n^2),\qquad T(\rmq) = O(1), \qquad M = O(n^2).
-\]
-</div>
-
+<!-- raw HTML omitted -->
 <p>Можно оставить только столбцы с номерами вида \(2^k\)</p>
-
-<div class="equation">
-\[
-    T(\new) = O(n\log n),\qquad T(\rmq) = O(1), \qquad M = O(n\log n).
-\]
-</div>
+<!-- raw HTML omitted -->
 </section>
-
 
 <section class="slide entry"><h2>
         Online RMQ
-    </h2>\(\rmq(i, j)\)</p>
-
+    </h2><p>\(\rmq(i, j)\)</p>
 <ul>
 <li>\(j - i = 2^k\) &mdash; результат уже есть в таблице</li>
 <li>выберем \(k = \max\{\ell \colon j - i &gt; 2^\ell\}\), возьмём из таблицы \(\rmq(i, i + 2^k)\) и \(\rmq(j - 2^k, j)\). Выберем из них минимум.</li>
-</ul></section>
-
+</ul>
+</section>
 
 <section id="pm_one_rmq" class="slide entry section"><h2>
         ±1 RMQ
     </h2></section>
 
-
 <section class="slide entry"><h2>
         ±1 RMQ
     </h2>Добавим ограничение: \(|a_k - a_{k+1}| = 1\) для \(k &lt; n - 1\).</p>
-
-<div class="equation">
-\[
-    \{35, 34, 33, 34, 35, 34, 35, 36, 37, \ldots\}
-\]
-</div></section>
-
+<!-- raw HTML omitted --></section>
 
 <section class="slide entry"><h2>
         ±1 RMQ
     </h2><p>Разобьём \(A\) на блоки \(B_\ell\) размера \(b\):</p>
-
-<div class="equation">
-\[
-    A = B_1 + B_2 + \ldots + B_{\lceil n/b \rceil}.
-\]
-</div>
-
-<div class="equation">
-\[
-    m_\ell = \min(B_\ell)
-\]
-</div>
-
+<!-- raw HTML omitted -->
+<!-- raw HTML omitted -->
 <p>Логарифмическая таблица:</p>
-
-<div class="equation">
-\[
-    T(\new) = O(n\frac{n}{b} + \frac{n}{b}\log\frac{n}{b}),
-    \qquad
-    M = O(\frac{n}{b}\log\frac{n}{b}).
-\]
-</div>
+<!-- raw HTML omitted -->
 </section>
 
-
 <section class="slide entry"><p>Запросы \(\rmq(i, j)\) делятся на 2 типа:</p>
-
 <ul>
 <li>\(i\) и \(j\) лежат в одном блоке;</li>
 </ul>
-
-<p><img src="../img/in_block.svg" alt="Запрос RMQ внутри блока" /></p>
-
+<p><img src="../img/in_block.svg" alt="Запрос RMQ внутри блока"></p>
 <ul>
 <li>\(i\) и \(j\) лежат в разных блоках:</li>
 </ul>
-
-<p><img src="../img/head-tail.svg" alt="Запрос RMQ с головой, телом и хвостом" /></p>
+<p><img src="../img/head-tail.svg" alt="Запрос RMQ с головой, телом и хвостом"></p>
 </section>
-
 
 <section class="slide entry"><h2>
         ±1 RMQ
     </h2><p>Сигнатура блока:</p>
-
-<div class="equation">
-\[
-    \{35, 34, 33, 34, 35, 34, 35, 36, 37\}
-\]
-</div>
-<div class="equation">
-\[
-    (35, 00110111)
-\]
-</div>
-
+<!-- raw HTML omitted -->
 <p>Построим таблицы для всех сигнатур: \(2^{b - 1} \times b \times b\)</p>
 </section>
-
 
 <section class="slide entry"><h2>
         ±1 RMQ
     </h2>Итого расход по памяти:</p>
-
-<div class="equation">
-\[
-    \underbrace{2^{b-1} b^2}_{\mathclap\text{куб таблиц по сигнатурам}} +
-    \overbrace{\frac{n}{b}\log\frac{n}{b}}^{\mathclap\text{логарифмическая таблица}} +
-    \underbrace{\frac{n}{b}\log b}_{\mathclap\text{соответствие сигнатур}}
-\]
-</div></section>
-
+<!-- raw HTML omitted --></section>
 
 <section class="slide entry"><h2>
         ±1 RMQ
     </h2><p>Итого расход по памяти:</p>
-
-<div class="equation">
-\[
-    2^{b-1} b^2 + \frac{n}{b}\log\frac{n}{b} + \frac{n}{b}\log b
-    = 2^{b-1} b^2 + \frac{n}{b}\log n.
-\]
-</div>
-
+<!-- raw HTML omitted -->
 <p>При \(b = \frac{\log n}{2}\):</p>
-
-<div class="equation">
-\[
-    O(\sqrt n \log^2 n + n) \approx O(n)
-\]
-</div>
+<!-- raw HTML omitted -->
 </section>
-
 
 <section id="lca_to_pm_one_rmq" class="slide entry section"><h2>
         LCA -&gt; ±1 RMQ
     </h2></section>
 
+<section class="slide entry"><h2>
+        LCA -&gt; ±1 RMQ
+    </h2><!-- raw HTML omitted -->
+<pre><code>&lt;/figcaption&gt;
+</code></pre>
+<!-- raw HTML omitted -->
+</section>
 
 <section class="slide entry"><h2>
         LCA -&gt; ±1 RMQ
-    </h2><figure>
-    <div class="mermaid">
-graph TD
-    A((3))
-    A --- B((8))
-    A --- C((5))
-    B --- D((9))
-    B --- E((12))
-    C --- F((14))
-    C --- G((7))
-</div>
-<figcaption>
-        Рис.&thinsp;3.
-        
-    </figcaption>
-</figure></section>
-
+    </h2><!-- raw HTML omitted -->
+<!-- raw HTML omitted --></section>
 
 <section class="slide entry"><h2>
         LCA -&gt; ±1 RMQ
-    </h2><figure>
-    <div class="mermaid w-25">
-graph TD
-    A((3))
-    A --- B((8))
-    A --- C((5))
-    B --- D((9))
-    B --- E((12))
-    C --- F((14))
-    C --- G((7))
-</div>
-</figure>
-
-<div class="equation">
-\[
-    3 \to 8 \to 9 \to 8 \to 12 \to 8 \to 3 \to 5 \to 14 \to 5 \to 7 \to 5 \to 3
-\]
-</div></section>
-
+    </h2><!-- raw HTML omitted -->
+<!-- raw HTML omitted --></section>
 
 <section class="slide entry"><h2>
         LCA -&gt; ±1 RMQ
-    </h2><figure>
-    <div class="mermaid w-25">
-graph TD
-    A((3))
-    A --- B((8))
-    A --- C((5))
-    B --- D((9))
-    B --- E((12))
-    C --- F((14))
-    C --- G((7))
-</div>
-</figure>
-
-<div class="equation">
-\[
-    9 \to 8 \to 12 \to 8 \to 3 \to 5 \to 14 \to 5 \to 7
-\]
-</div></section>
-
-
-<section class="slide entry"><h2>
-        LCA -&gt; ±1 RMQ
-    </h2><figure>
-    <div class="mermaid w-25">
-graph TD
-    A((3))
-    A --- B((8))
-    A --- C((5))
-    B --- D((9))
-    B --- E((12))
-    C --- F((14))
-    C --- G((7))
-</div>
-</figure>
-
-<div class="equation">
-\[
-    9 \to 8 \to 12 \to 8 \to 3 \to 5 \to 14 \to 5 \to 7
-\]
-</div>
-
+    </h2><!-- raw HTML omitted -->
+<!-- raw HTML omitted -->
 <p>Рассмотрим последовательность глубин:</p>
-
-<div class="equation">
-\[
-    3 \to 2 \to 3 \to 2 \to 1 \to 2 \to 3 \to 2 \to 3
-\]
-</div></section>
-
+<!-- raw HTML omitted --></section>
 
 <section class="slide entry"><h2>
         LCA -&gt; ±1 RMQ
-    </h2><figure>
-    <div class="mermaid w-25">
-graph TD
-    A((3))
-    A --- B((8))
-    A --- C((5))
-    B --- D((9))
-    B --- E((12))
-    C --- F((14))
-    C --- G((7))
+    </h2><!-- raw HTML omitted -->
+<pre><code>classDef zero  color:tomato
+classDef one   color:steelblue
+classDef two   color:blueviolet
 
-    classDef zero  color:tomato
-    classDef one   color:steelblue
-    classDef two   color:blueviolet
-
-    class E zero
-    class C one
-    class A two
-</div>
-</figure>
-
-<div class="equation">
-\[
-    9 \to 8 \to \textcolor{tomato}{12} \to 8 \to \textcolor{blueviolet}{3} \to \textcolor{steelblue}{5} \to 14 \to \textcolor{steelblue}{5} \to 7
-\]
-</div>
-
+class E zero
+class C one
+class A two
+</code></pre>
+<!-- raw HTML omitted -->
+<!-- raw HTML omitted -->
 <p>Рассмотрим последовательность глубин:</p>
-
-<div class="equation">
-\[
-    3 \to 2 \to \textcolor{tomato}{3} \to 2 \to \textcolor{blueviolet}{1} \to \textcolor{steelblue}{2} \to 3 \to \textcolor{steelblue}{2} \to 3
-\]
-</div></section>
+<!-- raw HTML omitted -->
+</section>
 
 
 

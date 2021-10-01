@@ -10,9 +10,9 @@
 <meta property='og:description' content='Мы всем поддерживаем кайф, нам кайф ломают кругом'>
 <meta property='og:url' content='https://vporoshok.me/slides/2019/03/dsu/'>
 <meta property='og:site_name' content='Где-то на дальнем сервере'>
-<meta property='og:type' content='article'><meta property='article:section' content='slides'><meta property='article:published_time' content='2019-03-08T14:57:14Z'/><meta property='article:modified_time' content='2019-03-09T09:22:08&#43;04:00'/><meta name='twitter:card' content='summary'>
+<meta property='og:type' content='article'><meta property='article:section' content='slides'><meta property='article:published_time' content='2019-03-08T14:57:14Z'/><meta property='article:modified_time' content='2021-10-01T18:45:33&#43;04:00'/><meta name='twitter:card' content='summary'>
 
-<meta name="generator" content="Hugo 0.57.2" />
+<meta name="generator" content="Hugo 0.88.1" />
 
     <title>Семейство непересекающихся множеств • Где-то на дальнем сервере</title>
     <link rel='canonical' href='https://vporoshok.me/slides/2019/03/dsu/'>
@@ -85,7 +85,6 @@
         Семейство непересекающихся множеств
     </h2></section>
 </p>
-
 <section id="toc" class="slide entry toc"><h2>
         План
     </h2><ol>
@@ -95,229 +94,111 @@
 <li><a href="#statistics">статистики</a></li>
 <li><a href="#ddf">динамический направленный лес</a></li>
 <li><a href="#implementation">вариант реализации</a></li>
-</ol></section>
-
+</ol>
+</section>
 
 <section id="problem" class="slide entry section"><h2>
         Задача и применение
     </h2></section>
 
-
 <section class="slide entry"><h2>
         Задача и применение
     </h2><p>Дано множество \(E = \{x_i\colon i &lt; n\}\) &mdash; <em>Универсум</em>.</p>
-
 <p>В каждый момент времени существует разбиение</p>
-
-<div class="equation">
-\[
-    \mathbb X = \{X_j \colon j < k\}
-\]
-</div>
-
+<!-- raw HTML omitted -->
 <p>такое, что</p>
-
-<div class="equation">
-\[
-    \cup \mathbb X = E,
-    \quad\text{и}\quad
-    X_j \cap X_l = \varnothing
-    \quad(i \neq j)
-\]
-</div>
+<!-- raw HTML omitted -->
 </section>
-
 
 <section class="slide entry"><h2>
         Задача и применение
     </h2>На семействе \(\mathbb X\) определим 2 операции:</p>
-
-<div class="equation">
-\[
-    \mathrm{Equiv}(x, y) =
-    \begin{cases}
-        1,& \exist\ X\in\mathbb X\colon x, y \in X,\\
-        0,& \text{иначе}
-    \end{cases}
-\]
-</div>
-<div class="equation">
-\[
-    \mathrm{Unite}(x, y) =
-    \begin{cases}
-        \mathbb X,\ \ \;\mathrm{Equiv}(x, y),\\
-        \mathbb X \setminus \{X, Y\} \cup \{X \cup Y\},
-    \end{cases}
-\]
-</div></section>
-
+<!-- raw HTML omitted --></section>
 
 <section class="slide entry"><h2>
         Задача и применение
-    </h2>Находит применение в решении задач</p>
-
+    </h2><p>Находит применение в решении задач</p>
 <ul>
 <li>построение минимального остова (алгоритм Краскала);</li>
 <li>Offline LCA (алгоритм Таржина);</li>
 <li>геометрический поиск;</li>
 <li>построение графов и деревьев;</li>
-</ul></section>
-
+</ul>
+</section>
 
 <section id="rank-heuristic" class="slide entry section"><h2>
         Ранговая эвристика
     </h2></section>
 
-
 <section class="slide entry"><h2>
         Ранговая эвристика
     </h2><p>Будем хранить компоненты связанности в виде деревьев. На них определим операцию \(\mathrm{GetRoot}(x)\), возвращающую корень дерева, в котором содержится \(x\).</p>
-
 <p>Для каждой вершины поставим в соответствие её родителя \(\mathrm{Parent}(x)\). Для корней родитель не определён (\(\varnothing\)).</p>
 </section>
 
-
 <section class="slide entry"><h2>
         Ранговая эвристика
-    </h2><div class="equation">
-\[
-    \mathrm{Equiv}(x, y) = [\mathrm{GetRoot}(x) = \mathrm{GetRoot}(y)];
-\]
-</div>
-<div class="equation">
-\[
-    \mathrm{Unite}(x, y) = \begin{cases}
-        \mathrm{Parent}(\mathrm{GetRoot}(x)) = \mathrm{GetRoot}(y)],\\
-        \mathrm{Parent}(\mathrm{GetRoot}(y)) = \mathrm{GetRoot}(x)];
-    \end{cases}
-\]
-</div>
-
+    </h2><!-- raw HTML omitted -->
 <p>Как выбрать корень нового дерева?</section>
-
 
 <section class="slide entry"><h2>
         Ранговая эвристика
     </h2><p>Для каждого дерева определим ранг как высота этого дерева минус 1</p>
-
-<div class="equation">
-\[
-    r(X) = h(X) - 1.
-\]
-</div>
-
+<!-- raw HTML omitted -->
 <p>Тогда в качестве нового корня выберем дерево с большим рангом.</p>
-
-<div class="equation">
-\[
-    r(X \cup Y) = \begin{cases}
-        r(X) + 1,& r(X) = r(Y),\\
-        \max\{r(X), r(Y)\},\\
-    \end{cases}
-\]
-</div>
+<!-- raw HTML omitted -->
 </section>
-
 
 <section class="slide entry"><h2>
         Ранговая эвристика
-    </h2><div class="equation">
-\[
-    \begin{gathered}
-        T(\mathrm{Equiv}) = O(\max\{h(X) \colon X \in \mathbb X\}),\\
-        T(\mathrm{Unite}) = O(\max\{h(X) \colon X \in \mathbb X\}),\\
-    \end{gathered}
-\]
-</div>
-
-<dl class="theorem next">
-    <dt>Утверждение</dt>
-    <dd>Высота деревьев логарифмически зависит от количества элементов, т.е. \(w(X) \geqslant 2^{r(X)}\).</dd>
-</dl></section>
-
+    </h2><!-- raw HTML omitted -->
+<!-- raw HTML omitted --></section>
 
 <section class="slide entry"><h2>
         Ранговая эвристика
     </h2><ol>
 <li>\(r({x}) = 0\), \(w({x}) = 1\).</li>
 <li>Пусть \(X\) и \(Y\) такие, что \(w(X) \geqslant 2^{r(X)}\) и \(w(Y) \geqslant 2^{r(Y)}\).</li>
-
-<li><ul>
-<li>Если \(r(X) &lt; r(Y)\), тогда \(r(X \cup Y) = r(X)\), следовательно \(w(X \cup Y) \geqslant 2^{r(X, Y)}\).</li>
-</ul>
-
+<li>
 <ul>
-<li>Если \(r(X) = r(Y)\), тогда</li>
-</ul></li>
+<li>
+<p>Если \(r(X) &lt; r(Y)\), тогда \(r(X \cup Y) = r(X)\), следовательно \(w(X \cup Y) \geqslant 2^{r(X, Y)}\).</p>
+</li>
+<li>
+<p>Если \(r(X) = r(Y)\), тогда</p>
+</li>
+</ul>
+</li>
 </ol>
-
-<div class="equation">
-\[
-    w(X \cup Y) = w(X) + w(Y) \geqslant 2^{r(X)} + 2^{r(Y)} = 2^{r(X) + 1} = 2^{r(X \cup Y)}
-\]
-</div></section>
-
+<!-- raw HTML omitted -->
+</section>
 
 <section class="slide entry"><h2>
         Ранговая эвристика
-    </h2><div class="equation">
-\[
-    \begin{gathered}
-        T(\mathrm{Equiv}) = O(\log n),\\
-        T(\mathrm{Unite}) = O(\log n),\\
-    \end{gathered}
-\]
-</div>
-
+    </h2><!-- raw HTML omitted -->
 <p>Можно не запоминать ранги, используя вместо них рандомизацию. Получим рандомизированный логарифм.</section>
-
 
 <section id="path-compression" class="slide entry section"><h2>
         Сжатие путей
     </h2></section>
 
-
 <section class="slide entry"><h2>
         Сжатие путей
     </h2><p>После применения операции \(\mathrm{GetRoot}(x)\) выполним операцию \(\mathrm{Squash}(x, root)\).</p>
-<div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#080;font-weight:bold">def</span> <span style="color:#06b;font-weight:bold">squash</span>(x, root):
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#080;font-weight:bold">def</span> <span style="color:#06b;font-weight:bold">squash</span>(x, root):
     p <span style="color:#333">=</span> x<span style="color:#333">.</span>parent
     <span style="color:#080;font-weight:bold">if</span> p <span style="color:#333">!=</span> root:
         x<span style="color:#333">.</span>parent <span style="color:#333">=</span> root
-        <span style="color:#080;font-weight:bold">return</span> squash(p, root)</code></pre></div></section>
-
+        <span style="color:#080;font-weight:bold">return</span> squash(p, root)
+</code></pre></div></section>
 
 <section class="slide entry"><h2>
         Сжатие путей
-    </h2><div class="equation">
-\[
-    T(\mathrm{GetRoot}) = O(\log^\star n).
-\]
-</div>
-<div class="equation next">
-\[
-    \log^\star 1 = 0,\quad
-    \log^\star 2 = 1,\quad
-    \log^\star 4 = 2,\quad
-    \log^\star 16 = 3,
-\]
-</div>
-<div class="equation next">
-\[
-    \log^\star 65536 = 4,
-\]
-</div>
-<div class="equation next">
-\[
-    \log^\star 2^{65536} = 5,
-\]
-</div></section>
-
+    </h2><!-- raw HTML omitted --></section>
 
 <section id="statistics" class="slide entry section"><h2>
         Статистики
     </h2></section>
-
 
 <section class="slide entry"><h2>
         Статистики
@@ -325,43 +206,36 @@
 <li>количество / сумма;</li>
 <li>максимум / минимум;</li>
 <li>цвет / класс;</li>
-</ul></section>
-
+</ul>
+</section>
 
 <section class="slide entry"><h2>
         Статистики
     </h2><p>Храниться только в корнях.</p>
-
 <p>Важно задать правила по которым будет определяться статистика после слияния.</p>
 </section>
-
 
 <section id="ddf" class="slide entry section"><h2>
         Динамический направленный лес
     </h2></section>
 
-
 <section class="slide entry"><h2>
         Динамический направленный лес
-    </h2>Лес с двумя операциями:</p>
-
+    </h2><p>Лес с двумя операциями:</p>
 <ul>
 <li>\(\mathrm{GetRoot}(x)\) &mdash; будем хранить корень как статистику;</li>
 <li>\(\mathrm{AddEdge}(x, y)\) &mdash; разрешено, если \(y\) является корнем и \(\mathrm{GetRoot}(x) \neq \mathrm{GetRoot}(y)\).</li>
-</ul></section>
-
+</ul>
+</section>
 
 <section id="implementation" class="slide entry section"><h2>
         Вариант реализации
     </h2></section>
 
-
 <section class="slide entry"><h2>
         Вариант реализации
     </h2><p>Массив с индексами родителей.</p>
-
 <p>Для корней можно хранить отрицательное число, в котором кодировать ранг или статистику.</p>
-
 <p>Также можно добавлять новые элементы.</p>
 </section>
 

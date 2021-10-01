@@ -10,9 +10,9 @@
 <meta property='og:description' content='Распределённые системы имеют кучу подводных граблей. Синхронизация состояния сама по себе нетривиальная задача, которой посвящены многие работы. А уж если состояние распределено по системе…'>
 <meta property='og:url' content='https://vporoshok.me/slides/2019/11/state-sync/'>
 <meta property='og:site_name' content='Где-то на дальнем сервере'>
-<meta property='og:type' content='article'><meta property='article:section' content='slides'><meta property='article:published_time' content='2019-11-16T12:24:33Z'/><meta property='article:modified_time' content='2019-11-22T11:32:36&#43;04:00'/><meta name='twitter:card' content='summary'>
+<meta property='og:type' content='article'><meta property='article:section' content='slides'><meta property='article:published_time' content='2019-11-16T12:24:33Z'/><meta property='article:modified_time' content='2021-10-01T18:45:33&#43;04:00'/><meta name='twitter:card' content='summary'>
 
-<meta name="generator" content="Hugo 0.57.2" />
+<meta name="generator" content="Hugo 0.88.1" />
 
     <title>Синхронизация состояния в распределённых системах • Где-то на дальнем сервере</title>
     <link rel='canonical' href='https://vporoshok.me/slides/2019/11/state-sync/'>
@@ -77,19 +77,11 @@
         <p>Распределённые системы имеют кучу подводных граблей. Синхронизация состояния сама по себе нетривиальная задача, которой посвящены многие работы. А уж если состояние распределено по системе…</p>
     </header>
 
-    <style>
-.middle {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-}
-</style>
-
+    <!-- raw HTML omitted -->
+<!-- raw HTML omitted -->
 <section id="title" class="slide entry clear section black"><h2>
         Синхронизация состояния в распределённых системах
     </h2></section>
-
 
 <section id="hello" class="slide entry"><h2>
         Всем привет!
@@ -97,10 +89,10 @@
 <li>Бастрыков Евгений</li>
 <li>Программирую с 2013</li>
 <li>Преподаю «Алгоритмы и структуры данных»</li>
-<li>Разрабатываю QuickBPM
-<p class="note"><a href="https://vporoshok.me" target="_blank">vporoshok.me</a></p></li>
-</ul></section>
-
+<li>Разрабатываю QuickBPM</li>
+</ul>
+<!-- raw HTML omitted -->
+</section>
 
 <section id="toc" class="slide entry toc"><h2>
         План
@@ -108,208 +100,142 @@
 <li><a href="#redis">кеш во внешнем сервисе</a></li>
 <li><a href="#local">кеш внутри сервиса</a></li>
 <li><a href="#sharding">шардирование</a></li>
-</ol></section>
-
+</ol>
+</section>
 
 <section class="slide entry"><h2 class="shout">
         Не используйте, если можете
     </h2></section>
 
-
 <section id="redis" class="slide entry section"><h2>
         Кеш во внешнем сервисе
     </h2></section>
 
+<section class="slide entry"><h2>
+        Кеш во внешнем сервисе
+    </h2><!-- raw HTML omitted --></section>
 
 <section class="slide entry"><h2>
         Кеш во внешнем сервисе
-    </h2><center class="middle">
-Распределённая = Конкурентная
-</center></section>
-
-
-<section class="slide entry"><h2>
-        Кеш во внешнем сервисе
-    </h2>Идеален, если</p>
-
+    </h2><p>Идеален, если</p>
 <ul>
 <li>чистые данные</li>
 <li>не меняются</li>
 <li>подготовка занимает время/ресурсы</li>
-</ul></section>
-
-
-<section class="slide entry"><h2>
-        Кеш во внешнем сервисе
-    </h2>Проблемы:
-<ul></p>
-
-<ul>
-<li>гонка на создании <span class="next">(трата ресурсов)</span>
-<li>гонка на обновление <span class="next">(атомарное обновление: inc/dec/CAS)</span>
-<li class="next">гонка создания и обновления
-</ul></li>
-</ul></section>
-
+</ul>
+</section>
 
 <section class="slide entry"><h2>
         Кеш во внешнем сервисе
-    </h2><figure>
-    <div class="mermaid">
-sequenceDiagram
-    participant Client 1
-    participant A
-    participant Redis
-    participant B
-    participant Client 2
-    Client 1->>+A: Get
-    Note right of A: Prepare
-    Client 2->>+B: Inc
-    B->>Redis: Inc
-    Redis->>B: Not found
-    B->>-Client 2: OK
-    A->>Redis: Set
-    A->>-Client 1: OK
-</div>
-<figcaption>
-        Рис.&thinsp;1.
-        
-    </figcaption>
-</figure></section>
+    </h2>Проблемы:</p>
+<!-- raw HTML omitted --></section>
 
+<section class="slide entry"><h2>
+        Кеш во внешнем сервисе
+    </h2><!-- raw HTML omitted -->
+<pre><code>&lt;/figcaption&gt;
+</code></pre>
+<!-- raw HTML omitted -->
+</section>
 
 <section class="slide entry clear section black"><h2>
         Локи
     </h2></section>
 
-
 <section class="slide entry"><h2>
         Кеш во внешнем сервисе
-    </h2>Проблемы:</p>
-
+    </h2><p>Проблемы:</p>
 <ul>
 <li>гонка на создании (трата ресурсов)</li>
 <li>гонка на обновление (атомарное обновление: inc/dec/CAS)</li>
 <li>гонка создания и обновления (блокировки)</li>
-</ul></section>
+</ul>
+</section>
 
-
-<section class="slide entry"><div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-lua" data-lang="lua"><span style="color:#080;font-weight:bold">local</span> c <span style="color:#333">=</span> redis.call(<span style="background-color:#fff0f0">&#34;HGET&#34;</span>, KEYS[<span style="color:#00d;font-weight:bold">1</span>], ARGV[<span style="color:#00d;font-weight:bold">1</span>])
+<section class="slide entry"><div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-lua" data-lang="lua"><span style="color:#080;font-weight:bold">local</span> c <span style="color:#333">=</span> redis.call(<span style="background-color:#fff0f0">&#34;HGET&#34;</span>, KEYS[<span style="color:#00d;font-weight:bold">1</span>], ARGV[<span style="color:#00d;font-weight:bold">1</span>])
 <span style="color:#080;font-weight:bold">if</span> c <span style="color:#333">==</span> <span style="color:#080;font-weight:bold">nil</span> <span style="color:#000;font-weight:bold">or</span> tonumber(c) <span style="color:#333">&lt;=</span> <span style="color:#333">-</span>tonumber(ARGV[<span style="color:#00d;font-weight:bold">2</span>]) <span style="color:#080;font-weight:bold">then</span>
     redis.call(<span style="background-color:#fff0f0">&#34;HDEL&#34;</span>, KEYS[<span style="color:#00d;font-weight:bold">1</span>], ARGV[<span style="color:#00d;font-weight:bold">1</span>])
     <span style="color:#080;font-weight:bold">return</span> <span style="color:#00d;font-weight:bold">0</span>
 <span style="color:#080;font-weight:bold">end</span>
 redis.call(<span style="background-color:#fff0f0">&#34;HINCRBY&#34;</span>, KEYS[<span style="color:#00d;font-weight:bold">1</span>], ARGV[<span style="color:#00d;font-weight:bold">1</span>], ARGV[<span style="color:#00d;font-weight:bold">2</span>])
 <span style="color:#080;font-weight:bold">local</span> updatedCount <span style="color:#333">=</span> redis.call(<span style="background-color:#fff0f0">&#34;HGET&#34;</span>, KEYS[<span style="color:#00d;font-weight:bold">1</span>], ARGV[<span style="color:#00d;font-weight:bold">1</span>])
-<span style="color:#080;font-weight:bold">return</span> tonumber(updatedCount)</code></pre></div></section>
-
+<span style="color:#080;font-weight:bold">return</span> tonumber(updatedCount)
+</code></pre></div></section>
 
 <section id="redis" class="slide entry section"><h2>
         Кеш внутри сервиса
     </h2></section>
 
-
 <section class="slide entry"><h2>
         Кеш внутри сервиса
-    </h2>Почему?</p>
-
+    </h2><p>Почему?</p>
 <ul>
 <li>Не просто данные</li>
 <li>Нагрузка на сеть</li>
-</ul></section>
-
+</ul>
+</section>
 
 <section class="slide entry"><h2>
         Кеш внутри сервиса
-    </h2>Что можно делать?</p>
-
+    </h2><p>Что можно делать?</p>
 <ul>
 <li>Создавать</li>
 <li>Читать</li>
 <li><del>Менять</del></li>
 <li>Инвалидировать</li>
-</ul></section>
-
+</ul>
+</section>
 
 <section class="slide entry"><h2>
         Кеш внутри сервиса
-    </h2>Оповещение об инвалидации:</p>
-
+    </h2><p>Оповещение об инвалидации:</p>
 <ul>
 <li>gossip</li>
 <li>message queue</li>
 <li>key-value</li>
-</ul></section>
-
+</ul>
+</section>
 
 <section class="slide entry"><h2>
         Кеш внутри сервиса
-    </h2>Флаг
-<center>
-Key &mdash; version
-</center>
-<div class="next">TTL</div></p>
-
-<div class="next"><center>
-Key &mdash; updatedAt
-</center></div></section>
-
+    </h2>Флаг</p>
+<!-- raw HTML omitted -->
+<!-- raw HTML omitted --></section>
 
 <section class="slide entry"><h2 class="shout">
         Расхождение часов
     </h2></section>
 
-
 <section class="slide entry"><h2>
         Расхождение часов
-    </h2><div class="highlight"><pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go">ts <span style="color:#333">:=</span> time.<span style="color:#06b;font-weight:bold">Now</span>().<span style="color:#06b;font-weight:bold">UTC</span>()
+    </h2><div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go">ts <span style="color:#333">:=</span> time.<span style="color:#06b;font-weight:bold">Now</span>().<span style="color:#06b;font-weight:bold">UTC</span>()
 claims <span style="color:#333">:=</span> <span style="color:#333">&amp;</span>jwt.StandardClaims{
     IssuedAt: ts.<span style="color:#06b;font-weight:bold">Add</span>(<span style="color:#333">-</span>deviateIssuedAt).<span style="color:#06b;font-weight:bold">Unix</span>(),
     ExpiresAt: ts.<span style="color:#06b;font-weight:bold">Add</span>(validTTL).<span style="color:#06b;font-weight:bold">Unix</span>(),
-}</code></pre></div></section>
-
+}
+</code></pre></div></section>
 
 <section class="slide entry clear"><h2>
         Расхождение часов
-    </h2><figure>
-    <div class="mermaid">
-sequenceDiagram
-    participant Client 1
-    participant A
-    participant Redis
-    participant B as B (-10 с)
-    participant Client 2
-    Client 1->>+A: Get
-    Client 2->>+B: Invalidate
-    Note over A: 1574000011
-    B->>Redis: 1574000002
-    A->>-Client 1: Value
-    B->>-Client 2: OK
-    A->>Redis: Get
-    Redis->>A: 1574000002
-    Note over A: Is not changed
-</div>
-<figcaption>
-        Рис.&thinsp;2.
-        
-    </figcaption>
-</figure></section>
-
+    </h2><!-- raw HTML omitted -->
+<pre><code>&lt;/figcaption&gt;
+</code></pre>
+<!-- raw HTML omitted -->
+</section>
 
 <section id="sharding" class="slide entry section"><h2>
         Шардирование
     </h2></section>
 
-
 <section class="slide entry"><h2>
         Шардирование
-    </h2>За определённое состояние должен отвечать только один сервис</p>
-
+    </h2><p>За определённое состояние должен отвечать только один сервис</p>
 <ul>
 <li>таймеры</li>
 <li>изменения в бд</li>
 <li>акторы</li>
-</ul></section>
+</ul>
+</section>
 
 
 

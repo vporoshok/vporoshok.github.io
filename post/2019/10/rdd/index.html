@@ -9,9 +9,9 @@
 <meta property='og:description' content='Как написать удобную библиотеку'>
 <meta property='og:url' content='https://vporoshok.me/post/2019/10/rdd/'>
 <meta property='og:site_name' content='Где-то на дальнем сервере'>
-<meta property='og:type' content='article'><meta property='article:section' content='post'><meta property='article:tag' content='architect'><meta property='article:tag' content='checklist'><meta property='article:published_time' content='2019-10-13T10:21:26Z'/><meta property='article:modified_time' content='2019-10-13T14:22:14&#43;04:00'/><meta name='twitter:card' content='summary'>
+<meta property='og:type' content='article'><meta property='article:section' content='post'><meta property='article:tag' content='architect'><meta property='article:tag' content='checklist'><meta property='article:published_time' content='2019-10-13T10:21:26Z'/><meta property='article:modified_time' content='2021-10-01T18:45:33&#43;04:00'/><meta name='twitter:card' content='summary'>
 
-<meta name="generator" content="Hugo 0.57.2" />
+<meta name="generator" content="Hugo 0.88.1" />
 
   <title>Readme Driven Development • Где-то на дальнем сервере</title>
   <link rel='canonical' href='https://vporoshok.me/post/2019/10/rdd/'>
@@ -219,8 +219,8 @@ if (!doNotTrack) {
 </svg>
 </span>
 </button>
-    <ul><li class='item'>
-        <a href='/post/'>Блог</a>
+    <ul><li class='item current'>
+        <a aria-current='page' href='/post/'>Блог</a>
       </li><li class='item'>
         <a href='/page/about/'>Обо мне</a>
       </li></ul>
@@ -286,48 +286,29 @@ if (!doNotTrack) {
   
 
   <div class='container entry-content'>
-  
-
-<blockquote>Технари всегда начинают разговор с «нет», потому что думают о том, как это реализовывать, а тут надо «парить»…<footer>
+  <blockquote>Технари всегда начинают разговор с «нет», потому что думают о том, как это реализовывать, а тут надо «парить»…<footer>
         
         Будин А.В.
         
         
     </footer>
 </blockquote>
-
 <p>В этой статье попробуем разобраться о том, как проектировать программные интерфейсы. Интерфейсы могут быть совершенно разными, однако, есть в них одна общая черта: программисты разрабатывают их для других программистов. И это будет нашим большим плюсом, потому что мы также можем выступать в роли потребителей собственных продуктов. Итак, вы решили разработать библиотеку или сервис. С чего начать?</p>
-
-<p>Один из подходов к проектированию программ был предложен Томом Престоном&ndash;Вернером<sup class="footnote-ref" id="fnref:1"><a href="#fn:1">1</a></sup> одним из основателей GitHub, а услышал я о нём впервые в одном из выпусков DevZen<sup class="footnote-ref" id="fnref:2"><a href="#fn:2">2</a></sup>. Этот подход называется RDD или Readme Driven Development и предлагает начинать проект с написания одного документа: README.md.</p>
-
+<p>Один из подходов к проектированию программ был предложен Томом Престоном&ndash;Вернером<sup id="fnref:1"><a href="#fn:1" class="footnote-ref" role="doc-noteref">1</a></sup> одним из основателей GitHub, а услышал я о нём впервые в одном из выпусков DevZen<sup id="fnref:2"><a href="#fn:2" class="footnote-ref" role="doc-noteref">2</a></sup>. Этот подход называется RDD или Readme Driven Development и предлагает начинать проект с написания одного документа: README.md.</p>
 <h2 id="мотивация">Мотивация</h2>
-
 <p>Я довольно технически настроенный человек. И каждый раз, когда слышу о какой-то проблеме / задаче / вопросе, мозг сразу начинает искать решение. Хотелось бы чтоб это было достоинством, но скорее это недостаток. Представьте, что рядом с вами ребёнок, пытаясь забить гвоздь, ударил себя по пальцу. Последнее, что поможет ситуации, это объяснение ему, что он не так держал молоток. Эту ситуацию не надо решать аналитически. Но мне довольно трудно оценить ситуацию в целом. Привычка закапываться в детали, когда за мелочами перестаёшь видеть целое.</p>
-
 <p>Поэтому важным моментом при написании readme для меня является отказ от попыток анализа внутренностей. Представьте себе идеальный чёрный ящик. То, каким бы вы хотели его видеть. Только интерфейс, ни шагу внутрь. Представьте, что вы ищете библиотеку для решения своей проблемы, что где-то на Земле есть просветлённый программист, который написал для вас идеальную библиотеку и выложил её в открытом доступе. При таком подходе мелочи и детали не отвлекают с самого начала, а появляются постепенно по мере уточнения интерфейса.</p>
-
 <p>При этом сразу вычерчиваются те механизмы, которыми вы бы хотели управлять как потребитель библиотеки, а от каких быть изолированными. Проблемой многих библиотек, которые я писал, оказывалось то, что они имели слишком большую ответственность. Бэкофы и ретраи, параллелизация и валидация. Я всегда думал на два шага вперёд. Но в итоге это оказывалось слишком жёстким, хрупким, несогласованным. Когда смотришь на интерфейс издалека начинаешь думать интерфейсами и находить, что бэкофы и ретраи в разных случаях должны вести себя похоже, так что это можно реализовать в отдельной библиотеке. А параллелизация слишком сильно зависит от контекста и лучше реализовать её в месте использования.</p>
-
 <h3 id="философия">Философия</h3>
-
-<p>В противовес подходу проектирования от реализации часто приводят DDD (Document-Driven Development<sup class="footnote-ref" id="fnref:3"><a href="#fn:3">3</a></sup>). Но полное следование такому подходу приводит к разработке довольно большими итерациями, практически водопадному циклу разработки. В отличии от этого RDD не требует чрезмерно-детального прорабатывания всей системы. Наоборот, написание readme должно быть максимально оторвано от реализации (в адекватном ключе, конечно), то есть не надо закапываться в детали при его написании. Это приводит к такому плюсу, что при написании кода его интерфейс, а значит и readme практически не меняются. Это документ, который будучи написан один раз в дальнейшем лишь развивается, но ни в коем случае не переписывается.</p>
-
+<p>В противовес подходу проектирования от реализации часто приводят DDD (Document-Driven Development<sup id="fnref:3"><a href="#fn:3" class="footnote-ref" role="doc-noteref">3</a></sup>). Но полное следование такому подходу приводит к разработке довольно большими итерациями, практически водопадному циклу разработки. В отличии от этого RDD не требует чрезмерно-детального прорабатывания всей системы. Наоборот, написание readme должно быть максимально оторвано от реализации (в адекватном ключе, конечно), то есть не надо закапываться в детали при его написании. Это приводит к такому плюсу, что при написании кода его интерфейс, а значит и readme практически не меняются. Это документ, который будучи написан один раз в дальнейшем лишь развивается, но ни в коем случае не переписывается.</p>
 <p>Ещё одним неоценимым плюсом такого подхода является быстрое ревью проекта. Прочитав один короткий документ у человека должно сложиться целостное понимание чтО перед ним находится, какую задачу эта программа решает и как эту программу предполагается использовать. Часто это пригождается и самому автору проекта, ведь время идёт и определённые решения забываются.</p>
-
 <h2 id="использование">Использование</h2>
-
-<p>Для того, чтобы использовать такой подход неплохо обзавестись шаблонным readme. Посмотрите на описания проектов, которые вам нравятся (есть неплохая подборка проектов с хорошими readme<sup class="footnote-ref" id="fnref:4"><a href="#fn:4">4</a></sup>). Подумайте над тем, что бы вы хотели узнать о проекте при первом взгляде на него. Выберите пункты и попробуйте написать readme для своего или чужого проекта. И следующий проект начните с написания readme на основе сформированного вами шаблона. Например, вот тут можно найти мой шаблон: <a href="https://gist.github.com/vporoshok/24d584cb7b52e56f77d9b91d890c3b4c">https://gist.github.com/vporoshok/24d584cb7b52e56f77d9b91d890c3b4c</a>.</p>
-
+<p>Для того, чтобы использовать такой подход неплохо обзавестись шаблонным readme. Посмотрите на описания проектов, которые вам нравятся (есть неплохая подборка проектов с хорошими readme<sup id="fnref:4"><a href="#fn:4" class="footnote-ref" role="doc-noteref">4</a></sup>). Подумайте над тем, что бы вы хотели узнать о проекте при первом взгляде на него. Выберите пункты и попробуйте написать readme для своего или чужого проекта. И следующий проект начните с написания readme на основе сформированного вами шаблона. Например, вот тут можно найти мой шаблон: <a href="https://gist.github.com/vporoshok/24d584cb7b52e56f77d9b91d890c3b4c">https://gist.github.com/vporoshok/24d584cb7b52e56f77d9b91d890c3b4c</a>.</p>
 <p>Не забудьте включить в документ примеры использования вашей программы. Именно эти примеры и станут основой для тестов, а дальше и для кода проекта.</p>
-
 <h2 id="как-это-работает">Как это работает</h2>
-
 <p>Перед началом движения хорошо бы знать точку назначения. Ну или хотя бы направление. Перед написанием программы, конечно, в первую очередь надо сформулировать задачу, которую она будет решать. Довольно часто я сам подходил к этой части довольно халатно, мол сервис авторизации, будет делать всё, что связанно с авторизацией. А управление пользователями: создание, приглашение, блокировка &mdash; тоже в этом сервисе будет происходить? На многие вопросы ответы находятся в момент написания или проектирования кода. Таким образом я подстраивал интерфейс программы для упрощения её внутреннего устройства. Но потребитель нашей программы не будет смотреть на её внутренности, он будет использовать её как чёрный ящик. И менять форму ящика под содержимое оказывается порочной практикой.</p>
-
 <p>Можно сказать, что RDD позволяет проектировать сложные системы сверху вниз, а не снизу вверх, как это часто происходит.</p>
-
 <h2 id="ключевые-особенности">Ключевые особенности</h2>
-
 <ul>
 <li>формулирование задачи с чёткими границами ответственности;</li>
 <li>проектирование удобного и гибкого интерфейса;</li>
@@ -335,9 +316,7 @@ if (!doNotTrack) {
 <li>минимальная документация (для многих проектов этой документации оказывается достаточно);</li>
 <li>помощь в принятии решения другим людям, выбирающих проект для своих нужд;</li>
 </ul>
-
 <h2 id="смотрите-также">Смотрите также</h2>
-
 <ul>
 <li><a href="https://krasimirtsonev.com/blog/article/readme-driven-development">https://krasimirtsonev.com/blog/article/readme-driven-development</a></li>
 <li><a href="https://medium.com/@elliotchance/readme-driven-development-3a434b7e253c">https://medium.com/@elliotchance/readme-driven-development-3a434b7e253c</a></li>
@@ -345,27 +324,26 @@ if (!doNotTrack) {
 <li><a href="https://github.com/noffle/art-of-readme#readme">https://github.com/noffle/art-of-readme#readme</a></li>
 <li><a href="http://thinkrelevance.com/blog/2011/11/15/documenting-architecture-decisions">http://thinkrelevance.com/blog/2011/11/15/documenting-architecture-decisions</a></li>
 </ul>
-
 <h2 id="заключение">Заключение</h2>
-
 <p>Если присмотреться, то можно заметить, что эта статья написана по моему шаблону readme. Полезная штука не только для описания программ, да?</p>
-
 <h2 id="ссылки">Ссылки</h2>
-<div class="footnotes">
-
-<hr />
-
+<section class="footnotes" role="doc-endnotes">
+<hr>
 <ol>
-<li id="fn:1"><a href="http://tom.preston-werner.com/2010/08/23/readme-driven-development.html">http://tom.preston-werner.com/2010/08/23/readme-driven-development.html</a>
- <a class="footnote-return" href="#fnref:1"><sup>[return]</sup></a></li>
-<li id="fn:2"><a href="https://devzen.ru/episode-0144/">https://devzen.ru/episode-0144/</a>
- <a class="footnote-return" href="#fnref:2"><sup>[return]</sup></a></li>
-<li id="fn:3"><a href="https://gist.github.com/zsup/9434452">https://gist.github.com/zsup/9434452</a>
- <a class="footnote-return" href="#fnref:3"><sup>[return]</sup></a></li>
-<li id="fn:4"><a href="https://github.com/matiassingers/awesome-readme">https://github.com/matiassingers/awesome-readme</a>
- <a class="footnote-return" href="#fnref:4"><sup>[return]</sup></a></li>
+<li id="fn:1" role="doc-endnote">
+<p><a href="http://tom.preston-werner.com/2010/08/23/readme-driven-development.html">http://tom.preston-werner.com/2010/08/23/readme-driven-development.html</a>&#160;<a href="#fnref:1" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:2" role="doc-endnote">
+<p><a href="https://devzen.ru/episode-0144/">https://devzen.ru/episode-0144/</a>&#160;<a href="#fnref:2" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:3" role="doc-endnote">
+<p><a href="https://gist.github.com/zsup/9434452">https://gist.github.com/zsup/9434452</a>&#160;<a href="#fnref:3" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:4" role="doc-endnote">
+<p><a href="https://github.com/matiassingers/awesome-readme">https://github.com/matiassingers/awesome-readme</a>&#160;<a href="#fnref:4" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
 </ol>
-</div>
+</section>
 
 </div>
 
@@ -376,7 +354,7 @@ if (!doNotTrack) {
   <path d="M22,19a2,2,0,0,1-2,2H4a2,2,0,0,1-2-2V5A2,2,0,0,1,4,3H9l2,3h9a2,2,0,0,1,2,2Z"/>
   
 </svg>
-<span class='screen-reader-text'>category: </span><a class='category' href='/categories/life-style/'>Образ жизни</a></div>
+<span class='screen-reader-text'>Категории: </span><a class='category' href='/categories/life-style/'>Образ жизни</a></div>
 <div class='tags'><svg class='icon' viewbox='0 0 24 24' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' aria-hidden='true'>
   
   <path d="M20.59,13.41l-7.17,7.17a2,2,0,0,1-2.83,0L2,12V2H12l8.59,8.59A2,2,0,0,1,20.59,13.41Z"/>
@@ -422,7 +400,7 @@ if (!doNotTrack) {
 
       <footer id='footer' class='footer'>
         <div class='container sep-before'><div class='copyright'>
-  <p>Материалы распространяются по <a rel="noreferrer" href="https://creativecommons.org/licenses/by/4.0/" target="_blank">лицензии CC BY</a> &copy; 2018-2021 vporoshok <br>Увидели ошибку? Буду рад <a rel="noreferrer" href="https://github.com/vporoshok/vporoshok.github.io" target="_blank">PR&rsquo;у</a></p>
+  <p>Материалы распространяются по <!-- raw HTML omitted -->лицензии CC BY<!-- raw HTML omitted --> &copy; 2018-2021 vporoshok <!-- raw HTML omitted -->Увидели ошибку? Буду рад <!-- raw HTML omitted -->PR&rsquo;у<!-- raw HTML omitted --></p>
 </div>
 
         </div>

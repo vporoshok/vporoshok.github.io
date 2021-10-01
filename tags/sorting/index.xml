@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>sorting on Где-то на дальнем сервере</title>
@@ -6,11 +6,7 @@
     <description>Recent content in sorting on Где-то на дальнем сервере</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>ru</language>
-    <lastBuildDate>Sat, 27 Oct 2018 08:53:31 +0000</lastBuildDate>
-    
-	<atom:link href="https://vporoshok.me/tags/sorting/index.xml" rel="self" type="application/rss+xml" />
-    
-    
+    <lastBuildDate>Sat, 27 Oct 2018 08:53:31 +0000</lastBuildDate><atom:link href="https://vporoshok.me/tags/sorting/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Сортировка слиянием</title>
       <link>https://vporoshok.me/post/2018/10/merge-sort/</link>
@@ -18,7 +14,7 @@
       
       <guid>https://vporoshok.me/post/2018/10/merge-sort/</guid>
       <description>Сортировка слиянием один из тех редких алгоритмов, которые не устаревают, а напротив год от года развивается, получает новые публикации и исследования. Это действительно чудесный со многих сторон алгоритм, который находит применение в современном мире, а исследования, связанные с ним предлагают решения, применимые далеко за пределами сортировки. Это своего рода жемчужина среди всех алгоритмов сортировки.
-Базовый алгоритм Mergesort является двойственным к быстрой сортировке и относится к классу алгоритмов «Разделяй и властвуй».</description>
+Базовый алгоритм Mergesort является двойственным к быстрой сортировке и относится к классу алгоритмов «Разделяй и властвуй». Основной функцией этого алгоритма является функция слияния, которая получает на вход два отсортированных массива и возвращает их отсортированное объединение.</description>
     </item>
     
   </channel>

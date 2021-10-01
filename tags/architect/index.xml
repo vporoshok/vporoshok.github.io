@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>architect on Где-то на дальнем сервере</title>
@@ -6,11 +6,7 @@
     <description>Recent content in architect on Где-то на дальнем сервере</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>ru</language>
-    <lastBuildDate>Sun, 13 Oct 2019 10:21:26 +0000</lastBuildDate>
-    
-	<atom:link href="https://vporoshok.me/tags/architect/index.xml" rel="self" type="application/rss+xml" />
-    
-    
+    <lastBuildDate>Sun, 13 Oct 2019 10:21:26 +0000</lastBuildDate><atom:link href="https://vporoshok.me/tags/architect/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Readme Driven Development</title>
       <link>https://vporoshok.me/post/2019/10/rdd/</link>
@@ -48,7 +44,7 @@ return errors.WithStack(err) Одной из ключевых особеннос
       
       <guid>https://vporoshok.me/post/2019/01/decorators/</guid>
       <description>Довольно большая часть моей работы заключается в написании библиотечного кода. Кода, который будет многократно использоваться как другими программистами, так и мной самим. Поэтому одним из важных критериев становится удобство интерфейсов. Некоторые применяемые мной практики рассмотрены в этой статье.
-Перехватчики Концепция middleware появилась, конечно, задолго до go. Будем называть их перехватчиками, что не по фен-шую, но лучше, чем «слой промежуточного программного обеспечения». Однако, именно в go эта концепция достигла своего апогея.</description>
+Перехватчики Концепция middleware появилась, конечно, задолго до go. Будем называть их перехватчиками, что не по фен-шую, но лучше, чем «слой промежуточного программного обеспечения». Однако, именно в go эта концепция достигла своего апогея. Собственно про middleware написано и сказано уже довольно много.</description>
     </item>
     
     <item>
@@ -57,10 +53,10 @@ return errors.WithStack(err) Одной из ключевых особеннос
       <pubDate>Sun, 20 Jan 2019 05:30:33 +0000</pubDate>
       
       <guid>https://vporoshok.me/post/2019/01/reflection/</guid>
-      <description>Зачем ты озабочен
-В этот хороший миг одним упорным выяснением,
-Как тебя люди другие видят. Тратишь воображение
-На домыслы пустые о домыслах касательно своей персоны.
+      <description>Зачем ты озабочен\
+В этот хороший миг одним упорным выяснением,\
+Как тебя люди другие видят. Тратишь воображение\
+На домыслы пустые о домыслах касательно своей персоны.\
 У тебя рефлексия, опасная стадия. Есть есть есть «Рефлексия»    Что же такое рефлексия и для чего она нужна? Рефлексия это механизм, с помощью которого программа может проверять своё состояние, исследовать типы данных и менять свою структуру и поведение во время выполнения. Звучит довольно запутано, но давайте раскладывать по полочкам.</description>
     </item>
     
