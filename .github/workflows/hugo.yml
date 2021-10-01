@@ -10,17 +10,28 @@ jobs:
       VERSION: '0.88.1'
       CNAME: vporoshok.me
     steps:
-      - uses: actions/checkout@v2
+      - name: Checkout
+        uses: actions/checkout@v2
         with:
           submodules: recursive
-      - run: wget "https://github.com/gohugoio/hugo/releases/download/v${VERSION}/hugo_${VERSION}_Linux-64bit.tar.gz"
-      - run: tar xvf hugo_${VERSION}_Linux-64bit.tar.gz
-      - run: git config --global user.name "${GITHUB_ACTOR}"
-      - run: git config --global user.email "${GITHUB_ACTOR}@users.noreply.github.com"
-      - run: git clone --depth=1 --single-branch --branch master "https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" /tmp/gh-pages
-      - run: rm -rf /tmp/gh-pages/*
-      - run: ./hugo -d /tmp/gh-pages/
-      - run: cd /tmp/gh-pages
-      - run: echo "${CNAME}" > CNAME
-      - run: git add -A && git commit --allow-empty -am "Publishing Site at ${GITHUB_SHA} on $(date -u)"
-      - run: git push --force
+      - name: Get Hugo
+        run: |
+          wget "https://github.com/gohugoio/hugo/releases/download/v${VERSION}/hugo_${VERSION}_Linux-64bit.tar.gz"
+          tar xvf hugo_${VERSION}_Linux-64bit.tar.gz
+      - name: Setup Git
+        run: |
+          git config --global user.name "${GITHUB_ACTOR}"
+          git config --global user.email "${GITHUB_ACTOR}@users.noreply.github.com"
+      - name: Prepare target repository
+        run: |
+          git clone --depth=1 --single-branch --branch master "https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" /tmp/gh-pages
+          rm -rf /tmp/gh-pages/*
+      - name: Build
+        run: ./hugo -d /tmp/gh-pages/
+      - name: Deploy
+        working-directory: /tmp/gh-pages
+        run: |
+          echo "${CNAME}" > CNAME
+          git add -A
+          git commit --allow-empty -am "Publishing Site at ${GITHUB_SHA} on $(date -u)"
+          git push --force
