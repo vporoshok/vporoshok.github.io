@@ -10,25 +10,15 @@ jobs:
       VERSION: '0.88.1'
       CNAME: vporoshok.me
     steps:
-      - name: Download hugo
-        run: wget "https://github.com/gohugoio/hugo/releases/download/v${VERSION}/hugo_${VERSION}_Linux-64bit.tar.gz"
-      - name: Unpack hugo
-        run: tar xvf hugo_${VERSION}_Linux-64bit.tar.gz
-      - name: Setup git user name
-        run: git config --global user.name "${GITHUB_ACTOR}"
-      - name: Setup git user email
-        run: git config --global user.email "${GITHUB_ACTOR}@users.noreply.github.com"
-      - name: Clone target repository
-        run: ls -al
-      - name: Cleanup target repository
-        run: rm -rf /tmp/gh-pages/*
-      - name: Build site
-        run: ./hugo -d /tmp/gh-pages/
-      - name: CD to target repository
-        run: cd /tmp/gh-pages
-      - name: Add cname
-        run: echo "${CNAME}" > CNAME
-      - name: Commit
-        run: git add -A && git commit --allow-empty -am "Publishing Site at ${GITHUB_SHA} on $(date -u)"
-      - name: Push
-        run: git push --force
+      - uses: actions/checkout@v2
+      - run: wget "https://github.com/gohugoio/hugo/releases/download/v${VERSION}/hugo_${VERSION}_Linux-64bit.tar.gz"
+      - run: tar xvf hugo_${VERSION}_Linux-64bit.tar.gz
+      - run: git config --global user.name "${GITHUB_ACTOR}"
+      - run: git config --global user.email "${GITHUB_ACTOR}@users.noreply.github.com"
+      - run: git clone --depth=1 --single-branch --branch master "https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" /tmp/gh-pages
+      - run: rm -rf /tmp/gh-pages/*
+      - run: ./hugo -d /tmp/gh-pages/
+      - run: cd /tmp/gh-pages
+      - run: echo "${CNAME}" > CNAME
+      - run: git add -A && git commit --allow-empty -am "Publishing Site at ${GITHUB_SHA} on $(date -u)"
+      - run: git push --force
