@@ -23,8 +23,14 @@ jobs:
           git config --global user.name "${GITHUB_ACTOR}"
           git config --global user.email "${GITHUB_ACTOR}@users.noreply.github.com"
       - name: Prepare target repository
+        env:
+          # Сгенерировать токен тут с доступом public_repo
+          # https://github.com/settings/tokens/new
+          # Добавить секрет PERSONAL_TOKEN с полученным токеном тут
+          # https://github.com/vporoshok/vporoshok.github.io/settings/secrets/actions/new
+          PERSONAL_TOKEN: ${{ secrets.PERSONAL_TOKEN }}
         run: |
-          git clone --depth=1 --single-branch --branch master "https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" /tmp/gh-pages
+          git clone --depth=1 --single-branch --branch master "https://x-access-token:${PERSONAL_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" /tmp/gh-pages
           rm -rf /tmp/gh-pages/*
       - name: Build
         run: ./hugo -d /tmp/gh-pages/
