@@ -100,7 +100,7 @@ def merge(AB, n, C):
             AB[r] = AB[a]
             a -= 1
             if a < 0:
-                AB[a:r] = C[:b]
+                AB[a+1:r] = C[:b+1]
                 return
         else:
             AB[r] = C[b]
