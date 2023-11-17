@@ -3,431 +3,431 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
     <loc>https://vporoshok.me/</loc>
-    <lastmod>2021-10-01T18:45:33+04:00</lastmod>
+    <lastmod>2023-11-17T17:20:06+04:00</lastmod>
     <priority>0</priority>
   </url><url>
     <loc>https://vporoshok.me/categories/</loc>
-    <lastmod>2021-10-01T18:45:33+04:00</lastmod>
+    <lastmod>2023-11-17T17:20:06+04:00</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url><url>
     <loc>https://vporoshok.me/tags/management/</loc>
-    <lastmod>2021-10-01T18:45:33+04:00</lastmod>
+    <lastmod>2023-11-17T17:20:06+04:00</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url><url>
     <loc>https://vporoshok.me/tags/</loc>
-    <lastmod>2021-10-01T18:45:33+04:00</lastmod>
+    <lastmod>2023-11-17T17:20:06+04:00</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url><url>
     <loc>https://vporoshok.me/tags/tutorial/</loc>
-    <lastmod>2021-10-01T18:45:33+04:00</lastmod>
+    <lastmod>2023-11-17T17:20:06+04:00</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url><url>
     <loc>https://vporoshok.me/tags/work/</loc>
-    <lastmod>2021-10-01T18:45:33+04:00</lastmod>
+    <lastmod>2023-11-17T17:20:06+04:00</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url><url>
     <loc>https://vporoshok.me/post/2021/04/work/</loc>
-    <lastmod>2021-10-01T18:45:33+04:00</lastmod>
+    <lastmod>2023-11-17T17:20:06+04:00</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url><url>
     <loc>https://vporoshok.me/tags/go/</loc>
-    <lastmod>2021-10-01T18:45:33+04:00</lastmod>
+    <lastmod>2023-11-17T17:20:06+04:00</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url><url>
     <loc>https://vporoshok.me/tags/logging/</loc>
-    <lastmod>2021-10-01T18:45:33+04:00</lastmod>
+    <lastmod>2023-11-17T17:20:06+04:00</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url><url>
     <loc>https://vporoshok.me/post/2020/07/logs/</loc>
-    <lastmod>2021-10-01T18:45:33+04:00</lastmod>
+    <lastmod>2023-11-17T17:20:06+04:00</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url><url>
     <loc>https://vporoshok.me/tags/distributed-system/</loc>
-    <lastmod>2021-10-01T18:45:33+04:00</lastmod>
+    <lastmod>2023-11-17T17:20:06+04:00</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url><url>
     <loc>https://vporoshok.me/tags/graph/</loc>
-    <lastmod>2021-10-01T18:45:33+04:00</lastmod>
+    <lastmod>2023-11-17T17:20:06+04:00</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url><url>
     <loc>https://vporoshok.me/tags/state-machine/</loc>
-    <lastmod>2021-10-01T18:45:33+04:00</lastmod>
+    <lastmod>2023-11-17T17:20:06+04:00</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url><url>
     <loc>https://vporoshok.me/post/2020/01/distributed-algorithms/</loc>
-    <lastmod>2021-10-01T18:45:33+04:00</lastmod>
+    <lastmod>2023-11-17T17:20:06+04:00</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url><url>
     <loc>https://vporoshok.me/slides/2019/11/state-sync/</loc>
-    <lastmod>2021-10-01T18:45:33+04:00</lastmod>
+    <lastmod>2023-11-17T17:20:06+04:00</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url><url>
     <loc>https://vporoshok.me/tags/architect/</loc>
-    <lastmod>2021-10-01T18:45:33+04:00</lastmod>
+    <lastmod>2023-11-17T17:20:06+04:00</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url><url>
     <loc>https://vporoshok.me/tags/checklist/</loc>
-    <lastmod>2021-10-01T18:45:33+04:00</lastmod>
+    <lastmod>2023-11-17T17:20:06+04:00</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url><url>
     <loc>https://vporoshok.me/post/2019/10/rdd/</loc>
-    <lastmod>2021-10-01T18:45:33+04:00</lastmod>
+    <lastmod>2023-11-17T17:20:06+04:00</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url><url>
     <loc>https://vporoshok.me/tags/scheme/</loc>
-    <lastmod>2021-10-01T18:45:33+04:00</lastmod>
+    <lastmod>2023-11-17T17:20:06+04:00</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url><url>
     <loc>https://vporoshok.me/tags/sicp/</loc>
-    <lastmod>2021-10-01T18:45:33+04:00</lastmod>
+    <lastmod>2023-11-17T17:20:06+04:00</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url><url>
     <loc>https://vporoshok.me/post/2019/10/sicp-elementary/</loc>
-    <lastmod>2021-10-01T18:45:33+04:00</lastmod>
+    <lastmod>2023-11-17T17:20:06+04:00</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url><url>
     <loc>https://vporoshok.me/tags/testing/</loc>
-    <lastmod>2021-10-01T18:45:33+04:00</lastmod>
+    <lastmod>2023-11-17T17:20:06+04:00</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url><url>
     <loc>https://vporoshok.me/post/2019/08/quick-test/</loc>
-    <lastmod>2021-10-01T18:45:33+04:00</lastmod>
+    <lastmod>2023-11-17T17:20:06+04:00</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url><url>
     <loc>https://vporoshok.me/tags/microservices/</loc>
-    <lastmod>2021-10-01T18:45:33+04:00</lastmod>
+    <lastmod>2023-11-17T17:20:06+04:00</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url><url>
     <loc>https://vporoshok.me/tags/tips-and-tricks/</loc>
-    <lastmod>2021-10-01T18:45:33+04:00</lastmod>
+    <lastmod>2023-11-17T17:20:06+04:00</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url><url>
     <loc>https://vporoshok.me/post/2019/08/actions-in-action/</loc>
-    <lastmod>2021-10-01T18:45:33+04:00</lastmod>
+    <lastmod>2023-11-17T17:20:06+04:00</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url><url>
     <loc>https://vporoshok.me/post/2019/07/sicp-intro/</loc>
-    <lastmod>2021-10-01T18:45:33+04:00</lastmod>
+    <lastmod>2023-11-17T17:20:06+04:00</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url><url>
     <loc>https://vporoshok.me/slides/2019/05/why-algorithm/</loc>
-    <lastmod>2021-10-01T18:45:33+04:00</lastmod>
+    <lastmod>2023-11-17T17:20:06+04:00</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url><url>
     <loc>https://vporoshok.me/post/2019/05/errors/</loc>
-    <lastmod>2021-10-01T18:45:33+04:00</lastmod>
+    <lastmod>2023-11-17T17:20:06+04:00</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url><url>
     <loc>https://vporoshok.me/post/2019/03/one-on-one/</loc>
-    <lastmod>2021-10-01T18:45:33+04:00</lastmod>
+    <lastmod>2023-11-17T17:20:06+04:00</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url><url>
     <loc>https://vporoshok.me/tags/scrum/</loc>
-    <lastmod>2021-10-01T18:45:33+04:00</lastmod>
+    <lastmod>2023-11-17T17:20:06+04:00</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url><url>
     <loc>https://vporoshok.me/slides/2019/03/rmq__lca/</loc>
-    <lastmod>2021-10-01T18:45:33+04:00</lastmod>
+    <lastmod>2023-11-17T17:20:06+04:00</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url><url>
     <loc>https://vporoshok.me/slides/2019/03/dsu/</loc>
-    <lastmod>2021-10-01T18:45:33+04:00</lastmod>
+    <lastmod>2023-11-17T17:20:06+04:00</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url><url>
     <loc>https://vporoshok.me/slides/2019/02/hashing/</loc>
-    <lastmod>2021-10-01T18:45:33+04:00</lastmod>
+    <lastmod>2023-11-17T17:20:06+04:00</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url><url>
     <loc>https://vporoshok.me/slides/2019/02/utility-classes/</loc>
-    <lastmod>2021-10-01T18:45:33+04:00</lastmod>
+    <lastmod>2023-11-17T17:20:06+04:00</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url><url>
     <loc>https://vporoshok.me/post/2019/01/decorators/</loc>
-    <lastmod>2021-10-01T18:45:33+04:00</lastmod>
+    <lastmod>2023-11-17T17:20:06+04:00</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url><url>
     <loc>https://vporoshok.me/post/2019/01/reflection/</loc>
-    <lastmod>2021-10-01T18:45:33+04:00</lastmod>
+    <lastmod>2023-11-17T17:20:06+04:00</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url><url>
     <loc>https://vporoshok.me/tags/event/</loc>
-    <lastmod>2021-10-01T18:45:33+04:00</lastmod>
+    <lastmod>2023-11-17T17:20:06+04:00</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url><url>
     <loc>https://vporoshok.me/tags/hackathon/</loc>
-    <lastmod>2021-10-01T18:45:33+04:00</lastmod>
+    <lastmod>2023-11-17T17:20:06+04:00</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url><url>
     <loc>https://vporoshok.me/tags/keynote/</loc>
-    <lastmod>2021-10-01T18:45:33+04:00</lastmod>
+    <lastmod>2023-11-17T17:20:06+04:00</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url><url>
     <loc>https://vporoshok.me/post/2019/01/hackathon/</loc>
-    <lastmod>2021-10-01T18:45:33+04:00</lastmod>
+    <lastmod>2023-11-17T17:20:06+04:00</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url><url>
     <loc>https://vporoshok.me/slides/2018/12/hackathon/</loc>
-    <lastmod>2021-10-01T18:45:33+04:00</lastmod>
+    <lastmod>2023-11-17T17:20:06+04:00</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url><url>
     <loc>https://vporoshok.me/tags/complexity/</loc>
-    <lastmod>2021-10-01T18:45:33+04:00</lastmod>
+    <lastmod>2023-11-17T17:20:06+04:00</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url><url>
     <loc>https://vporoshok.me/tags/data-structure/</loc>
-    <lastmod>2021-10-01T18:45:33+04:00</lastmod>
+    <lastmod>2023-11-17T17:20:06+04:00</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url><url>
     <loc>https://vporoshok.me/post/2018/12/search-tree/</loc>
-    <lastmod>2021-10-01T18:45:33+04:00</lastmod>
+    <lastmod>2023-11-17T17:20:06+04:00</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url><url>
     <loc>https://vporoshok.me/post/2018/11/introduction/</loc>
-    <lastmod>2021-10-01T18:45:33+04:00</lastmod>
+    <lastmod>2023-11-17T17:20:06+04:00</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url><url>
     <loc>https://vporoshok.me/post/2018/11/meldable-heaps/</loc>
-    <lastmod>2021-10-01T18:45:33+04:00</lastmod>
+    <lastmod>2023-11-17T17:20:06+04:00</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url><url>
     <loc>https://vporoshok.me/slides/2018/11/meldable-heaps/</loc>
-    <lastmod>2021-10-01T18:45:33+04:00</lastmod>
+    <lastmod>2023-11-17T17:20:06+04:00</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url><url>
     <loc>https://vporoshok.me/tags/memory/</loc>
-    <lastmod>2021-10-01T18:45:33+04:00</lastmod>
+    <lastmod>2023-11-17T17:20:06+04:00</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url><url>
     <loc>https://vporoshok.me/post/2018/11/merge-sort-2/</loc>
-    <lastmod>2021-10-01T18:45:33+04:00</lastmod>
+    <lastmod>2023-11-17T17:20:06+04:00</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url><url>
     <loc>https://vporoshok.me/tags/python/</loc>
-    <lastmod>2021-10-01T18:45:33+04:00</lastmod>
+    <lastmod>2023-11-17T17:20:06+04:00</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url><url>
     <loc>https://vporoshok.me/post/2018/11/simple-heap/</loc>
-    <lastmod>2021-10-01T18:45:33+04:00</lastmod>
+    <lastmod>2023-11-17T17:20:06+04:00</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url><url>
     <loc>https://vporoshok.me/slides/2018/11/simple-heap/</loc>
-    <lastmod>2021-10-01T18:45:33+04:00</lastmod>
+    <lastmod>2023-11-17T17:20:06+04:00</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url><url>
     <loc>https://vporoshok.me/tags/sorting/</loc>
-    <lastmod>2021-10-01T18:45:33+04:00</lastmod>
+    <lastmod>2023-11-17T17:20:06+04:00</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url><url>
     <loc>https://vporoshok.me/post/2018/10/merge-sort/</loc>
-    <lastmod>2021-10-01T18:45:33+04:00</lastmod>
+    <lastmod>2023-11-17T17:20:06+04:00</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url><url>
     <loc>https://vporoshok.me/tags/rules/</loc>
-    <lastmod>2021-10-01T18:45:33+04:00</lastmod>
+    <lastmod>2023-11-17T17:20:06+04:00</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url><url>
     <loc>https://vporoshok.me/tags/team-lead/</loc>
-    <lastmod>2021-10-01T18:45:33+04:00</lastmod>
+    <lastmod>2023-11-17T17:20:06+04:00</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url><url>
     <loc>https://vporoshok.me/post/2018/08/code-review/</loc>
-    <lastmod>2021-10-01T18:45:33+04:00</lastmod>
+    <lastmod>2023-11-17T17:20:06+04:00</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url><url>
     <loc>https://vporoshok.me/tags/blog/</loc>
-    <lastmod>2021-10-01T18:45:33+04:00</lastmod>
+    <lastmod>2023-11-17T17:20:06+04:00</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url><url>
     <loc>https://vporoshok.me/tags/orgmode/</loc>
-    <lastmod>2021-10-01T18:45:33+04:00</lastmod>
+    <lastmod>2023-11-17T17:20:06+04:00</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url><url>
     <loc>https://vporoshok.me/post/2018/06/goto-standalone-blog/</loc>
-    <lastmod>2021-10-01T18:45:33+04:00</lastmod>
+    <lastmod>2023-11-17T17:20:06+04:00</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url><url>
     <loc>https://vporoshok.me/post/2018/06/property-based-testing/</loc>
-    <lastmod>2021-10-01T18:45:33+04:00</lastmod>
+    <lastmod>2023-11-17T17:20:06+04:00</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url><url>
     <loc>https://vporoshok.me/post/2018/04/clean-architect/</loc>
-    <lastmod>2021-10-01T18:45:33+04:00</lastmod>
+    <lastmod>2023-11-17T17:20:06+04:00</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url><url>
     <loc>https://vporoshok.me/tags/git/</loc>
-    <lastmod>2021-10-01T18:45:33+04:00</lastmod>
+    <lastmod>2023-11-17T17:20:06+04:00</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url><url>
     <loc>https://vporoshok.me/post/2018/04/developer-check-list/</loc>
-    <lastmod>2021-10-01T18:45:33+04:00</lastmod>
+    <lastmod>2023-11-17T17:20:06+04:00</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url><url>
     <loc>https://vporoshok.me/tags/angular/</loc>
-    <lastmod>2021-10-01T18:45:33+04:00</lastmod>
+    <lastmod>2023-11-17T17:20:06+04:00</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url><url>
     <loc>https://vporoshok.me/tags/rxjs/</loc>
-    <lastmod>2021-10-01T18:45:33+04:00</lastmod>
+    <lastmod>2023-11-17T17:20:06+04:00</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url><url>
     <loc>https://vporoshok.me/tags/toc/</loc>
-    <lastmod>2021-10-01T18:45:33+04:00</lastmod>
+    <lastmod>2023-11-17T17:20:06+04:00</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url><url>
     <loc>https://vporoshok.me/tags/typescript/</loc>
-    <lastmod>2021-10-01T18:45:33+04:00</lastmod>
+    <lastmod>2023-11-17T17:20:06+04:00</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url><url>
     <loc>https://vporoshok.me/post/2018/04/angular-toc/</loc>
-    <lastmod>2021-10-01T18:45:33+04:00</lastmod>
+    <lastmod>2023-11-17T17:20:06+04:00</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url><url>
     <loc>https://vporoshok.me/tags/algorithm/</loc>
-    <lastmod>2021-10-01T18:45:33+04:00</lastmod>
+    <lastmod>2023-11-17T17:20:06+04:00</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url><url>
     <loc>https://vporoshok.me/post/2017/06/orgraph-resolve/</loc>
-    <lastmod>2021-10-01T18:45:33+04:00</lastmod>
+    <lastmod>2023-11-17T17:20:06+04:00</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url><url>
     <loc>https://vporoshok.me/tags/csrf/</loc>
-    <lastmod>2021-10-01T18:45:33+04:00</lastmod>
+    <lastmod>2023-11-17T17:20:06+04:00</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url><url>
     <loc>https://vporoshok.me/tags/php/</loc>
-    <lastmod>2021-10-01T18:45:33+04:00</lastmod>
+    <lastmod>2023-11-17T17:20:06+04:00</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url><url>
     <loc>https://vporoshok.me/tags/security/</loc>
-    <lastmod>2021-10-01T18:45:33+04:00</lastmod>
+    <lastmod>2023-11-17T17:20:06+04:00</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url><url>
     <loc>https://vporoshok.me/tags/web/</loc>
-    <lastmod>2021-10-01T18:45:33+04:00</lastmod>
+    <lastmod>2023-11-17T17:20:06+04:00</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url><url>
     <loc>https://vporoshok.me/post/2017/05/token-placement/</loc>
-    <lastmod>2021-10-01T18:45:33+04:00</lastmod>
+    <lastmod>2023-11-17T17:20:06+04:00</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url><url>
     <loc>https://vporoshok.me/page/</loc>
-    <lastmod>2021-10-01T18:45:33+04:00</lastmod>
+    <lastmod>2023-11-17T17:20:06+04:00</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url><url>
     <loc>https://vporoshok.me/categories/algorithm/</loc>
-    <lastmod>2021-10-01T18:45:33+04:00</lastmod>
+    <lastmod>2023-11-17T17:20:06+04:00</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url><url>
     <loc>https://vporoshok.me/post/</loc>
-    <lastmod>2021-10-01T18:45:33+04:00</lastmod>
+    <lastmod>2023-11-17T17:20:06+04:00</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url><url>
     <loc>https://vporoshok.me/page/about/</loc>
-    <lastmod>2021-10-01T18:45:33+04:00</lastmod>
+    <lastmod>2023-11-17T17:20:06+04:00</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url><url>
     <loc>https://vporoshok.me/categories/book/</loc>
-    <lastmod>2021-10-01T18:45:33+04:00</lastmod>
+    <lastmod>2023-11-17T17:20:06+04:00</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url><url>
     <loc>https://vporoshok.me/categories/life-style/</loc>
-    <lastmod>2021-10-01T18:45:33+04:00</lastmod>
+    <lastmod>2023-11-17T17:20:06+04:00</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url><url>
     <loc>https://vporoshok.me/slides/</loc>
-    <lastmod>2021-10-01T18:45:33+04:00</lastmod>
+    <lastmod>2023-11-17T17:20:06+04:00</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url><url>
     <loc>https://vporoshok.me/categories/project/</loc>
-    <lastmod>2021-10-01T18:45:33+04:00</lastmod>
+    <lastmod>2023-11-17T17:20:06+04:00</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url><url>
     <loc>https://vporoshok.me/categories/develop/</loc>
-    <lastmod>2021-10-01T18:45:33+04:00</lastmod>
+    <lastmod>2023-11-17T17:20:06+04:00</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
